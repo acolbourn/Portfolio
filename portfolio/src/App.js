@@ -9,6 +9,7 @@ import Navbar from './Navbar';
 import Home from './Home';
 import CodingClasses from './CodingClasses';
 import Contact from './Contact';
+import Projects from './Projects';
 import useStyles from './styles/AppStyles';
 import './styles/App.css';
 
@@ -37,6 +38,9 @@ function App() {
               </Route>
               <Route path='/coding-classes'>
                 <CodingClasses />
+              </Route>
+              <Route path='/projects'>
+                <Projects />
               </Route>
               <Route path='/'>
                 <Home />

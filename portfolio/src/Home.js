@@ -4,8 +4,8 @@ import AnimatedText from './AnimatedText';
 export default function Home() {
   return (
     <div>
-      <h1>Home</h1>
       <AnimatedText />
+      {/* <iframe src='\MS Project Report - Alex Colbourn.pdf' /> */}
     </div>
   );
 }

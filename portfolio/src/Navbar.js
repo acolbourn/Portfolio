@@ -62,7 +62,7 @@ export default function ButtonAppBar() {
           <div className={classes.navLinkText}>CONTACT</div>
         </IconButton>
       </NavLink>
-      <NavLink to='/coding-classes' activeClassName={classes.activePage} exact>
+      <NavLink to='/classes' activeClassName={classes.activePage} exact>
         <IconButton className={classes.icon} aria-label='Classes'>
           <SchoolIcon className={classes.navLink} />
           <div className={classes.navLinkText}>CLASSES</div>

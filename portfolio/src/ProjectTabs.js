@@ -7,14 +7,28 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import ProjectCard from './ProjectCard';
-import { roboticsProjects } from './constants';
+import { roboticsProjects, webProjects } from './constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  gridItem: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  swipeContainer: {
+    width: '100%',
     height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    // justifyContent: 'center',
   },
 }));
 
@@ -31,7 +45,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography component={'span'}>{children}</Typography>
+          <Typography component={'div'}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -83,21 +97,63 @@ export default function ProjectTabs() {
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={value}
         onChangeIndex={handleChangeIndex}
+        className={classes.swipeContainer}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          {roboticsProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              id={project.id}
-              imgSrc={project.imgSrc}
-              imgAlt={project.imgAlt}
-              title={project.title}
-              description={project.description}
-            />
-          ))}
+          <Grid
+            container
+            spacing={3}
+            direction='row'
+            justify='center'
+            alignItems='center'
+          >
+            {roboticsProjects.map((project, index) => (
+              <Grid
+                item
+                // xs={12}
+                // sm={6}
+                key={index}
+                className={classes.gridItem}
+              >
+                <ProjectCard
+                  key={project.id}
+                  id={project.id}
+                  imgSrc={project.imgSrc}
+                  imgAlt={project.imgAlt}
+                  title={project.title}
+                  description={project.description}
+                />
+              </Grid>
+            ))}
+          </Grid>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          Web Development
+          <Grid
+            container
+            spacing={3}
+            direction='row'
+            justify='space-evenly'
+            alignItems='center'
+          >
+            {webProjects.map((project, index) => (
+              <Grid
+                item
+                // xs={12}
+                // sm={6}
+                key={index}
+                className={classes.gridItem}
+              >
+                <ProjectCard
+                  key={project.id}
+                  id={project.id}
+                  imgSrc={project.imgSrc}
+                  imgAlt={project.imgAlt}
+                  title={project.title}
+                  description={project.description}
+                />
+              </Grid>
+            ))}
+          </Grid>
         </TabPanel>
       </SwipeableViews>
     </div>

@@ -11,45 +11,39 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
-    height: 308,
-
-    // boxShadow: '0px 5px 20px rgba(34, 35, 58, 0.2)',
-    // transition: '0.3s',
-    // '&:hover': {
-    //   transform: 'translateY(2px)',
-    //   boxShadow: '0 2px 10px 0 rgba(0,0,0,0.12)',
-    // },
+  },
+  media: {
+    height: 140,
   },
 });
 
-export default function ProjectCard({ imgSrc, imgAlt, title, description }) {
+export default function ClassesCard() {
   const classes = useStyles();
 
   return (
     <Card className={classes.root}>
       <CardActionArea>
         <CardMedia
-          component='img'
-          alt={imgAlt}
-          height='140'
-          image={imgSrc}
-          title={imgAlt}
+          className={classes.media}
+          image='/images/Coding.jpg'
+          title='Contemplative Reptile'
         />
         <CardContent>
           <Typography gutterBottom variant='h5' component='h2'>
-            {title}
+            Lizard
           </Typography>
           <Typography variant='body2' color='textSecondary' component='p'>
-            {description}
+            Lizards are a widespread group of squamate reptiles, with over 6,000
+            species, ranging across all continents except Antarctica
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
         <Button size='small' color='primary'>
-          Live Website
+          Share
         </Button>
         <Button size='small' color='primary'>
-          Explore
+          Learn More
         </Button>
       </CardActions>
     </Card>

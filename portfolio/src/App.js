@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core/styles';
 import Navbar from './Navbar';
 import Home from './Home';
-import CodingClasses from './CodingClasses';
+import Classes from './Classes';
 import Contact from './Contact';
 import Projects from './Projects';
 import useStyles from './styles/AppStyles';
@@ -36,8 +36,8 @@ function App() {
               <Route path='/contact'>
                 <Contact />
               </Route>
-              <Route path='/coding-classes'>
-                <CodingClasses />
+              <Route path='/classes'>
+                <Classes />
               </Route>
               <Route path='/projects'>
                 <Projects />

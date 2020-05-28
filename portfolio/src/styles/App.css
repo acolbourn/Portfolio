@@ -11,6 +11,10 @@
   height: 90vh;
 } */
 
+html {
+  background-color: #1d1d1d;
+}
+
 button:focus {
   outline: none !important;
 }

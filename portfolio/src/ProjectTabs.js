@@ -18,17 +18,17 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
-  gridItem: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // gridItem: {
+  //   display: 'flex',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   swipeContainer: {
     width: '100%',
     height: '100%',
     display: 'flex',
     alignItems: 'center',
-    // justifyContent: 'center',
+    justifyContent: 'center',
   },
 }));
 
@@ -107,22 +107,9 @@ export default function ProjectTabs() {
             justify='center'
             alignItems='center'
           >
-            {roboticsProjects.map((project, index) => (
-              <Grid
-                item
-                // xs={12}
-                // sm={6}
-                key={index}
-                className={classes.gridItem}
-              >
-                <ProjectCard
-                  key={project.id}
-                  id={project.id}
-                  imgSrc={project.imgSrc}
-                  imgAlt={project.imgAlt}
-                  title={project.title}
-                  description={project.description}
-                />
+            {roboticsProjects.map((project, idx) => (
+              <Grid item key={idx} className={classes.gridItem}>
+                <ProjectCard key={project.id} id={project.id} {...project} />
               </Grid>
             ))}
           </Grid>
@@ -135,22 +122,9 @@ export default function ProjectTabs() {
             justify='space-evenly'
             alignItems='center'
           >
-            {webProjects.map((project, index) => (
-              <Grid
-                item
-                // xs={12}
-                // sm={6}
-                key={index}
-                className={classes.gridItem}
-              >
-                <ProjectCard
-                  key={project.id}
-                  id={project.id}
-                  imgSrc={project.imgSrc}
-                  imgAlt={project.imgAlt}
-                  title={project.title}
-                  description={project.description}
-                />
+            {webProjects.map((project, idx) => (
+              <Grid item key={idx} className={classes.gridItem}>
+                <ProjectCard key={project.id} id={project.id} {...project} />
               </Grid>
             ))}
           </Grid>

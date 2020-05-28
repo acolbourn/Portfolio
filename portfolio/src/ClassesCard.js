@@ -7,45 +7,57 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import './styles/ribbon.css';
 
 const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
+  root: (props) => ({
+    width: 345,
+    height: 308,
+    border: props.featured ? '1px solid #08fdd8' : 'none',
+    position: 'relative',
+  }),
   media: {
     height: 140,
   },
 });
 
-export default function ClassesCard() {
-  const classes = useStyles();
+export default function ClassesCard(props) {
+  const { imgSrc, imgAlt, title, keyPoints, school, featured } = props;
+  const classes = useStyles(props);
 
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image='/images/Coding.jpg'
-          title='Contemplative Reptile'
-        />
+        <CardMedia className={classes.media} image={imgSrc} title={imgAlt} />
         <CardContent>
           <Typography gutterBottom variant='h5' component='h2'>
-            Lizard
+            {title}
           </Typography>
-          <Typography variant='body2' color='textSecondary' component='p'>
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+          <Typography gutterBottom variant='subtitle2'>
+            {school}
+          </Typography>
+          <Typography variant='body2' color='textSecondary' component='span'>
+            <ul>
+              {keyPoints.map((point, idx) => (
+                <li key={idx}>{point}</li>
+              ))}
+            </ul>
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
+      {/* <CardActions>
         <Button size='small' color='primary'>
           Share
         </Button>
         <Button size='small' color='primary'>
           Learn More
         </Button>
-      </CardActions>
+      </CardActions> */}
+      {featured && (
+        <div className='ribbon ribbon-top-right'>
+          <span>Featured</span>
+        </div>
+      )}
     </Card>
   );
 }

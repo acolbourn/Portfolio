@@ -3,12 +3,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import Divider from '@material-ui/core/Divider';
+import ClassesProjects from './ClassesProjects';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    maxWidth: '90%',
+    overflow: 'auto',
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -18,8 +22,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ClassesDetail({ open, openDetail, closeDetail, id }) {
+export default function ClassesDetail({
+  open,
+  openDetail,
+  closeDetail,
+  codingClass,
+}) {
   const classes = useStyles();
+  const { description, title, projects } = codingClass;
   //   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -32,12 +42,9 @@ export default function ClassesDetail({ open, openDetail, closeDetail, id }) {
 
   return (
     <div>
-      <button type='button' onClick={handleOpen}>
-        react-transition-group
-      </button>
       <Modal
-        aria-labelledby='transition-modal-title'
-        aria-describedby='transition-modal-description'
+        aria-labelledby='title'
+        aria-describedby='description'
         className={classes.modal}
         open={open}
         onClose={handleClose}
@@ -49,8 +56,10 @@ export default function ClassesDetail({ open, openDetail, closeDetail, id }) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id='transition-modal-title'>Transition modal</h2>
-            <p id='transition-modal-description'>{id}</p>
+            <h2 id='title'>{title}</h2>
+            <p id='description'>{description}</p>
+            <Divider />
+            <ClassesProjects projects={projects} />
           </div>
         </Fade>
       </Modal>

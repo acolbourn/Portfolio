@@ -11,8 +11,8 @@ import './styles/ribbon.css';
 import ClassesDetail from './ClassesDetail';
 
 const useStyles = makeStyles({
-  root: (props) => ({
-    border: props.featured ? '1px solid #08fdd8' : 'none',
+  root: (codingClass) => ({
+    border: codingClass.featured ? '1px solid #08fdd8' : 'none',
     position: 'relative',
     height: 308,
     width: 330,
@@ -29,10 +29,18 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ClassesCard(props) {
-  const { imgSrc, imgAlt, title, keyPoints, school, featured, id } = props;
-  const classes = useStyles(props);
-  const [open, setOpen] = React.useState(false);
+export default function ClassesCard({ codingClass }) {
+  const {
+    imgSrc,
+    imgAlt,
+    title,
+    keyPoints,
+    school,
+    featured,
+    id,
+  } = codingClass;
+  const classes = useStyles(codingClass);
+  const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     console.log(id);
@@ -81,7 +89,7 @@ export default function ClassesCard(props) {
         </div>
       )}
       <ClassesDetail
-        id={id}
+        codingClass={codingClass}
         open={open}
         openDetail={openDetail}
         closeDetail={closeDetail}

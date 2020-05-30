@@ -27,9 +27,9 @@ export default function Classes() {
         alignItems='center'
         spacing={3}
       >
-        {codingClasses.map((cls, idx) => (
+        {codingClasses.map((codingClass, idx) => (
           <Grid key={idx} item>
-            <ClassesCard {...cls} />
+            <ClassesCard codingClass={codingClass} />
           </Grid>
         ))}
       </Grid>

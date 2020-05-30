@@ -68,7 +68,76 @@ const codingClasses = [
     keyPoints: ['Hooks, useContext, useReducer', 'React Router', 'JSS'],
     school: 'Udemy',
     link: 'https://www.udemy.com/course/modern-react-bootcamp/',
-    projects: [],
+    projects: [
+      {
+        projectTitle: 'Hangman',
+        projectLink: 'https://priceless-perlman-4364a1.netlify.com/',
+        projectGit:
+          'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/hangman',
+        projectDesc: '',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Lights Out',
+        projectLink: 'https://clever-payne-8fc0ae.netlify.com/',
+        projectGit:
+          'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/lights-out',
+        projectDesc: '',
+        projectFeatured: true,
+      },
+      {
+        projectTitle: 'Todo List',
+        projectLink: 'https://unruffled-haibt-21c6de.netlify.com/',
+        projectGit:
+          'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/todo-list',
+        projectDesc: '',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Yahtzee',
+        projectLink: 'https://keen-almeida-7f8c34.netlify.com/',
+        projectGit:
+          'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/yahtzee',
+        projectDesc: '',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Dad Jokes',
+        projectLink: 'https://priceless-minsky-751dd3.netlify.com/',
+        projectGit:
+          'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/dad-jokes',
+        projectDesc:
+          'Fetches jokes from an API. Handles voting/sorting and uses local storage to prevent duplicate jokes.',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Context App',
+        projectLink: 'https://keen-knuth-3d6fdd.netlify.app/',
+        projectGit:
+          'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/context-app',
+        projectDesc:
+          'A simple project to learn React Contexts. Dark mode and language can be switched using contexts.',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Todo Hooks, useReducer, useContext',
+        projectLink: 'https://loving-meninsky-42ef4e.netlify.app/',
+        projectGit:
+          'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/todos-hooks',
+        projectDesc:
+          'A Todo app completely built using Hooks, useContext, and useReducer.',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Color Picker',
+        projectLink: 'https://vibrant-archimedes-c03d7f.netlify.app/',
+        projectGit:
+          'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/colors-app',
+        projectDesc:
+          "This is the capstone project of the bootcamp. It's a color palette website that lets you create and manage color pallettes.",
+        projectFeatured: true,
+      },
+    ],
     featured: true,
     grade: 'Complete',
   },
@@ -76,13 +145,20 @@ const codingClasses = [
     id: uuidv4(),
     imgSrc: '/images/optimized/webBootcamp.jpg',
     imgAlt: 'Web Development Bootcamp',
-    title: 'The 2020 Web Bootcamp',
+    title: 'Complete 2020 Web Bootcamp',
     description:
       'A full bootcamp focused on the MERN stack.  It provides a large overview of all aspects of web development and covers, HTML, CSS, Bootstrap 4, Javascript, jQuery, Node, Express, APIs, MongoDB, React, design, etc...',
     keyPoints: ['HTML, CSS, Javascript', 'Node, Express', 'MongoDB'],
     school: 'Udemy',
     link: 'https://www.udemy.com/course/the-complete-web-development-bootcamp/',
-    projects: [],
+    projects: [
+      {
+        projectTitle: '',
+        projectLink: '',
+        projectDesc: '',
+        projectFeatured: false,
+      },
+    ],
     featured: true,
     grade: 'Complete',
   },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 // import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import './styles/ribbon.css';
+import ClassesDetail from './ClassesDetail';
 
 const useStyles = makeStyles({
   root: (props) => ({
@@ -29,12 +30,26 @@ const useStyles = makeStyles({
 });
 
 export default function ClassesCard(props) {
-  const { imgSrc, imgAlt, title, keyPoints, school, featured } = props;
+  const { imgSrc, imgAlt, title, keyPoints, school, featured, id } = props;
   const classes = useStyles(props);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    console.log(id);
+    openDetail();
+  };
+
+  const openDetail = () => {
+    setOpen(true);
+  };
+
+  const closeDetail = () => {
+    setOpen(false);
+  };
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea onClick={handleClick}>
         <CardMedia className={classes.media} image={imgSrc} title={imgAlt} />
         <CardContent>
           <Typography gutterBottom variant='h6' component='h2'>
@@ -65,6 +80,12 @@ export default function ClassesCard(props) {
           <span>Featured</span>
         </div>
       )}
+      <ClassesDetail
+        id={id}
+        open={open}
+        openDetail={openDetail}
+        closeDetail={closeDetail}
+      />
     </Card>
   );
 }

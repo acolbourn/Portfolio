@@ -6,6 +6,7 @@ import {
   responsiveFontSizes,
 } from '@material-ui/core/styles';
 import Navbar from './Navbar';
+import BackToTop from './BackToTop';
 import Home from './Home';
 import Classes from './Classes';
 import Contact from './Contact';
@@ -29,6 +30,7 @@ function App() {
         <div className={classes.root}>
           <div className={classes.nav}>
             <Navbar />
+            <BackToTop />
           </div>
 
           <div className={classes.body}>

@@ -93,7 +93,7 @@ export default function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appbar} position='static'>
+      <AppBar className={classes.appbar} position='sticky'>
         <Toolbar>
           {isMobile ? (
             <IconButton

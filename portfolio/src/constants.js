@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 const roboticsProjects = [
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/code1.jpg',
     imgAlt: 'Robot',
     title: 'Autonomous Search and Rescue Robot',
     description: 'A robot for search and rescue.',
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/code1.jpg',
     imgAlt: 'Drone',
     title: 'Autonomous Drone',
     description:
@@ -18,7 +18,7 @@ const roboticsProjects = [
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/code1.jpg',
     imgAlt: 'Swarms',
     title: 'Robotic Swarms',
     description:
@@ -29,28 +29,28 @@ const roboticsProjects = [
 const webProjects = [
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/code1.jpg',
     imgAlt: 'Retirement',
     title: 'Retirement Calculator',
     description: 'A calculator built with javacript and jQuery.',
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/code1.jpg',
     imgAlt: 'Coronavirus',
     title: 'Covid-19 Hackathon',
     description: 'Animations made with React',
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/code1.jpg',
     imgAlt: 'Colors',
     title: 'Color Picker',
     description: 'A large udemy project.',
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/code1.jpg',
     imgAlt: 'Drone',
     title: 'Next Project',
     description: 'Music project.',
@@ -88,8 +88,8 @@ const codingClasses = [
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
-    imgAlt: 'Retirement',
+    imgSrc: '/images/optimized/Nyu1.jpg',
+    imgAlt: 'Washington Square Park',
     title: 'Algorithms',
     description:
       'A graduate level course on the design and analysis of algorithms.  It covers data structures, queues, binary search trees, searching, sorting, dynamic programming, greedy algorithms, graph algorithms, etc...',
@@ -139,8 +139,8 @@ const codingClasses = [
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
-    imgAlt: 'Retirement',
+    imgSrc: '/images/optimized/ucsb1.jpg',
+    imgAlt: 'UC Santa Barbara',
     title: 'Intro to C Programming',
     description:
       'This course focuses on the fundamentals of the C programming language, MatLab, and the Linux operating system. Special emphasis is placed on using the tools acquired in this class to solve problems faced by engineers. ',
@@ -153,7 +153,7 @@ const codingClasses = [
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: '/images/optimized/code2.jpg',
     imgAlt: 'Retirement',
     title: 'Computer Science I: Java',
     description:
@@ -167,7 +167,7 @@ const codingClasses = [
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/code1.jpg',
     imgAlt: 'Retirement',
     title: 'Computer Science II: Java',
     description:
@@ -200,7 +200,7 @@ const codingClasses = [
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/Coding.jpg',
+    imgSrc: 'images/optimized/c3p0.jpg',
     imgAlt: 'Retirement',
     title: 'Simulation Tools for Robotics',
     description:

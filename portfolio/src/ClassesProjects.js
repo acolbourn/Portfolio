@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
   github: {
     '&:hover': {
-      backgroundColor: 'green',
+      backgroundColor: 'blue',
     },
   },
 }));

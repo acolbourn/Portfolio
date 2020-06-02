@@ -1,5 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -26,15 +28,27 @@ const useStyles = makeStyles((theme) => ({
     // maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
+    '& .MuiList-root': {
+      paddingBottom: 0,
+    },
+    '& .MuiListItem-root': {
+      paddingLeft: 0,
+    },
   },
   listItem: {
     '&:hover': {
-      backgroundColor: 'red',
+      '& svg': {
+        transition: 'color 0.2s',
+        color: '#08fdd8',
+      },
     },
   },
   github: {
     '&:hover': {
-      backgroundColor: 'blue',
+      '& span': {
+        transition: 'color 0.2s',
+        color: '#08fdd8',
+      },
     },
   },
 }));
@@ -45,7 +59,8 @@ function ListItemLink(props) {
 
 export default function ClassesProjects({ projects }) {
   const classes = useStyles();
-  const secondary = 'text here description';
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
   return (
     <div className={classes.root}>
@@ -64,7 +79,7 @@ export default function ClassesProjects({ projects }) {
               </ListItemAvatar>
               <ListItemText
                 primary={project.projectTitle}
-                secondary={secondary ? project.projectDesc : null}
+                secondary={isMobile ? null : project.projectDesc}
               />
             </ListItemLink>
             <ListItemSecondaryAction>
@@ -94,13 +109,4 @@ export default function ClassesProjects({ projects }) {
       </List> */}
     </div>
   );
-}
-
-{
-  /* <ListItem button>
-          <ListItemText primary='Trash' />
-        </ListItem>
-        <ListItemLink href='#simple-list'>
-          <ListItemText primary='Spam' />
-        </ListItemLink> */
 }

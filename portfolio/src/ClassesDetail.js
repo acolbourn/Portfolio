@@ -7,21 +7,23 @@ import Divider from '@material-ui/core/Divider';
 import ClassesProjects from './ClassesProjects';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
+import CancelSharpIcon from '@material-ui/icons/CancelSharp';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'auto',
+    overflow: 'scroll',
   },
   paper: {
+    position: 'relative',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     maxWidth: '800px',
+    // maxHeight: '96%',
     [theme.breakpoints.down('sm')]: {
       maxWidth: '94%',
     },
@@ -39,6 +41,12 @@ const useStyles = makeStyles((theme) => ({
   projectDivider: {
     marginTop: '16px',
   },
+  closeButton: {
+    position: 'absolute',
+    top: '4px',
+    right: '4px',
+    cursor: 'pointer',
+  },
 }));
 
 export default function ClassesDetail({
@@ -51,9 +59,9 @@ export default function ClassesDetail({
   const { description, title, projects, grade, link } = codingClass;
   //   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
-    openDetail();
-  };
+  // const handleOpen = () => {
+  //   openDetail();
+  // };
 
   const handleClose = () => {
     closeDetail();
@@ -82,7 +90,10 @@ export default function ClassesDetail({
                 Course Website
               </Link>
             </Typography>
-            <CloseIcon onClick={handleClose} />
+            <CancelSharpIcon
+              onClick={handleClose}
+              className={classes.closeButton}
+            />
             <Divider className={classes.headerDivider} />
             <p id='description' className={classes.desc}>
               {description}

@@ -153,10 +153,73 @@ const codingClasses = [
     link: 'https://www.udemy.com/course/the-complete-web-development-bootcamp/',
     projects: [
       {
-        projectTitle: '',
-        projectLink: '',
-        projectDesc: '',
+        projectTitle: 'TinDog',
+        projectLink: 'https://ecstatic-yalow-6215cb.netlify.com',
+        projectGit:
+          'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/TinDog',
+        projectDesc:
+          'A startup landing page using Bootstrap 4 for responsive design.',
         projectFeatured: false,
+      },
+      {
+        projectTitle: 'Drum Kit',
+        projectLink: 'https://practical-brown-b01565.netlify.com',
+        projectGit:
+          'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Drum%20Kit',
+        projectDesc: 'A pure Javascript drum kit.',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Simon',
+        projectLink: 'https://elated-panini-b8cd96.netlify.com',
+        projectGit:
+          'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Simon-Game',
+        projectDesc:
+          'Javascript/jQuery implementation of the classic game Simon.',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Newsletter Sign-up',
+        projectLink: 'https://secret-earth-69190.herokuapp.com/',
+        projectGit:
+          'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Newsletter-Signup',
+        projectDesc: 'Newsletter signup using the MailChimp API.',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Todo List',
+        projectLink: 'https://morning-mesa-38937.herokuapp.com/',
+        projectGit:
+          'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/todolist-v2',
+        projectDesc:
+          'Todo List made with MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku.',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Blog',
+        projectLink: 'https://pure-plateau-18911.herokuapp.com/',
+        projectGit:
+          'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Blog-with-Database',
+        projectDesc:
+          'Made using EJS, MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku.',
+        projectFeatured: true,
+      },
+      {
+        projectTitle: 'Wiki API',
+        projectLink: '#',
+        projectGit:
+          'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Wiki-API',
+        projectDesc:
+          'This is a RESTful API simulating a wikipedia type website. This was purely backend code so there is no live website.',
+        projectFeatured: false,
+      },
+      {
+        projectTitle: 'Notes App',
+        projectLink: 'https://condescending-goldwasser-d048ed.netlify.com',
+        projectGit:
+          'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/notes-app',
+        projectDesc: 'A note taking website built with React.',
+        projectFeatured: true,
       },
     ],
     featured: true,

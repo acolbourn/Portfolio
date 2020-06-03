@@ -9,6 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import './styles/ribbon.css';
 import ClassesDetail from './ClassesDetail';
+import ClassesDialog from './ClassesDialog';
 
 const useStyles = makeStyles({
   root: (codingClass) => ({
@@ -30,20 +31,11 @@ const useStyles = makeStyles({
 });
 
 export default function ClassesCard({ codingClass }) {
-  const {
-    imgSrc,
-    imgAlt,
-    title,
-    keyPoints,
-    school,
-    featured,
-    id,
-  } = codingClass;
+  const { imgSrc, imgAlt, title, keyPoints, school, featured } = codingClass;
   const classes = useStyles(codingClass);
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
-    console.log(id);
     openDetail();
   };
 
@@ -57,6 +49,7 @@ export default function ClassesCard({ codingClass }) {
 
   return (
     <Card className={classes.root}>
+      <ClassesDialog />
       <CardActionArea onClick={handleClick}>
         <CardMedia className={classes.media} image={imgSrc} title={imgAlt} />
         <CardContent>

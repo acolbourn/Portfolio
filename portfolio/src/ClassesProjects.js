@@ -4,23 +4,14 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
 import WebAssetIcon from '@material-ui/icons/WebAsset';
+import StarIcon from '@material-ui/icons/Star';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,19 +28,38 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     '&:hover': {
+      color: '#fff',
       '& svg': {
         transition: 'color 0.2s',
         color: '#08fdd8',
       },
+      '& .MuiAvatar-root': {
+        transition: 'border 0.2s',
+        border: '3px solid #08fdd8',
+      },
     },
   },
   github: {
+    paddingRight: 0,
+    '& .fa-github': {
+      width: '28px',
+    },
     '&:hover': {
       '& span': {
         transition: 'color 0.2s',
         color: '#08fdd8',
       },
     },
+  },
+  webIcon: {
+    border: '3px solid white',
+  },
+  star: {
+    position: 'absolute',
+    top: '-1px',
+    left: '-3px',
+    color: 'gold !important',
+    zIndex: '10',
   },
 }));
 
@@ -71,12 +81,15 @@ export default function ClassesProjects({ projects }) {
               href={project.projectLink}
               target='_blank'
               className={classes.listItem}
+              disabled={project.projectLink === '#'}
             >
+              {project.projectFeatured && <StarIcon className={classes.star} />}
               <ListItemAvatar>
-                <Avatar>
+                <Avatar className={classes.webIcon}>
                   <WebAssetIcon />
                 </Avatar>
               </ListItemAvatar>
+
               <ListItemText
                 primary={project.projectTitle}
                 secondary={isMobile ? null : project.projectDesc}

@@ -1,34 +1,12 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-// import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-// import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import './styles/ribbon.css';
-import ClassesDetail from './ClassesDetail';
+import useStyles from './styles/ClassesCardStyles';
 import ClassesDialog from './ClassesDialog';
-
-const useStyles = makeStyles({
-  root: (codingClass) => ({
-    border: codingClass.featured ? '1px solid #08fdd8' : 'none',
-    position: 'relative',
-    height: 308,
-    width: 330,
-    '@media (max-width: 340px)': {
-      width: 300,
-    },
-  }),
-  media: {
-    height: 140,
-  },
-  bulletPoints: {
-    listStylePosition: 'inside',
-    paddingLeft: 0,
-  },
-});
 
 export default function ClassesCard({ codingClass }) {
   const { imgSrc, imgAlt, title, keyPoints, school, featured } = codingClass;
@@ -38,18 +16,15 @@ export default function ClassesCard({ codingClass }) {
   const handleClick = () => {
     openDetail();
   };
-
   const openDetail = () => {
     setOpen(true);
   };
-
   const closeDetail = () => {
     setOpen(false);
   };
 
   return (
     <Card className={classes.root}>
-      <ClassesDialog />
       <CardActionArea onClick={handleClick}>
         <CardMedia className={classes.media} image={imgSrc} title={imgAlt} />
         <CardContent>
@@ -68,20 +43,12 @@ export default function ClassesCard({ codingClass }) {
           </Typography>
         </CardContent>
       </CardActionArea>
-      {/* <CardActions>
-        <Button size='small' color='primary'>
-          Share
-        </Button>
-        <Button size='small' color='primary'>
-          Learn More
-        </Button>
-      </CardActions> */}
       {featured && (
         <div className='ribbon ribbon-top-right'>
           <span>Featured</span>
         </div>
       )}
-      <ClassesDetail
+      <ClassesDialog
         codingClass={codingClass}
         open={open}
         openDetail={openDetail}

@@ -82,7 +82,7 @@ const codingClasses = [
         projectLink: 'https://clever-payne-8fc0ae.netlify.com/',
         projectGit:
           'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/lights-out',
-        projectDesc: '',
+        projectDesc: 'Turn off all the lights to win.',
         projectFeatured: true,
       },
       {
@@ -99,7 +99,7 @@ const codingClasses = [
         projectGit:
           'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/yahtzee',
         projectDesc: '',
-        projectFeatured: false,
+        projectFeatured: true,
       },
       {
         projectTitle: 'Dad Jokes',
@@ -147,7 +147,7 @@ const codingClasses = [
     imgAlt: 'Web Development Bootcamp',
     title: 'Complete 2020 Web Bootcamp',
     description:
-      'A full bootcamp focused on the MERN stack.  It provides a large overview of all aspects of web development and covers, HTML, CSS, Bootstrap 4, Javascript, jQuery, Node, Express, APIs, MongoDB, React, design, etc...',
+      'A full bootcamp focused on the MERN stack.  It provides a large overview of all aspects of web development and covers: HTML, CSS, Bootstrap 4, Javascript, jQuery, Node, Express, APIs, MongoDB, React, visual design, etc...',
     keyPoints: ['HTML, CSS, Javascript', 'Node, Express', 'MongoDB'],
     school: 'Udemy',
     link: 'https://www.udemy.com/course/the-complete-web-development-bootcamp/',
@@ -183,7 +183,8 @@ const codingClasses = [
         projectLink: 'https://secret-earth-69190.herokuapp.com/',
         projectGit:
           'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Newsletter-Signup',
-        projectDesc: 'Newsletter signup using the MailChimp API.',
+        projectDesc:
+          'Newsletter signup using the MailChimp API. (Note: Heroku loads slowly.)',
         projectFeatured: false,
       },
       {
@@ -192,7 +193,7 @@ const codingClasses = [
         projectGit:
           'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/todolist-v2',
         projectDesc:
-          'Todo List made with MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku.',
+          'Todo List made with MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku. (Note: Heroku loads slowly.)',
         projectFeatured: false,
       },
       {
@@ -201,7 +202,7 @@ const codingClasses = [
         projectGit:
           'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Blog-with-Database',
         projectDesc:
-          'Made using EJS, MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku.',
+          'Made using EJS, MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku. (Note: Heroku loads slowly.)',
         projectFeatured: true,
       },
       {
@@ -235,7 +236,7 @@ const codingClasses = [
     keyPoints: [
       'Data Structures',
       'Searching, Sorting',
-      'Graph Algorithms, Dynamic Programming',
+      'Graph & Dynamic Algorithms',
     ],
     school: 'NYU',
     link:
@@ -330,7 +331,7 @@ const codingClasses = [
     imgAlt: 'Labview Logo',
     title: 'LabVIEW Programming',
     description:
-      'Introduction to mechatronics, electromechanical systems, data acquisition, software programming and Labview. Students learn programming fundamentals, hardware interfacing and controls with simulated hardware and actual motor controllers.',
+      'Introduction to mechatronics, electromechanical systems, data acquisition, software programming and LabVIEW. Students learn programming fundamentals, hardware interfacing and controls with simulated hardware and actual motor controllers.',
     keyPoints: ['LabVIEW', 'Data Acquisition', 'Hardware/Software Interfacing'],
     school: 'UCSB',
     link: 'https://ninjacourses.com/explore/4/course/ME/147/',
@@ -344,7 +345,7 @@ const codingClasses = [
     imgAlt: 'Robot',
     title: 'Simulation Tools for Robotics',
     description:
-      "MITx: 6.00.1x is MIT's Introduction to Computer Science.  This course focuses on the fundamentals of Python and covers Object Oriented Programming, Classes, Computational Complexity, Searching and Sorting, etc...",
+      'The student who completes this course will gain an advanced understanding of the principles underlying simulation of dynamical systems, with particular reference to mechatronics and robotic systems. He/she will be able to use modern tools for simulation of mechatronics and robotic systems. Moreover, he/she will be able to design and implement control algorithms and assess their performance on the simulated systems.',
     keyPoints: ['Matlab', 'Simulink', 'Computational Efficiency'],
     school: 'NYU',
     link:

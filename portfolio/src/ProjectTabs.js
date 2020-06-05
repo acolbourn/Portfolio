@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import ProjectCard from './ProjectCard';
 import { roboticsProjects, webProjects } from './constants';
 
@@ -29,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  cardContainer: {
+    backgroundColor: 'blue',
   },
 }));
 
@@ -69,6 +74,7 @@ export default function ProjectTabs() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -90,7 +96,7 @@ export default function ProjectTabs() {
           aria-label='full width tabs example'
         >
           <Tab label='Robotics' {...a11yProps(0)} />
-          <Tab label='Web Development' {...a11yProps(1)} />
+          <Tab label={isMobile ? 'Web' : 'Web Development'} {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -108,8 +114,9 @@ export default function ProjectTabs() {
             alignItems='center'
           >
             {roboticsProjects.map((project, idx) => (
-              <Grid item key={idx} className={classes.gridItem}>
-                <ProjectCard key={project.id} id={project.id} {...project} />
+              <Grid item key={idx} className={classes.gridItem} xs={12}>
+                <Paper className={classes.cardContainer}>test</Paper>
+                {/* <ProjectCard key={project.id} id={project.id} {...project} /> */}
               </Grid>
             ))}
           </Grid>

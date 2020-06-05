@@ -3,26 +3,27 @@ import { v4 as uuidv4 } from 'uuid';
 const roboticsProjects = [
   {
     id: uuidv4(),
-    imgSrc: 'images/optimized/code1.jpg',
-    imgAlt: 'Robot',
+    imgSrc: 'images/raw/turtlebot3_1.jpg',
+    imgAlt: 'Turtlebot Robot',
     title: 'Autonomous Search and Rescue Robot',
-    description: 'A robot for search and rescue.',
+    description:
+      'A proof-of-concept search and rescue robot developed using Python and ROS (Robot Operating System).  It autonomously searches and maps an unknown environment using LIDAR, finds and picks up targets using basic computer vision, and delivers them to a safe location.',
   },
   {
     id: uuidv4(),
-    imgSrc: 'images/optimized/code1.jpg',
+    imgSrc: 'images/raw/drone.jpg',
     imgAlt: 'Drone',
     title: 'Autonomous Drone',
     description:
-      'A drone that detects electromagnetic radiation from powerlines to avoid and fly along them.',
+      'A project for an Army Research Lab funded drone startup aiming to use the electromagnetic radiation emitted from powerlines to both avoid and fly along them for inspections.  I created an experimental test setup and LabVIEW software that proves the feasibility of such a system using magnetic fields.',
   },
   {
     id: uuidv4(),
-    imgSrc: 'images/optimized/code1.jpg',
-    imgAlt: 'Swarms',
-    title: 'Robotic Swarms',
+    imgSrc: 'images/raw/swarms.jpg',
+    imgAlt: 'Swarms of Drones',
+    title: 'Swarm Robotics',
     description:
-      'Networked swarm robots, very cool practical appliation of graph algorithms.',
+      'A project using Python and graph algorithms to simulate a swarm of differential drive robots.  There is no centralized control system, they use a distributed graph mesh network to communicate and pass data to nearby robots.  They then coordinate movement in formations while avoiding collisions and navigating a maze.',
   },
 ];
 
@@ -183,8 +184,7 @@ const codingClasses = [
         projectLink: 'https://secret-earth-69190.herokuapp.com/',
         projectGit:
           'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Newsletter-Signup',
-        projectDesc:
-          'Newsletter signup using the MailChimp API. (Note: Heroku loads slowly.)',
+        projectDesc: 'Newsletter signup using the MailChimp API.',
         projectFeatured: false,
       },
       {
@@ -193,7 +193,7 @@ const codingClasses = [
         projectGit:
           'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/todolist-v2',
         projectDesc:
-          'Todo List made with MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku. (Note: Heroku loads slowly.)',
+          'Todo List made with MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku.',
         projectFeatured: false,
       },
       {
@@ -202,7 +202,7 @@ const codingClasses = [
         projectGit:
           'https://github.com/acolbourn/Udemy-Bootcamp-Projects/tree/master/Blog-with-Database',
         projectDesc:
-          'Made using EJS, MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku. (Note: Heroku loads slowly.)',
+          'Made using EJS, MongoDB/Mongoose, Node/Express, and hosted on Atlas/Heroku.',
         projectFeatured: true,
       },
       {

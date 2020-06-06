@@ -19,6 +19,7 @@ let theme = createMuiTheme({
     type: 'dark',
   },
 });
+
 theme = responsiveFontSizes(theme);
 
 function App() {

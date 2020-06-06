@@ -11,10 +11,38 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '345px',
+    width: '100%',
+    // width: '345px',
     height: '500px',
-    [theme.breakpoints.down('xs')]: {
+    '@media (max-width: 1280px)': {
+      height: '450px',
+    },
+    '@media (max-width: 1150px)': {
+      height: '475px',
+    },
+    '@media (max-width: 960px)': {
       height: '400px',
+    },
+    '@media (max-width: 750px)': {
+      height: '450px',
+    },
+    '@media (max-width: 600px)': {
+      height: '360px',
+    },
+    '@media (max-width: 420px)': {
+      height: '400px',
+    },
+    '@media (max-width: 360px)': {
+      height: '420px',
+    },
+
+    display: 'flex',
+  },
+  actionArea: {
+    display: 'flex',
+    flexDirection: 'column',
+    '& .MuiCardContent-root': {
+      flex: 1,
     },
   },
 }));
@@ -24,13 +52,24 @@ export default function ProjectCard({ imgSrc, imgAlt, title, description }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
+  let imgHeight = '300';
+  if (useMediaQuery(theme.breakpoints.down('md'))) {
+    imgHeight = '225';
+  }
+  if (useMediaQuery(theme.breakpoints.down('sm'))) {
+    imgHeight = '180';
+  }
+  console.log(theme.breakpoints.down('xssm'));
+
+  console.log(imgHeight);
+
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea className={classes.actionArea}>
         <CardMedia
           component='img'
           alt={imgAlt}
-          height={isMobile ? '140' : '240'}
+          height={imgHeight}
           image={imgSrc}
           title={imgAlt}
         />

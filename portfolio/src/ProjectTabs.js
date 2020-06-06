@@ -9,7 +9,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import ProjectCard from './ProjectCard';
 import { roboticsProjects, webProjects } from './constants';
 
@@ -17,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     width: '100%',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -28,12 +28,17 @@ const useStyles = makeStyles((theme) => ({
   swipeContainer: {
     width: '100%',
     height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cardContainer: {
-    backgroundColor: 'blue',
+    // display: 'flex',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // backgroundColor: 'blue',
+    '& .react-swipeable-view-container': {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      // justifyContent: 'center',
+    },
   },
 }));
 
@@ -114,9 +119,15 @@ export default function ProjectTabs() {
             alignItems='center'
           >
             {roboticsProjects.map((project, idx) => (
-              <Grid item key={idx} className={classes.gridItem} xs={12}>
-                <Paper className={classes.cardContainer}>test</Paper>
-                {/* <ProjectCard key={project.id} id={project.id} {...project} /> */}
+              <Grid
+                item
+                key={idx}
+                className={classes.gridItem}
+                xs={12}
+                sm={6}
+                md={4}
+              >
+                <ProjectCard key={project.id} id={project.id} {...project} />
               </Grid>
             ))}
           </Grid>

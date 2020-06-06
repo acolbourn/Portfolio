@@ -5,7 +5,7 @@ const roboticsProjects = [
     id: uuidv4(),
     imgSrc: 'images/raw/turtlebot3_1.jpg',
     imgAlt: 'Turtlebot Robot',
-    title: 'Autonomous Search and Rescue Robot',
+    title: 'Search and Rescue',
     description:
       'A proof-of-concept search and rescue robot developed using Python and ROS (Robot Operating System).  It autonomously searches and maps an unknown environment using LIDAR, finds and picks up targets using basic computer vision, and delivers them to a safe location.',
   },
@@ -23,7 +23,7 @@ const roboticsProjects = [
     imgAlt: 'Swarms of Drones',
     title: 'Swarm Robotics',
     description:
-      'A project using Python and graph algorithms to simulate a swarm of differential drive robots.  There is no centralized control system, they use a distributed graph mesh network to communicate and pass data to nearby robots.  They then coordinate movement in formations while avoiding collisions and navigating a maze.',
+      'A project using Python and graph algorithms to simulate a swarm of differential drive robots.  There is no centralized control system, they use a distributed graph mesh network to communicate and pass data to nearby robots.  They then navigate a maze in coordinated formations while avoiding collisions.',
   },
 ];
 

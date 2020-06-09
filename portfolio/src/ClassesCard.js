@@ -10,7 +10,7 @@ import ClassesDialog from './ClassesDialog';
 
 export default function ClassesCard({ codingClass }) {
   const { imgSrc, imgAlt, title, keyPoints, school, featured } = codingClass;
-  const classes = useStyles(codingClass);
+  const classes = useStyles(featured);
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {

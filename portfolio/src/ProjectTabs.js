@@ -127,7 +127,11 @@ export default function ProjectTabs() {
                 sm={6}
                 md={4}
               >
-                <ProjectCard key={project.id} id={project.id} {...project} />
+                <ProjectCard
+                  key={project.id}
+                  id={project.id}
+                  project={project}
+                />
               </Grid>
             ))}
           </Grid>
@@ -142,7 +146,11 @@ export default function ProjectTabs() {
           >
             {webProjects.map((project, idx) => (
               <Grid item key={idx} className={classes.gridItem}>
-                <ProjectCard key={project.id} id={project.id} {...project} />
+                <ProjectCard
+                  key={project.id}
+                  id={project.id}
+                  project={project}
+                />
               </Grid>
             ))}
           </Grid>

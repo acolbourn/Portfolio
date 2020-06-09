@@ -3,27 +3,61 @@ import { v4 as uuidv4 } from 'uuid';
 const roboticsProjects = [
   {
     id: uuidv4(),
-    imgSrc: 'images/raw/turtlebot3_1.jpg',
+    imgSrc: 'images/optimized/turtlebot.jpg',
     imgAlt: 'Turtlebot Robot',
     title: 'Search and Rescue',
     description:
       'A proof-of-concept search and rescue robot developed using Python and ROS (Robot Operating System).  It autonomously searches and maps an unknown environment using LIDAR, finds and picks up targets using basic computer vision, and delivers them to a safe location.',
+    featured: true,
+    youtube: [
+      {
+        vidLink: 'vD6ngnMxDQM',
+        vidDesc:
+          'Autonomously searching for and retrieving targets in a real world environment.',
+      },
+      {
+        vidLink: 'Vt46-e4vAJM',
+        vidDesc: 'Mapping a real world environment with LIDAR.',
+      },
+      {
+        vidLink: 'H3HIfaRytCg',
+        vidDesc:
+          'Using Gazebo/Rviz to autonomously search for and retrieve targets in a simulated environment.',
+      },
+      {
+        vidLink: 'Fu9YxBRYT_E',
+        vidDesc: 'Using Gazebo/Rviz to map a simulated environment with LIDAR.',
+      },
+    ],
+    github: null,
+    pdf: null,
+    webLink: null,
   },
   {
     id: uuidv4(),
-    imgSrc: 'images/raw/drone.jpg',
+    imgSrc: 'images/optimized/drone.jpg',
     imgAlt: 'Drone',
     title: 'Autonomous Drone',
     description:
       'A project for an Army Research Lab funded drone startup aiming to use the electromagnetic radiation emitted from powerlines to both avoid and fly along them for inspections.  I created an experimental test setup and LabVIEW software that proves the feasibility of such a system using magnetic fields.',
+    featured: true,
+    youtube: null,
+    github: null,
+    pdf: null,
+    webLink: null,
   },
   {
     id: uuidv4(),
-    imgSrc: 'images/raw/swarms.jpg',
+    imgSrc: 'images/optimized/swarms.jpg',
     imgAlt: 'Swarms of Drones',
     title: 'Swarm Robotics',
     description:
       'A project using Python and graph algorithms to simulate a swarm of differential drive robots.  There is no centralized control system, they use a distributed graph mesh network to communicate and pass data to nearby robots.  They then navigate a maze in coordinated formations while avoiding collisions.',
+    featured: false,
+    youtube: null,
+    github: null,
+    pdf: null,
+    webLink: null,
   },
 ];
 
@@ -34,6 +68,10 @@ const webProjects = [
     imgAlt: 'Retirement',
     title: 'Retirement Calculator',
     description: 'A calculator built with javacript and jQuery.',
+    youtube: null,
+    github: null,
+    pdf: null,
+    webLink: null,
   },
   {
     id: uuidv4(),
@@ -41,6 +79,10 @@ const webProjects = [
     imgAlt: 'Coronavirus',
     title: 'Covid-19 Hackathon',
     description: 'Animations made with React',
+    youtube: null,
+    github: null,
+    pdf: null,
+    webLink: null,
   },
   {
     id: uuidv4(),
@@ -48,6 +90,10 @@ const webProjects = [
     imgAlt: 'Colors',
     title: 'Color Picker',
     description: 'A large udemy project.',
+    youtube: null,
+    github: null,
+    pdf: null,
+    webLink: null,
   },
   {
     id: uuidv4(),
@@ -55,6 +101,10 @@ const webProjects = [
     imgAlt: 'Drone',
     title: 'Next Project',
     description: 'Music project.',
+    youtube: null,
+    github: null,
+    pdf: null,
+    webLink: null,
   },
 ];
 

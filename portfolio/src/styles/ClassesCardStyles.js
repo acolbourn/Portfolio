@@ -1,8 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-  root: (codingClass) => ({
-    border: codingClass.featured ? '1px solid #08fdd8' : 'none',
+  root: (featured) => ({
+    border: featured ? '1px solid #08fdd8' : 'none',
     position: 'relative',
     height: 308,
     width: 330,

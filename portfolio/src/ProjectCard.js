@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import ProjectDialog from './ProjectDialog';
+import './styles/ribbon.css';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  root: (featured) => ({
+    border: featured ? '1px solid #08fdd8' : 'none',
     width: '100%',
     // width: '345px',
     height: '500px',
@@ -35,9 +36,8 @@ const useStyles = makeStyles((theme) => ({
     '@media (max-width: 360px)': {
       height: '420px',
     },
-
     display: 'flex',
-  },
+  }),
   actionArea: {
     display: 'flex',
     flexDirection: 'column',
@@ -47,10 +47,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProjectCard({ imgSrc, imgAlt, title, description }) {
-  const classes = useStyles();
+export default function ProjectCard({ project }) {
+  const { imgSrc, imgAlt, title, description, featured } = project;
+  const classes = useStyles(featured);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+  // const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    openDetail();
+  };
+  const openDetail = () => {
+    setOpen(true);
+  };
+  const closeDetail = () => {
+    setOpen(false);
+  };
 
   let imgHeight = '300';
   if (useMediaQuery(theme.breakpoints.down('md'))) {
@@ -59,13 +71,10 @@ export default function ProjectCard({ imgSrc, imgAlt, title, description }) {
   if (useMediaQuery(theme.breakpoints.down('sm'))) {
     imgHeight = '180';
   }
-  console.log(theme.breakpoints.down('xssm'));
-
-  console.log(imgHeight);
 
   return (
     <Card className={classes.root}>
-      <CardActionArea className={classes.actionArea}>
+      <CardActionArea className={classes.actionArea} onClick={handleClick}>
         <CardMedia
           component='img'
           alt={imgAlt}
@@ -81,7 +90,18 @@ export default function ProjectCard({ imgSrc, imgAlt, title, description }) {
             {description}
           </Typography>
         </CardContent>
+        {featured && (
+          <div className='ribbon ribbon-top-right'>
+            <span>Featured</span>
+          </div>
+        )}
       </CardActionArea>
+      <ProjectDialog
+        project={project}
+        open={open}
+        openDetail={openDetail}
+        closeDetail={closeDetail}
+      />
     </Card>
   );
 }

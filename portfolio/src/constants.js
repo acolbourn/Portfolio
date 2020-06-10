@@ -54,7 +54,13 @@ const roboticsProjects = [
     description:
       'A project using Python and graph algorithms to simulate a swarm of differential drive robots.  There is no centralized control system, they use a distributed graph mesh network to communicate and pass data to nearby robots.  They then navigate a maze in coordinated formations while avoiding collisions.',
     featured: false,
-    youtube: null,
+    youtube: [
+      {
+        vidLink: 'eUMud7Ygu5s',
+        vidDesc:
+          'Navigating a maze in formation with a swarm of decentralized robots.',
+      },
+    ],
     github: null,
     pdf: null,
     webLink: null,
@@ -79,7 +85,16 @@ const webProjects = [
     imgAlt: 'Coronavirus',
     title: 'Covid-19 Hackathon',
     description: 'Animations made with React',
-    youtube: null,
+    youtube: [
+      {
+        vidLink: 'uWXcr1ekypU',
+        vidDesc: 'Hackathon 1',
+      },
+      {
+        vidLink: 'WZ6fewjkqo4',
+        vidDesc: 'Hackathon 2',
+      },
+    ],
     github: null,
     pdf: null,
     webLink: null,

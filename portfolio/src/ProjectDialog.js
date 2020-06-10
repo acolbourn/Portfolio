@@ -17,8 +17,11 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: 0,
     },
     '& .MuiPaper-root': {
-      width: '90%',
       maxWidth: '800px',
+      width: '90%',
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+      },
     },
   },
   title: {

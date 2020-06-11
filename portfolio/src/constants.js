@@ -43,7 +43,7 @@ const roboticsProjects = [
     featured: true,
     youtube: null,
     github: null,
-    pdf: null,
+    pdf: 'MS Project Report - Alex Colbourn.pdf',
     webLink: null,
   },
   {

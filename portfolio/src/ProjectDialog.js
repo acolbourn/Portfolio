@@ -10,6 +10,7 @@ import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import CloseIcon from '@material-ui/icons/Close';
 import Youtube from './Youtube';
+import PdfViewer from './PdfViewer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     paddingBottom: 8,
+  },
+  dividerContainer: {
+    flex: 'none',
   },
   headerDivider: {
     marginTop: '9px',
@@ -46,8 +50,8 @@ const useStyles = makeStyles((theme) => ({
 export default function ProjectDialog({ open, closeDetail, project }) {
   const theme = useTheme();
   const classes = useStyles();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const { description, title, youtube, github, pdf, webLink } = project;
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs')) || pdf;
 
   const handleClose = () => {
     closeDetail();
@@ -67,11 +71,12 @@ export default function ProjectDialog({ open, closeDetail, project }) {
         </DialogTitle>
         <CloseIcon onClick={handleClose} className={classes.closeButton} />
 
-        <DialogContent>
+        <DialogContent className={classes.dividerContainer}>
           <Divider className={classes.headerDivider} />
         </DialogContent>
         <DialogContent>
-          <Youtube youtube={youtube} />
+          {youtube && <Youtube youtube={youtube} />}
+          {pdf && <PdfViewer pdf={pdf} />}
         </DialogContent>
       </Dialog>
     </div>

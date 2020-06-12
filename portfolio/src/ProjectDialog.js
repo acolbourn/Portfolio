@@ -11,6 +11,7 @@ import Link from '@material-ui/core/Link';
 import CloseIcon from '@material-ui/icons/Close';
 import Youtube from './Youtube';
 import PdfViewer from './PdfViewer';
+import ProjectWebsite from './ProjectWebsite';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,6 +79,7 @@ export default function ProjectDialog({ open, closeDetail, project }) {
         <DialogContent>
           {youtube && <Youtube youtube={youtube} />}
           {pdf && <PdfViewer pdf={pdf} />}
+          {webLink && <ProjectWebsite webLink={webLink} github={github} />}
         </DialogContent>
       </Dialog>
     </div>

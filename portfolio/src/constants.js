@@ -95,11 +95,13 @@ const webProjects = [
     youtube: [
       {
         vidLink: 'WZ6fewjkqo4',
-        vidDesc: 'Hackathon 1',
+        vidDesc:
+          "Dr. Desai's great video explaining the core idea much better than I could.  It's almost entirely made using my animations and research I sent him.  He also connected me with the CEO of Lifebridge Health who are now trying to trial this idea at a chain of Baltimore hospitals!",
       },
       {
         vidLink: 'uWXcr1ekypU',
-        vidDesc: 'Hackathon 2',
+        vidDesc:
+          'My original hackathon submission.  The animations at 41 seconds were made using React and CSS.',
       },
     ],
     featured: true,

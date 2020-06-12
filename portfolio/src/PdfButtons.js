@@ -1,19 +1,14 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    // display: 'flex',
-    // flexDirection: 'column',
-    // alignItems: 'center',
-    // '& > *': {
-    //   margin: theme.spacing(1),
-    // },
+const useStyles = makeStyles(() => ({
+  pageInfo: {
+    backgroundColor: '#3f51b5 !important',
+    color: '#fff !important',
   },
 }));
 
@@ -30,7 +25,10 @@ export default function PdfButtons({ pageNumber, numPages, prev, next }) {
         <Button onClick={prev} disabled={pageNumber === 1}>
           <NavigateBeforeIcon />
         </Button>
-        <Button disabled={true}>{`${pageNumber} of ${numPages}`}</Button>
+        <Button
+          className={classes.pageInfo}
+          disabled={true}
+        >{`${pageNumber} of ${numPages}`}</Button>
         <Button onClick={next} disabled={pageNumber === numPages}>
           <NavigateNextIcon />
         </Button>

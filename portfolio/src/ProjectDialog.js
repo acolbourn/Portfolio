@@ -51,7 +51,8 @@ export default function ProjectDialog({ open, closeDetail, project }) {
   const theme = useTheme();
   const classes = useStyles();
   const { description, title, youtube, github, pdf, webLink } = project;
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs')) || pdf;
+  const fullScreen =
+    useMediaQuery(theme.breakpoints.down('xs')) || pdf !== null;
 
   const handleClose = () => {
     closeDetail();

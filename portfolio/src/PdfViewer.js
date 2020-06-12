@@ -1,30 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Link from '@material-ui/core/Link';
 import PdfButtons from './PdfButtons';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  pdfContainer: {
-    height: '100%',
-    // width: '78%',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    boxShadow: '10px 10px 5px 0px rgba(0,0,0,0.25);',
-    backgroundColor: 'white',
-    color: 'black',
-  },
-  buttons: {
-    padding: '1.5rem',
-  },
-}));
+import useStyles from './styles/PdfViewerStyles';
 
 export default function PdfViewer({ pdf }) {
   const [numPages, setNumPages] = useState(null);
@@ -35,9 +13,7 @@ export default function PdfViewer({ pdf }) {
 
   useEffect(() => {
     setHeight(ref.current.clientHeight);
-  });
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+  }, [ref]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -48,7 +24,7 @@ export default function PdfViewer({ pdf }) {
   return (
     <div className={classes.root}>
       <div className={classes.pdfContainer} ref={ref}>
-        <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+        <Document file={pdf.local} onLoadSuccess={onDocumentLoadSuccess}>
           <Page
             pageNumber={pageNumber}
             renderAnnotationLayer={false}
@@ -64,6 +40,9 @@ export default function PdfViewer({ pdf }) {
           next={goToNextPage}
         />
       </nav>
+      <Link className={classes.downloadLink} href={pdf.dropbox} target='_blank'>
+        Download PDF
+      </Link>
     </div>
   );
 }

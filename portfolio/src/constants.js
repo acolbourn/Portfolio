@@ -43,7 +43,11 @@ const roboticsProjects = [
     featured: true,
     youtube: null,
     github: null,
-    pdf: 'MS Project Report - Alex Colbourn.pdf',
+    pdf: {
+      local: 'MS Project Report - Alex Colbourn.pdf',
+      dropbox:
+        'https://www.dropbox.com/s/vwcrto0gxdbpa7g/MS%20Project%20Report%20-%20Alex%20Colbourn.pdf?dl=0',
+    },
     webLink: null,
   },
   {
@@ -70,56 +74,52 @@ const roboticsProjects = [
 const webProjects = [
   {
     id: uuidv4(),
-    imgSrc: 'images/optimized/code1.jpg',
-    imgAlt: 'Retirement',
+    imgSrc: 'images/raw/retirement.jpg',
+    imgAlt: 'Retirement Website',
     title: 'Retirement Calculator',
-    description: 'A calculator built with javacript and jQuery.',
+    description:
+      'This site is a visual retirement calculator made with D3, Javascript, jQuery, Bootstrap 4, HTML, and CSS. This was my first big non-tutorial project to solidfy my understanding of the basics before moving onto React.  Use it to find the day when you no longer have to look at portfolio sites like this!',
+    featured: true,
     youtube: null,
-    github: null,
+    github: 'https://github.com/acolbourn/Retirement-Calculator',
     pdf: null,
-    webLink: null,
+    webLink: 'https://affectionate-bhabha-988fc4.netlify.app/',
   },
   {
     id: uuidv4(),
-    imgSrc: 'images/optimized/code1.jpg',
-    imgAlt: 'Coronavirus',
+    imgSrc: 'images/raw/covid.jpg',
+    imgAlt: 'Coronavirus Video Thumbnail',
     title: 'Covid-19 Hackathon',
-    description: 'Animations made with React',
+    description:
+      'This was my entry into a hackathon where I apply simple computer science algorithms to significantly boost Coronavirus testing capacity.  I ended up getting in contact with Dr. Desai (MSNBC contributor and Chief Medical Officer at Osmosis) who made a video featuring my idea and used my animations made with React/CSS!',
     youtube: [
       {
-        vidLink: 'uWXcr1ekypU',
+        vidLink: 'WZ6fewjkqo4',
         vidDesc: 'Hackathon 1',
       },
       {
-        vidLink: 'WZ6fewjkqo4',
+        vidLink: 'uWXcr1ekypU',
         vidDesc: 'Hackathon 2',
       },
     ],
+    featured: true,
     github: null,
     pdf: null,
     webLink: null,
   },
   {
     id: uuidv4(),
-    imgSrc: 'images/optimized/code1.jpg',
-    imgAlt: 'Colors',
+    imgSrc: 'images/raw/colors.jpg',
+    imgAlt: 'Color Picker Website',
     title: 'Color Picker',
-    description: 'A large udemy project.',
+    description:
+      'This was a guided project from the Udemy React Bootcamp.  Originally I wanted to reserve this page for personal projects only, but I decided to put this here because I think it is an accurate representation of my current skill level with React.  It covers React Router, JSS, Material-UI, responsive design, validation, etc...',
+    featured: false,
     youtube: null,
-    github: null,
+    github:
+      'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/colors-app',
     pdf: null,
-    webLink: null,
-  },
-  {
-    id: uuidv4(),
-    imgSrc: 'images/optimized/code1.jpg',
-    imgAlt: 'Drone',
-    title: 'Next Project',
-    description: 'Music project.',
-    youtube: null,
-    github: null,
-    pdf: null,
-    webLink: null,
+    webLink: 'https://vibrant-archimedes-c03d7f.netlify.app/',
   },
 ];
 

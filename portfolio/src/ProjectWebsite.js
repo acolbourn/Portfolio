@@ -28,7 +28,7 @@ export default function ProjectWebsite({ webLink, github }) {
                 <WebAssetIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary='Live Website' />
+            <ListItemText primary='View Site' />
           </ListItemLink>
           <ListItemSecondaryAction>
             <ListItemLink

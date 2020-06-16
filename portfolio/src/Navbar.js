@@ -42,10 +42,12 @@ export default function ButtonAppBar() {
           <div className={classes.navLinkText}>HOME</div>
         </IconButton>
       </NavLink>
-      <IconButton className={classes.icon} aria-label='About'>
-        <PersonOutlineOutlinedIcon className={classes.navLink} />
-        <div className={classes.navLinkText}>ABOUT</div>
-      </IconButton>
+      <NavLink to='/about' activeClassName={classes.activePage} exact>
+        <IconButton className={classes.icon} aria-label='About'>
+          <PersonOutlineOutlinedIcon className={classes.navLink} />
+          <div className={classes.navLinkText}>ABOUT</div>
+        </IconButton>
+      </NavLink>
       <NavLink to='/projects' activeClassName={classes.activePage} exact>
         <IconButton className={classes.icon} aria-label='Projects'>
           <WorkOutlineOutlinedIcon className={classes.navLink} />

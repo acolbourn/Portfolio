@@ -78,7 +78,7 @@ const webProjects = [
     imgAlt: 'Retirement Website',
     title: 'Retirement Calculator',
     description:
-      'This site is a visual retirement calculator made with D3, Javascript, jQuery, Bootstrap 4, HTML, and CSS. This was my first big non-tutorial project to solidfy my understanding of the basics before moving onto React.  Use it to find the day when you no longer have to look at portfolio sites like this!',
+      'A visual retirement calculator made with D3, Javascript, jQuery, Bootstrap 4, HTML, and CSS. This was my first big non-tutorial project to solidfy my understanding of the basics before moving onto React.  Use it to find the day when you no longer have to look at portfolio sites like this!',
     featured: true,
     youtube: null,
     github: 'https://github.com/acolbourn/Retirement-Calculator',
@@ -96,7 +96,7 @@ const webProjects = [
       {
         vidLink: 'WZ6fewjkqo4',
         vidDesc:
-          "Dr. Desai's great video explaining the core idea much better than I could.  It's almost entirely made using my animations and research I sent him.  He also connected me with the CEO of Lifebridge Health who are now trying to trial this idea at a chain of Baltimore hospitals!",
+          "Dr. Desai's great video explaining the core concept using my React animations and research I sent him.  He also connected me with the CEO of Lifebridge Health who are now looking into trialing this idea at a chain of Baltimore hospitals!",
       },
       {
         vidLink: 'uWXcr1ekypU',
@@ -115,7 +115,7 @@ const webProjects = [
     imgAlt: 'Color Picker Website',
     title: 'Color Picker',
     description:
-      'This was a guided project from the Udemy React Bootcamp.  Originally I wanted to reserve this page for personal projects only, but I decided to put this here because I think it is an accurate representation of my current skill level with React.  It covers React Router, JSS, Material-UI, responsive design, validation, etc...',
+      'This was a guided project from the Udemy React Bootcamp.  Even though this was a tutorial project, I decided to put it here because I think it is an accurate representation of my current skill level with React.  I feel very comfortable making projects of around this scope.  It covers React Router, JSS, Material-UI, responsive design, validation, etc...',
     featured: false,
     youtube: null,
     github:

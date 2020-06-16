@@ -11,6 +11,7 @@ import Home from './Home';
 import Classes from './Classes';
 import Contact from './Contact';
 import Projects from './Projects';
+import About from './About';
 import useStyles from './styles/AppStyles';
 import './styles/App.css';
 
@@ -44,6 +45,9 @@ function App() {
               </Route>
               <Route path='/projects'>
                 <Projects />
+              </Route>
+              <Route path='/about'>
+                <About />
               </Route>
               <Route path='/'>
                 <Home />

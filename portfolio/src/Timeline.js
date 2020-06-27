@@ -118,9 +118,9 @@ export default function Timeline() {
     },
   ];
   const classes = useStyles();
-  const startYear = 2011;
-  const endYear = 2021;
-  const years = calculateYears(startYear, endYear);
+  // const startYear = 2011;
+  // const endYear = 2021;
+  // const years = calculateYears(startYear, endYear);
   const timeline = generateTimeline(jobs);
 
   return (

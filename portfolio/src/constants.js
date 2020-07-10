@@ -309,7 +309,7 @@ const codingClasses = [
     link:
       'http://catalog.poly.edu/preview_course_nopop.php?catoid=9&coid=23963',
     projects: null,
-    featured: true,
+    featured: false,
     grade: 'A',
   },
   {

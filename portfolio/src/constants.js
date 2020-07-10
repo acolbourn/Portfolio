@@ -423,4 +423,55 @@ const codingClasses = [
   },
 ];
 
-export { roboticsProjects, webProjects, codingClasses };
+const jobs = [
+  {
+    job: 'Microfluidics Lab',
+    jobTitle: 'Junior Specialist',
+    startYear: '2011',
+    endYear: '2012',
+    color: '#08FDD8',
+    overlapTimeline: false,
+  },
+  {
+    job: 'Scifiniti',
+    jobTitle: 'Junior Mechanical Engineer',
+    startYear: '2012',
+    endYear: '2013.5',
+    color: '#DD0849',
+    overlapTimeline: false,
+  },
+  {
+    job: 'Sycal',
+    jobTitle: 'Controls Engineer',
+    startYear: '2013.5',
+    endYear: '2017.5',
+    color: '#08BCFD',
+    overlapTimeline: false,
+  },
+  {
+    job: 'Freelancer',
+    jobTitle: 'Product Design',
+    startYear: '2015.5',
+    endYear: '2017.5',
+    color: '#D26CD5',
+    overlapTimeline: true,
+  },
+  {
+    job: "Robotics Master's",
+    jobTitle: 'NYU Student',
+    startYear: '2017.5',
+    endYear: '2019.5',
+    color: '#96bb7c',
+    overlapTimeline: false,
+  },
+  {
+    job: 'Coding Bootcamps',
+    jobTitle: 'Udemy Student',
+    startYear: '2019.5',
+    endYear: 'current',
+    color: '#FFF600',
+    overlapTimeline: false,
+  },
+];
+
+export { roboticsProjects, webProjects, codingClasses, jobs };

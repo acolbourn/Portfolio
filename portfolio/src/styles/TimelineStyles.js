@@ -1,0 +1,126 @@
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    width: '100%',
+    height: '200px',
+    flexWrap: 'nowrap',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    position: 'relative',
+    marginBottom: '6.5rem',
+  },
+  timelineBox: {
+    display: 'flex',
+    width: '90%',
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+  },
+  jobBoxRoot: {
+    width: '90%',
+    display: 'flex',
+    flexDirection: 'row',
+    position: 'absolute',
+    top: '0',
+    zIndex: '100',
+  },
+  overlayBoxRoot: {
+    width: '90%',
+    display: 'flex',
+    flexDirection: 'row',
+    position: 'absolute',
+    top: '0',
+  },
+  jobBox: {
+    width: '100%',
+    height: '185px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    position: 'relative',
+  },
+  overlayJobBox: {
+    width: '100%',
+    height: '200px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    position: 'relative',
+  },
+  jobLine: {
+    height: '5px',
+  },
+  jobText: {
+    textAlign: 'center',
+    margin: '0 auto 10px',
+    padding: '2px',
+    [theme.breakpoints.down('xs')]: {
+      writingMode: 'vertical-rl',
+      transform: 'rotate(180deg)',
+      textAlign: 'left',
+    },
+  },
+  jobTitleBox: {
+    zIndex: '2000',
+    textAlign: 'center',
+    height: '200px',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '100px',
+    top: '0px',
+    backgroundColor: 'transparent',
+    opacity: '0',
+    transition: 'opacity 0.5s',
+    '&:hover': {
+      opacity: '0.95',
+    },
+  },
+  jobTitle: {
+    textAlign: 'center',
+    width: '100px',
+    marginTop: '40px',
+    padding: '3px',
+    borderRadius: '5px',
+    backgroundColor: '#373737',
+  },
+  yearBox: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  line: {
+    height: '1px',
+    width: '100%',
+    backgroundColor: '#444',
+  },
+  tick: {
+    height: '15px',
+    width: '2px',
+    backgroundColor: '#444',
+    position: 'absolute',
+  },
+  year: {
+    color: '#444',
+    position: 'absolute',
+    top: '10px',
+    left: '5px',
+    [theme.breakpoints.down('xs')]: {
+      transform: 'rotate(-90deg)',
+      top: '20px',
+      left: '-15px',
+    },
+  },
+  overlayBackground: {
+    height: '75px',
+    backgroundColor: '#373737',
+  },
+}));
+
+export default useStyles;

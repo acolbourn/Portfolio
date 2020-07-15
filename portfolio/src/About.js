@@ -8,17 +8,31 @@ import BackgroundTag from './BackgroundTag';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    justifyContent: 'center',
     height: '100%',
     width: '100%',
     position: 'relative',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'center',
+    },
   },
-  pageContainer: {
+  aboutContainer: {
+    flexGrow: 2,
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    // maxWidth: '1200px',
+    maxWidth: '960px',
+  },
+  sideContainer: {
+    flexGrow: 1,
+    backgroundColor: 'grey',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  DELETETHIS: {
+    width: '100%',
   },
   contentContainer: {
     width: '100%',
@@ -29,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     width: '90%',
-    // maxWidth: '80%',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -45,13 +58,19 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       marginTop: '20px',
       marginLeft: 0,
-      fontSize: '40px',
+      fontSize: '44px',
+    },
+    '@media (max-height: 800px)': {
+      fontSize: '44px',
     },
   },
   textArea: {
     marginTop: '50px',
     marginLeft: '15px',
     [theme.breakpoints.down('xs')]: {
+      margin: '10px 0',
+    },
+    '@media (max-height: 800px)': {
       margin: '10px 0',
     },
   },
@@ -61,10 +80,11 @@ export default function About() {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <div className={classes.root}>
-      <div className={classes.pageContainer}>
+      <div className={classes.aboutContainer}>
         <BackgroundTag tagType='header' isMobile={isMobile} />
         <div className={classes.contentContainer}>
           <div className={classes.content}>
@@ -97,6 +117,15 @@ export default function About() {
         </div>
         <BackgroundTag tagType='footer' isMobile={isMobile} />
       </div>
+      {isDesktop && (
+        <div className={classes.sideContainer}>
+          <img
+            className={classes.DELETETHIS}
+            src='./images/optimized/c3p0.jpg'
+            alt='c3p0'
+          />
+        </div>
+      )}
     </div>
   );
 }

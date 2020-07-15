@@ -1,10 +1,5 @@
 import React from 'react';
-import AnimatedText from './AnimatedText';
 
 export default function Home() {
-  return (
-    <div>
-      <AnimatedText />
-    </div>
-  );
+  return <div style={{ fontSize: '400px' }}>@</div>;
 }

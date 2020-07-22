@@ -73,10 +73,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#181818',
   },
   logo: {
-    backgroundColor: '#070707',
-    height: '64px',
-    position: 'absolute',
-    left: '0',
+    marginLeft: '-10px',
+    width: '45px',
   },
   activePage: {
     '& .MuiSvgIcon-root': {

@@ -15,6 +15,7 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import NavDrawer from './NavDrawer';
 import useStyles from './styles/NavbarStyles';
+import Logo from './Logo';
 
 export default function ButtonAppBar() {
   const classes = useStyles();
@@ -58,16 +59,16 @@ export default function ButtonAppBar() {
         <CodeOutlinedIcon className={classes.navLink} />
         <div className={classes.navLinkText}>CODE</div>
       </IconButton> */}
-      <NavLink to='/contact' activeClassName={classes.activePage} exact>
-        <IconButton className={classes.icon} aria-label='Contact'>
-          <EmailOutlinedIcon className={classes.navLink} />
-          <div className={classes.navLinkText}>CONTACT</div>
-        </IconButton>
-      </NavLink>
       <NavLink to='/classes' activeClassName={classes.activePage} exact>
         <IconButton className={classes.icon} aria-label='Classes'>
           <SchoolIcon className={classes.navLink} />
           <div className={classes.navLinkText}>CLASSES</div>
+        </IconButton>
+      </NavLink>
+      <NavLink to='/contact' activeClassName={classes.activePage} exact>
+        <IconButton className={classes.icon} aria-label='Contact'>
+          <EmailOutlinedIcon className={classes.navLink} />
+          <div className={classes.navLinkText}>CONTACT</div>
         </IconButton>
       </NavLink>
     </div>
@@ -109,7 +110,7 @@ export default function ButtonAppBar() {
             </IconButton>
           ) : (
             <div className={classes.logo}>
-              <h1>AC</h1>
+              <Logo />
             </div>
           )}
 

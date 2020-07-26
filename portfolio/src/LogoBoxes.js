@@ -1,45 +1,17 @@
 import * as THREE from 'three';
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { useFrame } from 'react-three-fiber';
+import { useFrame, useUpdate } from 'react-three-fiber';
 import niceColors from 'nice-color-palettes';
 import logoPoints from './logoPoints.js';
 
+const depth = 1;
+const numOfInstances = logoPoints.length * depth;
+const boxSize = 1;
 const tempObject = new THREE.Object3D();
 const tempColor = new THREE.Color();
-const colors = new Array(1000)
+const colors = new Array(numOfInstances)
   .fill()
   .map(() => niceColors[17][Math.floor(Math.random() * 5)]);
-
-// const logoPoints = [
-//   [4385, 4140],
-//   [4187, 4114],
-//   [3992, 4069],
-//   [3803, 4005],
-//   [3620, 3923],
-//   [3447, 3823],
-//   [3285, 3706],
-//   [3135, 3574],
-//   [2999, 3427],
-//   [2878, 3268],
-//   [2773, 3098],
-//   [2738, 2921],
-// ];
-
-const scaleDivider = 150;
-const logoPointsScaled = logoPoints.map((x) => [
-  x[0] / scaleDivider,
-  x[1] / scaleDivider,
-]);
-console.log(logoPointsScaled);
-
-const positions = [
-  [0, 0],
-  [0, 1],
-  [0, 2],
-];
-const depth = 2;
-const numOfInstances = logoPointsScaled.length * depth;
-const boxSize = 1;
 
 export default function LogoBoxes() {
   const [hovered, set] = useState();
@@ -53,7 +25,15 @@ export default function LogoBoxes() {
     []
   );
 
-  const ref = useRef();
+  // const ref = useRef();
+  const ref = useUpdate(
+    (mesh) => {
+      // geometry.computeBoundingSphere();
+      console.log(mesh.geometry);
+      mesh.geometry.computeBoundingSphere();
+    },
+    [] // execute only if these properties change
+  );
   const previous = useRef();
   useEffect(() => void (previous.current = hovered), [hovered]);
 
@@ -62,11 +42,18 @@ export default function LogoBoxes() {
     // ref.current.rotation.x = Math.sin(time / 4);
     // ref.current.rotation.y = Math.sin(time / 2);
     ref.current.rotation.y += 0.01;
+
+    // ref.current.geometry.computeBoundingBox();
+    // ref.current.geometry.boundingBox.getCenter(center);
+    // ref.current.geometry.center();
+    // ref.current.position.copy(center);
+    // console.log(ref.current);
+
     let i = 0;
     // for (let x = 0; x < 10; x++)
     //   for (let y = 0; y < 10; y++)
     //     for (let z = 0; z < 10; z++)
-    logoPointsScaled.forEach((position) => {
+    logoPoints.forEach((position) => {
       const x = position[0];
       const y = position[1];
       for (let z = 0; z < depth; z++) {
@@ -99,6 +86,8 @@ export default function LogoBoxes() {
       args={[null, null, numOfInstances]}
       onPointerMove={(e) => set(e.instanceId)}
       onPointerOut={(e) => set(undefined)}
+      position={[0, 0, 0]}
+      rotation={[0, 0, Math.PI]}
     >
       <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
         <instancedBufferAttribute

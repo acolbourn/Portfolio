@@ -1,6 +1,7 @@
 import React from 'react';
 // import Logo from './Logo';
 import ThreeViewer from './ThreeViewer';
+// import Cannon from './Cannon.js';
 
 export default function Home() {
   return (

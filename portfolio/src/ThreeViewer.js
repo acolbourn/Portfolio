@@ -19,14 +19,16 @@ export default function ThreeViewer() {
     //   <BoxTest position={[1.2, 0, 0]} /> */}
     // </Canvas>
 
+    // Spinning boxes
     <Canvas
       gl={{ antialias: false, alpha: false }}
-      camera={{ position: [0, 0, 60], near: 5, far: 200 }}
+      camera={{ position: [0, 0, 50], near: 5, far: 200 }}
       onCreated={({ gl }) => gl.setClearColor('grey')}
     >
       <ambientLight />
       <pointLight position={[150, 150, 150]} intensity={0.55} />
       <Suspense fallback={null}>
+        {/* <Logo3d /> */}
         <LogoBoxes />
       </Suspense>
 

@@ -11,12 +11,12 @@ export default function Box(props) {
   // Rotate mesh every frame, this is outside of React without overhead
   useFrame(() => {
     if (hovered && !active) {
-      mesh.current.rotation.z += 0.01;
-      mesh.current.rotation.x += 0.01;
+      // mesh.current.rotation.z += 0.01;
+      // mesh.current.rotation.x += 0.01;
     }
     if (hovered && active) {
-      mesh.current.rotation.y += 0.02;
-      mesh.current.rotation.x += 0.06;
+      // mesh.current.rotation.y += 0.02;
+      // mesh.current.rotation.x += 0.06;
     }
   });
 

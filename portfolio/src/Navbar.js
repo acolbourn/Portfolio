@@ -43,12 +43,6 @@ export default function ButtonAppBar() {
           <div className={classes.navLinkText}>HOME</div>
         </IconButton>
       </NavLink>
-      <NavLink to='/about' activeClassName={classes.activePage} exact>
-        <IconButton className={classes.icon} aria-label='About'>
-          <PersonOutlineOutlinedIcon className={classes.navLink} />
-          <div className={classes.navLinkText}>ABOUT</div>
-        </IconButton>
-      </NavLink>
       <NavLink to='/projects' activeClassName={classes.activePage} exact>
         <IconButton className={classes.icon} aria-label='Projects'>
           <WorkOutlineOutlinedIcon className={classes.navLink} />
@@ -63,6 +57,12 @@ export default function ButtonAppBar() {
         <IconButton className={classes.icon} aria-label='Classes'>
           <SchoolIcon className={classes.navLink} />
           <div className={classes.navLinkText}>CLASSES</div>
+        </IconButton>
+      </NavLink>
+      <NavLink to='/about' activeClassName={classes.activePage} exact>
+        <IconButton className={classes.icon} aria-label='About'>
+          <PersonOutlineOutlinedIcon className={classes.navLink} />
+          <div className={classes.navLinkText}>ABOUT</div>
         </IconButton>
       </NavLink>
       <NavLink to='/contact' activeClassName={classes.activePage} exact>

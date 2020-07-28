@@ -1,19 +1,23 @@
 import * as THREE from 'three';
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { useFrame, useUpdate } from 'react-three-fiber';
-import niceColors from 'nice-color-palettes';
+import { useFrame } from 'react-three-fiber';
 import logoPoints from './logoPoints.js';
 
-const depth = 1;
+const depth = 5;
 const numOfInstances = logoPoints.length * depth;
 const boxSize = 1;
+const groupPosZ = (depth * boxSize) / 2 - boxSize / 2;
+const groupPosXY = 0;
 const tempObject = new THREE.Object3D();
 const tempColor = new THREE.Color();
-const colors = new Array(numOfInstances)
-  .fill()
-  .map(() => niceColors[17][Math.floor(Math.random() * 5)]);
+// const colorPalette = ['#99b898', '#fecea8', '#ff847c', '#e84a5f', '#2a363b'];
+// const colors = new Array(numOfInstances)
+//   .fill()
+//   .map(() => colorPalette[Math.floor(Math.random() * 5)]);
+const colors = new Array(numOfInstances).fill().map(() => '#444444');
+const spherePoints = getRandomSpherePoints(numOfInstances);
 
-export default function LogoBoxes() {
+export default function LogoBoxes({ mouse }) {
   const [hovered, set] = useState();
   const colorArray = useMemo(
     () =>
@@ -25,15 +29,7 @@ export default function LogoBoxes() {
     []
   );
 
-  // const ref = useRef();
-  const ref = useUpdate(
-    (mesh) => {
-      // geometry.computeBoundingSphere();
-      console.log(mesh.geometry);
-      mesh.geometry.computeBoundingSphere();
-    },
-    [] // execute only if these properties change
-  );
+  const ref = useRef();
   const previous = useRef();
   useEffect(() => void (previous.current = hovered), [hovered]);
 
@@ -43,22 +39,23 @@ export default function LogoBoxes() {
     // ref.current.rotation.y = Math.sin(time / 2);
     ref.current.rotation.y += 0.01;
 
-    // ref.current.geometry.computeBoundingBox();
-    // ref.current.geometry.boundingBox.getCenter(center);
-    // ref.current.geometry.center();
-    // ref.current.position.copy(center);
-    // console.log(ref.current);
-
     let i = 0;
     // for (let x = 0; x < 10; x++)
     //   for (let y = 0; y < 10; y++)
     //     for (let z = 0; z < 10; z++)
-    logoPoints.forEach((position) => {
+    logoPoints.forEach((position, idx) => {
+      const sphereX = spherePoints[idx].x * mouse.current[0];
+      const sphereY = spherePoints[idx].y * mouse.current[0];
+      const sphereZ = spherePoints[idx].z * mouse.current[0];
       const x = position[0];
       const y = position[1];
       for (let z = 0; z < depth; z++) {
         const id = i++;
-        tempObject.position.set(5 - x, 5 - y, 5 - z);
+        tempObject.position.set(
+          groupPosXY - x - sphereX,
+          groupPosXY - y - sphereY,
+          groupPosZ - z - sphereZ
+        );
         tempObject.rotation.y =
           Math.sin(x / 4 + time) +
           Math.sin(y / 4 + time) +
@@ -98,4 +95,24 @@ export default function LogoBoxes() {
       <meshPhongMaterial attach='material' vertexColors={THREE.VertexColors} />
     </instancedMesh>
   );
+}
+
+function getRandomSpherePoints(count) {
+  let points = [];
+  for (let i = 0; i < count; i++) {
+    let u = Math.random();
+    let v = Math.random();
+    let theta = u * 2.0 * Math.PI;
+    let phi = Math.acos(2.0 * v - 1.0);
+    let r = Math.cbrt(Math.random());
+    let sinTheta = Math.sin(theta);
+    let cosTheta = Math.cos(theta);
+    let sinPhi = Math.sin(phi);
+    let cosPhi = Math.cos(phi);
+    let x = r * sinPhi * cosTheta;
+    let y = r * sinPhi * sinTheta;
+    let z = r * cosPhi;
+    points.push({ x: x, y: y, z: z });
+  }
+  return points;
 }

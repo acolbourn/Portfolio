@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame } from 'react-three-fiber';
 import logoPoints from './logoPoints.js';
+import { getRandomSpherePoints, scaleMouse } from './LogoBoxesHelpers';
 
 const depth = 5;
 const numOfInstances = logoPoints.length * depth;
@@ -16,6 +17,19 @@ const tempColor = new THREE.Color();
 //   .map(() => colorPalette[Math.floor(Math.random() * 5)]);
 const colors = new Array(numOfInstances).fill().map(() => '#444444');
 const spherePoints = getRandomSpherePoints(numOfInstances);
+let mouseX = 0;
+let mouseY = 0;
+let mouseVelX = 0;
+let mouseVelY = 0;
+const animateSpeed = 0.02;
+
+// Create array with xy points copied to each depth in z direction
+const logoPoints3d = [];
+logoPoints.forEach((point) => {
+  for (let z = 0; z < depth; z++) {
+    logoPoints3d.push([point[0], point[1], z]);
+  }
+});
 
 export default function LogoBoxes({ mouse }) {
   const [hovered, set] = useState();
@@ -32,6 +46,12 @@ export default function LogoBoxes({ mouse }) {
   const ref = useRef();
   const previous = useRef();
   useEffect(() => void (previous.current = hovered), [hovered]);
+  // Load with boxes spaced out and animate in after 3s
+  // useEffect(() => {
+  //   mouse.current[0] = 400;
+  //   console.log('here');
+  //   setTimeout(() => (mouse.current[0] = 0), 2000);
+  // }, []);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -40,39 +60,45 @@ export default function LogoBoxes({ mouse }) {
     ref.current.rotation.y += 0.01;
 
     let i = 0;
-    // for (let x = 0; x < 10; x++)
-    //   for (let y = 0; y < 10; y++)
-    //     for (let z = 0; z < 10; z++)
-    logoPoints.forEach((position, idx) => {
-      const sphereX = spherePoints[idx].x * mouse.current[0];
-      const sphereY = spherePoints[idx].y * mouse.current[0];
-      const sphereZ = spherePoints[idx].z * mouse.current[0];
+
+    // Scale mouse positions and create velocities for animations
+    mouseX = scaleMouse(mouse.current[0], window.innerWidth);
+    mouseY = scaleMouse(mouse.current[1], window.innerHeight);
+    mouseVelX += (mouseX - mouseVelX) * animateSpeed;
+    mouseVelY += (-mouseY - mouseVelY) * animateSpeed;
+
+    // Update each boxes position, rotation, etc...
+    logoPoints3d.forEach((position, idx) => {
+      const sphereX = spherePoints[idx].x * mouseVelX;
+      const sphereY = spherePoints[idx].y * mouseVelX;
+      const sphereZ = spherePoints[idx].z * mouseVelX;
       const x = position[0];
       const y = position[1];
-      for (let z = 0; z < depth; z++) {
-        const id = i++;
-        tempObject.position.set(
-          groupPosXY - x - sphereX,
-          groupPosXY - y - sphereY,
-          groupPosZ - z - sphereZ
-        );
-        tempObject.rotation.y =
-          Math.sin(x / 4 + time) +
-          Math.sin(y / 4 + time) +
-          Math.sin(z / 4 + time);
-        tempObject.rotation.z = tempObject.rotation.y * 2;
-        if (hovered !== previous.current) {
-          tempColor
-            .set(id === hovered ? 'white' : colors[id])
-            .toArray(colorArray, id * 3);
-          ref.current.geometry.attributes.color.needsUpdate = true;
-        }
-        const scale = id === hovered ? 2 : 1;
-        tempObject.scale.set(scale, scale, scale);
+      const z = position[2];
 
-        tempObject.updateMatrix();
-        ref.current.setMatrixAt(id, tempObject.matrix);
+      const id = i++;
+
+      tempObject.position.set(
+        groupPosXY - x - sphereX,
+        groupPosXY - y - sphereY,
+        groupPosZ - z - sphereZ
+      );
+      tempObject.rotation.y =
+        Math.sin(x / 4 + time) +
+        Math.sin(y / 4 + time) +
+        Math.sin(z / 4 + time);
+      tempObject.rotation.z = tempObject.rotation.y * 2;
+      if (hovered !== previous.current) {
+        tempColor
+          .set(id === hovered ? 'white' : colors[id])
+          .toArray(colorArray, id * 3);
+        ref.current.geometry.attributes.color.needsUpdate = true;
       }
+      const scale = id === hovered ? 1 : 1;
+      tempObject.scale.set(scale, scale, scale);
+
+      tempObject.updateMatrix();
+      ref.current.setMatrixAt(id, tempObject.matrix);
     });
     ref.current.instanceMatrix.needsUpdate = true;
   });
@@ -95,24 +121,4 @@ export default function LogoBoxes({ mouse }) {
       <meshPhongMaterial attach='material' vertexColors={THREE.VertexColors} />
     </instancedMesh>
   );
-}
-
-function getRandomSpherePoints(count) {
-  let points = [];
-  for (let i = 0; i < count; i++) {
-    let u = Math.random();
-    let v = Math.random();
-    let theta = u * 2.0 * Math.PI;
-    let phi = Math.acos(2.0 * v - 1.0);
-    let r = Math.cbrt(Math.random());
-    let sinTheta = Math.sin(theta);
-    let cosTheta = Math.cos(theta);
-    let sinPhi = Math.sin(phi);
-    let cosPhi = Math.cos(phi);
-    let x = r * sinPhi * cosTheta;
-    let y = r * sinPhi * sinTheta;
-    let z = r * cosPhi;
-    points.push({ x: x, y: y, z: z });
-  }
-  return points;
 }

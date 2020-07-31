@@ -1,25 +1,50 @@
-import React, { Suspense, useRef, useCallback } from 'react';
+import React, {
+  Suspense,
+  useRef,
+  useCallback,
+  useState,
+  useEffect,
+} from 'react';
+// import { useTheme } from '@material-ui/core/styles';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Canvas } from 'react-three-fiber';
-import { Text } from 'troika-three-text';
 // import Logo3d from './Logo3d.js';
 import LogoBoxes from './LogoBoxes.js';
 // import LogoEffects from './LogoEffects.js';
 // import BoxTest from './BoxTest.js';
 // import { OrbitControls } from 'drei';
-import Text3d from './Text3d';
-
-const opts = {
-  font: 'Philosopher',
-  fontSize: 10,
-  color: '#99ccff',
-  maxWidth: 300,
-  lineHeight: 1,
-  letterSpacing: 0,
-  textAlign: 'justify',
-  materialType: 'MeshPhongMaterial',
-};
+// import Text3d from './Text3d';
+import TextGeometry from './TextGeometry';
+import useWindowSize from './hooks/useWindowSize';
 
 export default function ThreeViewer() {
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [width, height] = useWindowSize();
+  console.log(width, height);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    // Calculate scale based on window width using y=mx + b
+    const scaleMax = 1;
+    const scaleMin = 0.65;
+    const winMax = 1900;
+    const winMin = 300;
+    const m = (scaleMax - scaleMin) / (winMax - winMin);
+    const b = scaleMax - m * winMax;
+    setScale(m * window.innerWidth + b);
+    if (scale > scaleMax) {
+      setScale(scaleMax);
+    } else if (scale < scaleMin) {
+      setScale(scaleMin);
+    }
+    console.log('scale: ', scale);
+  }, [width, scale]);
+
+  // let scale = 1;
+  // if (isMobile) {
+  //   scale = 0.65;
+  // }
   const mouse = useRef([0, 0]);
   const onMouseMove = useCallback(
     ({ clientX: x, clientY: y }) =>
@@ -55,10 +80,31 @@ export default function ThreeViewer() {
     >
       <ambientLight />
       <pointLight position={[150, 150, 150]} intensity={0.55} />
-      <Suspense fallback={null}>
-        {/* <Logo3d /> */}
-        <LogoBoxes mouse={mouse} />
-      </Suspense>
+      <group scale={[scale, scale, scale]}>
+        <Suspense fallback={null}>
+          {/* <Logo3d /> */}
+          <LogoBoxes
+            meshPosition={[0, -2, 0]}
+            meshScale={[1, 1, 1]}
+            mouse={mouse}
+          />
+        </Suspense>
+
+        <Suspense fallback={null}>
+          <TextGeometry
+            text={'Alex Colbourn'}
+            position={[0, 25, 0]}
+            fontSize={4.8}
+          />
+        </Suspense>
+        <Suspense fallback={null}>
+          <TextGeometry
+            text={'Web Developer / Robotics Engineer'}
+            position={[0, 19.5, 0]}
+            fontSize={1.7}
+          />
+        </Suspense>
+      </group>
       {/* <LogoEffects /> */}
       {/* <axesHelper args={50} /> */}
       {/* <OrbitControls /> */}
@@ -69,22 +115,6 @@ export default function ThreeViewer() {
           children='Alex Colbourn'
         />
       </Suspense> */}
-
-      <text
-        position={[0, 20, 0]}
-        rotation={[0, 0, 0, 0]}
-        {...opts}
-        text={'Alex Colbourn'}
-        font={
-          'https://fonts.gstatic.com/s/philosopher/v9/vEFV2_5QCwIS4_Dhez5jcWBuT0s.woff'
-        }
-        anchorX='center'
-        anchorY='middle'
-      >
-        {opts.materialType === 'MeshPhongMaterial' ? (
-          <meshPhongMaterial attach='material' color={opts.color} />
-        ) : null}
-      </text>
     </Canvas>
   );
 }

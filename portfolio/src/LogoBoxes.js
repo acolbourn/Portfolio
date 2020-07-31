@@ -31,7 +31,7 @@ logoPoints.forEach((point) => {
   }
 });
 
-export default function LogoBoxes({ mouse }) {
+export default function LogoBoxes({ mouse, meshPosition, meshScale }) {
   const [hovered, set] = useState();
   const colorArray = useMemo(
     () =>
@@ -88,12 +88,12 @@ export default function LogoBoxes({ mouse }) {
         Math.sin(y / 4 + time) +
         Math.sin(z / 4 + time);
       tempObject.rotation.z = tempObject.rotation.y * 2;
-      if (hovered !== previous.current) {
-        tempColor
-          .set(id === hovered ? 'white' : colors[id])
-          .toArray(colorArray, id * 3);
-        ref.current.geometry.attributes.color.needsUpdate = true;
-      }
+      // if (hovered !== previous.current) {
+      //   tempColor
+      //     .set(id === hovered ? 'white' : colors[id])
+      //     .toArray(colorArray, id * 3);
+      //   ref.current.geometry.attributes.color.needsUpdate = true;
+      // }
       const scale = id === hovered ? 1 : 1;
       tempObject.scale.set(scale, scale, scale);
 
@@ -109,8 +109,9 @@ export default function LogoBoxes({ mouse }) {
       args={[null, null, numOfInstances]}
       onPointerMove={(e) => set(e.instanceId)}
       onPointerOut={(e) => set(undefined)}
-      position={[0, 0, 0]}
+      position={meshPosition}
       rotation={[0, 0, Math.PI]}
+      scale={meshScale}
     >
       <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
         <instancedBufferAttribute

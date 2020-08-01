@@ -15,36 +15,69 @@ import LogoBoxes from './LogoBoxes.js';
 // import { OrbitControls } from 'drei';
 // import Text3d from './Text3d';
 import TextGeometry from './TextGeometry';
-import useWindowSize from './hooks/useWindowSize';
+// import useWindowSize from './hooks/useWindowSize';
+import useWidth from './hooks/useWidth';
 
 export default function ThreeViewer() {
   // const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [width, height] = useWindowSize();
-  console.log(width, height);
-  const [scale, setScale] = useState(1);
+  // const [width, height] = useWindowSize();
+
+  const [scale, setScale] = useState(0.9);
+  const [positions, setPositions] = useState({
+    logo: [0, -4, 0],
+    name: [0, 23.5, 0],
+    jobTitles: [0, 18, 0],
+  });
+  const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
+  const screenWidth = useWidth();
+  console.log(screenWidth);
 
   useEffect(() => {
-    // Calculate scale based on window width using y=mx + b
-    const scaleMax = 1;
-    const scaleMin = 0.65;
-    const winMax = 1900;
-    const winMin = 300;
-    const m = (scaleMax - scaleMin) / (winMax - winMin);
-    const b = scaleMax - m * winMax;
-    setScale(m * window.innerWidth + b);
-    if (scale > scaleMax) {
-      setScale(scaleMax);
-    } else if (scale < scaleMin) {
-      setScale(scaleMin);
+    console.log('useEffect: ', screenWidth);
+    const aspect = window.innerWidth / window.innerHeight;
+    console.log(aspect);
+    switch (screenWidth) {
+      case 'xs':
+        setPositions({
+          logo: [0, -6, 0],
+          name: [0, 21, 0],
+          jobTitles: [0, 16, 0],
+        });
+        aspect < 0.52 ? setScale(0.55) : setScale(0.65);
+        break;
+      case 'sm':
+        setPositions({
+          logo: [0, -6, 0],
+          name: [0, 21, 0],
+          jobTitles: [0, 16, 0],
+        });
+        setScale(0.75);
+        break;
+      // case 'md':
+      //   setScale(0.85);
+      //   setPositions({
+      //     logo: [0, 0, 0],
+      //     name: [0, 27.5, 0],
+      //     jobTitles: [0, 22, 0],
+      //   });
+      //   break;
+      case 'md':
+      case 'lg':
+      case 'xl':
+        setPositions({
+          logo: [0, 0, 0],
+          name: [0, 24.5, 0],
+          jobTitles: [0, 20.2, 0],
+        });
+        setFontSizes({ name: 3.8, titles: 1.2 });
+        setScale(0.9);
+        break;
+      default:
+        setScale(0.7);
     }
-    console.log('scale: ', scale);
-  }, [width, scale]);
+  }, [screenWidth]);
 
-  // let scale = 1;
-  // if (isMobile) {
-  //   scale = 0.65;
-  // }
   const mouse = useRef([0, 0]);
   const onMouseMove = useCallback(
     ({ clientX: x, clientY: y }) =>
@@ -84,7 +117,7 @@ export default function ThreeViewer() {
         <Suspense fallback={null}>
           {/* <Logo3d /> */}
           <LogoBoxes
-            meshPosition={[0, -2, 0]}
+            meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
             mouse={mouse}
           />
@@ -93,15 +126,15 @@ export default function ThreeViewer() {
         <Suspense fallback={null}>
           <TextGeometry
             text={'Alex Colbourn'}
-            position={[0, 25, 0]}
-            fontSize={4.8}
+            position={positions.name}
+            fontSize={fontSizes.name}
           />
         </Suspense>
         <Suspense fallback={null}>
           <TextGeometry
             text={'Web Developer / Robotics Engineer'}
-            position={[0, 19.5, 0]}
-            fontSize={1.7}
+            position={positions.jobTitles}
+            fontSize={fontSizes.titles}
           />
         </Suspense>
       </group>
@@ -118,3 +151,20 @@ export default function ThreeViewer() {
     </Canvas>
   );
 }
+
+// useEffect(() => {
+//   // Calculate scale based on window width using y=mx + b
+//   const scaleMax = 1;
+//   const scaleMin = 0.65;
+//   const winMax = 1900;
+//   const winMin = 300;
+//   const m = (scaleMax - scaleMin) / (winMax - winMin);
+//   const b = scaleMax - m * winMax;
+//   setScale(m * window.innerWidth + b);
+//   if (scale > scaleMax) {
+//     setScale(scaleMax);
+//   } else if (scale < scaleMin) {
+//     setScale(scaleMin);
+//   }
+//   console.log('scale: ', scale);
+// }, [width, scale]);

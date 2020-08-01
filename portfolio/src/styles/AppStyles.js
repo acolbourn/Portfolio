@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
   body: {
     // display: 'flex',
     flex: 1,
+    // Needed for home page canvas to let the size shrink w/out overflow
+    // minWidth: 0,
+    // minHeight: 0,
   },
 }));
 

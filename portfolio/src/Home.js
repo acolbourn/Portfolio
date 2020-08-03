@@ -1,40 +1,49 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import HomeFallback from './HomeFallback';
+import WEBGL from './3dAnimations/webGLCheck';
 
 // import Logo from './Logo';
 import ThreeViewer from './ThreeViewer';
 // import Cannon from './Cannon.js';
 // import SwarmViewer from './SwarmViewer';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100%',
+    // Calcs create a fixed size so canvas is forced to shrink when window is resized
+    height: 'calc(100vh - 64px)',
+    [theme.breakpoints.down('xs')]: {
+      height: 'calc(100vh - 56px)',
+    },
     width: '100%',
     margin: 0,
     padding: 0,
-    minWidth: '0 !important',
-    minHeight: '0 !important',
     display: 'flex',
-    // flexDirection: 'column',
-    // overflow: 'hidden',
+    overflow: 'hidden',
   },
   threeViewport: {
     flex: '1 1 auto',
-    // Needed for home page canvas to let the size shrink w/out overflow, must be updated in page body as well
-    minWidth: '0 !important',
-    minHeight: '0 !important',
+    // Force canvas to not exceed page size and allow its size to go to 0
+    minWidth: '0',
+    minHeight: '0',
     overflow: 'hidden',
   },
-});
+}));
 
 export default function Home() {
   const classes = useStyles();
-  return (
-    <div className={classes.root}>
+  let content;
+
+  // Check for webGL compatibility, then render 3d or 2d version
+  if (WEBGL.isWebGLAvailable()) {
+    content = (
       <div className={classes.threeViewport}>
         <ThreeViewer />
-        {/* <SwarmViewer /> */}
       </div>
-    </div>
-  );
+    );
+  } else {
+    content = <HomeFallback />;
+  }
+
+  return <div className={classes.root}>{content}</div>;
 }

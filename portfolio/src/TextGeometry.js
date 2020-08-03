@@ -2,19 +2,11 @@ import React from 'react';
 import { extend } from 'react-three-fiber';
 import { Text } from 'troika-three-text';
 
-const fonts = {
-  Syncopate:
-    'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff',
-  Montserrat:
-    '/fontsKeep/montserrat-v14-latin/montserrat-v14-latin-regular.woff',
-};
-
 // Register Text as a react-three-fiber element
 extend({ Text });
 
 export default function TextGeometry({ text, position, fontSize }) {
   const opts = {
-    font: 'Syncopate',
     fontSize: fontSize,
     color: '#99ccff',
     maxWidth: 300,
@@ -29,7 +21,9 @@ export default function TextGeometry({ text, position, fontSize }) {
       rotation={[0, 0, 0]}
       {...opts}
       text={text}
-      font={fonts[opts.font]}
+      font={
+        'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff'
+      }
       anchorX='center'
       anchorY='middle'
     >

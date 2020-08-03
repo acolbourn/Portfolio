@@ -6,13 +6,13 @@ const useStyles = makeStyles((theme) => ({
   },
   appbar: {
     backgroundColor: '#181818',
-    color: '#444',
+    color: theme.colors.secondary,
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   icon: {
-    color: '#444',
+    color: theme.colors.secondary,
     transition: 'color 0.2s',
     '& svg': {
       opacity: '1',
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
       transition: 'opacity 0.2s',
     },
     '&:hover': {
-      color: '#08fdd8',
+      color: theme.colors.primary,
       '& svg': {
         opacity: '0',
       },
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
   activePage: {
     '& .MuiSvgIcon-root': {
-      color: '#08fdd8',
+      color: theme.colors.primary,
     },
   },
 }));

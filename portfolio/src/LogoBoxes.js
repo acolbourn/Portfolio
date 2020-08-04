@@ -3,6 +3,7 @@ import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame } from 'react-three-fiber';
 import logoPoints from './logoPoints.js';
 import { getRandomSpherePoints, scaleMouse } from './LogoBoxesHelpers';
+import Color from 'color';
 
 const depth = 5;
 const numOfInstances = logoPoints.length * depth;
@@ -11,11 +12,28 @@ const groupPosZ = (depth * boxSize) / 2 - boxSize / 2;
 const groupPosXY = 0;
 const tempObject = new THREE.Object3D();
 const tempColor = new THREE.Color();
-// const colorPalette = ['#99b898', '#fecea8', '#ff847c', '#e84a5f', '#2a363b'];
+const colorPalette = ['#99b898', '#fecea8', '#ff847c', '#e84a5f', '#2a363b'];
 // const colors = new Array(numOfInstances)
 //   .fill()
 //   .map(() => colorPalette[Math.floor(Math.random() * 5)]);
-const colors = new Array(numOfInstances).fill().map(() => '#444444');
+
+let boxColors = [];
+let boxColorsHex = [];
+let uniformBoxColorHex;
+// Generate initial color arrays. Use id's to reduce number of computations run each loop.  Only a set number of colors is calculated each time instead of each individual box, and then boxes pull from one of those precalculated limiited colors based on their id.
+colorPalette.forEach((color) => boxColors.push(Color(color)));
+boxColors.forEach((color) => boxColorsHex.push(color.hex()));
+console.log(boxColorsHex);
+
+// let defaultBoxColor = Color('#444444');  // icon grey
+let defaultBoxColor = Color('#2a363b'); // grey from nicecolors
+let defaultBoxColorHex = defaultBoxColor.hex();
+const colors = new Array(numOfInstances).fill().map(() => defaultBoxColorHex);
+const colorIds = new Array(numOfInstances)
+  .fill()
+  .map(() => Math.floor(Math.random() * colorPalette.length));
+
+// const colors = new Array(numOfInstances).fill().map(() => '#444444');
 const spherePoints = getRandomSpherePoints(numOfInstances);
 let mouseX = 0;
 let mouseY = 0;
@@ -62,10 +80,23 @@ export default function LogoBoxes({ mouse, meshPosition, meshScale }) {
     let i = 0;
 
     // Scale mouse positions and create velocities for animations
-    mouseX = scaleMouse(mouse.current[0], window.innerWidth);
-    mouseY = scaleMouse(mouse.current[1], window.innerHeight);
+    mouseX = scaleMouse(mouse.current[0], window.innerWidth, 'log', 75, 300);
+    mouseY = scaleMouse(mouse.current[1], window.innerHeight, 'linear', 0, 1);
     mouseVelX += (mouseX - mouseVelX) * animateSpeed;
     mouseVelY += (-mouseY - mouseVelY) * animateSpeed;
+
+    // Calculate box colors based on mouse y position
+    // defaultBoxColorHex = defaultBoxColor.lighten(Math.abs(mouseY / 100)).hex();
+    if (mouseY < 0) {
+      uniformBoxColorHex = defaultBoxColor
+        .mix(Color('blue'), Math.abs(mouseY))
+        .hex();
+      boxColorsHex = boxColorsHex.map(() => uniformBoxColorHex);
+    } else {
+      boxColorsHex = boxColors.map((color) =>
+        color.mix(Color(defaultBoxColorHex), 1 - Math.abs(mouseY)).hex()
+      );
+    }
 
     // Update each boxes position, rotation, etc...
     logoPoints3d.forEach((position, idx) => {
@@ -94,8 +125,17 @@ export default function LogoBoxes({ mouse, meshPosition, meshScale }) {
       //     .toArray(colorArray, id * 3);
       //   ref.current.geometry.attributes.color.needsUpdate = true;
       // }
-      const scale = id === hovered ? 1 : 1;
-      tempObject.scale.set(scale, scale, scale);
+
+      // tempColor
+      //   .set(colorPalette[Math.floor((mouseY / 100) * 5)])
+      //   .toArray(colorArray, id * 3);
+      // ref.current.geometry.attributes.color.needsUpdate = true;
+
+      tempColor.set(boxColorsHex[colorIds[idx]]).toArray(colorArray, id * 3);
+      ref.current.geometry.attributes.color.needsUpdate = true;
+
+      // const scale = id === hovered ? 1 : 1;
+      tempObject.scale.set(1, 1, 1);
 
       tempObject.updateMatrix();
       ref.current.setMatrixAt(id, tempObject.matrix);

@@ -31,12 +31,12 @@ export default function ThreeViewer() {
   });
   const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
   const screenWidth = useWidth();
-  console.log(screenWidth);
+  // console.log(screenWidth);
 
   useEffect(() => {
-    console.log('useEffect: ', screenWidth);
+    // console.log('useEffect: ', screenWidth);
     const aspect = window.innerWidth / window.innerHeight;
-    console.log(aspect);
+    // console.log(aspect);
     switch (screenWidth) {
       case 'xs':
         setPositions({

@@ -19,26 +19,46 @@ function getRandomSpherePoints(count) {
   return points;
 }
 
-// Scale mouse movements to make smooth animations for user
-function scaleMouse(mouseCurrent, windowSize) {
+/**
+ * Scales mouse movements from window units to desired units.  The center of the screen represents (0,0)
+ *
+ * @param {number} mouseCurrent  Current raw mouse position.
+ * @param {number} windowSize    Current raw window size.
+ * @param {string} scaleType     Desired scale funcion ('log' or 'linear').
+ * @param {number} deadZone      Space around center of window in which scale is truncated to 0 (in window units).
+ * @param {number} maxOutput     Max of desired output scale.
+ * @return {number} Scaled value from 0 to max output.
+ */
+function scaleMouse(mouseCurrent, windowSize, scaleType, deadZone, maxOutput) {
   const sign = mouseCurrent < 0 ? -1 : 1;
   let mouseScaled = Math.abs(mouseCurrent);
-  const deadZone = 75;
   const windowHalf = windowSize / 2;
-  const max = 300;
+
   if (mouseScaled < deadZone) {
     return (mouseScaled = 0);
   } else {
-    // Calculate logarithmic function so animations start slow towards center and accelerate towards edge of screen
-    // position is between 0 and half of window length
-    let minp = 0;
-    let maxp = windowHalf;
-    // The result should be between 0 and max of desired animation
-    let minv = Math.log(1);
-    let maxv = Math.log(max);
-    // calculate adjustment factor
-    let scale = (maxv - minv) / (maxp - minp);
-    mouseScaled = Math.exp(minv + scale * (mouseScaled - minp));
+    if (scaleType === 'log') {
+      // Calculate logarithmic function so animations start slow towards center and accelerate towards edge of screen
+      // position is between 0 and half of window length
+      const minp = 0;
+      const maxp = windowHalf;
+      // The result should be between 0 and maxOutput of desired animation
+      const minv = Math.log(1);
+      const maxv = Math.log(maxOutput);
+      // calculate adjustment factor
+      const scale = (maxv - minv) / (maxp - minp);
+      mouseScaled = Math.exp(minv + scale * (mouseScaled - minp));
+    } else {
+      // else assume standard linear scale using y = mx + b
+      const m = maxOutput / (windowHalf - deadZone);
+      const b = maxOutput - m * windowHalf;
+      mouseScaled = m * mouseScaled + b;
+    }
+  }
+
+  // ensure scaled value doesn't exceed user max
+  if (mouseScaled > maxOutput) {
+    mouseScaled = maxOutput;
   }
   return mouseScaled * sign;
 }

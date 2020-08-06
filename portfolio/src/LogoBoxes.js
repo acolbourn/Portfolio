@@ -5,6 +5,22 @@ import logoPoints from './logoPoints.js';
 import { getRandomSpherePoints, scaleMouse } from './LogoBoxesHelpers';
 import Color from 'color';
 
+import colorPalettes from 'nice-color-palettes';
+// const colorPalette = colorPalettes[95];
+// const colorPalette = [
+//   'red',
+//   'orange',
+//   'yellow',
+//   'green',
+//   'blue',
+//   'indigo',
+//   'violet',
+// ]; // rainbow
+// const colorPalette = ['red', 'green', 'blue']; // rgb
+const colorPalette = ['#1b262c', '#0f4c75', '#00b7c2'];
+// const uniformColor = colorPalette[0];
+const uniformColor = 'black';
+
 const depth = 5;
 const numOfInstances = logoPoints.length * depth;
 const boxSize = 1;
@@ -12,7 +28,7 @@ const groupPosZ = (depth * boxSize) / 2 - boxSize / 2;
 const groupPosXY = 0;
 const tempObject = new THREE.Object3D();
 const tempColor = new THREE.Color();
-const colorPalette = ['#99b898', '#fecea8', '#ff847c', '#e84a5f', '#2a363b'];
+// const colorPalette = ['#99b898', '#fecea8', '#ff847c', '#e84a5f', '#2a363b'];
 // const colors = new Array(numOfInstances)
 //   .fill()
 //   .map(() => colorPalette[Math.floor(Math.random() * 5)]);
@@ -29,9 +45,10 @@ console.log(boxColorsHex);
 let defaultBoxColor = Color('#2a363b'); // grey from nicecolors
 let defaultBoxColorHex = defaultBoxColor.hex();
 const colors = new Array(numOfInstances).fill().map(() => defaultBoxColorHex);
+const numOfColors = colorPalette.length;
 const colorIds = new Array(numOfInstances)
   .fill()
-  .map(() => Math.floor(Math.random() * colorPalette.length));
+  .map(() => Math.floor(Math.random() * numOfColors));
 
 // const colors = new Array(numOfInstances).fill().map(() => '#444444');
 const spherePoints = getRandomSpherePoints(numOfInstances);
@@ -39,6 +56,8 @@ let mouseX = 0;
 let mouseY = 0;
 let mouseVelX = 0;
 let mouseVelY = 0;
+let colorFadeCount = 0;
+const colorFadeResolution = 0.01;
 const animateSpeed = 0.02;
 
 // Create array with xy points copied to each depth in z direction
@@ -50,6 +69,23 @@ logoPoints.forEach((point) => {
 });
 
 export default function LogoBoxes({ mouse, meshPosition, meshScale }) {
+  // Rotate the colors every second so they blend between neighboring colors in the color array
+  const [colorsRotate, setColorsRotate] = useState(boxColors);
+  let rotatedColors = colorsRotate;
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     let rotatedColors = colorsRotate;
+  //     const movingColor = rotatedColors.shift();
+  //     rotatedColors.push(movingColor);
+  //     setColorsRotate(rotatedColors);
+  //     // setColorsRotate((colorsRotate) =>
+  //     //   colorsRotate >= numOfColors - 1 ? 0 : colorsRotate + 1
+  //     // );
+  //     // console.log(colorsRotate);
+  //   }, 3000);
+  //   return () => clearInterval(interval);
+  // }, [colorsRotate]);
+
   const [hovered, set] = useState();
   const colorArray = useMemo(
     () =>
@@ -81,22 +117,53 @@ export default function LogoBoxes({ mouse, meshPosition, meshScale }) {
 
     // Scale mouse positions and create velocities for animations
     mouseX = scaleMouse(mouse.current[0], window.innerWidth, 'log', 75, 300);
-    mouseY = scaleMouse(mouse.current[1], window.innerHeight, 'linear', 0, 1);
+    mouseY = scaleMouse(mouse.current[1], window.innerHeight, 'linear', 75, 1);
     mouseVelX += (mouseX - mouseVelX) * animateSpeed;
-    mouseVelY += (-mouseY - mouseVelY) * animateSpeed;
+    mouseVelY += (mouseY - mouseVelY) * animateSpeed;
 
     // Calculate box colors based on mouse y position
     // defaultBoxColorHex = defaultBoxColor.lighten(Math.abs(mouseY / 100)).hex();
-    if (mouseY < 0) {
+    if (mouseVelY < 0) {
       uniformBoxColorHex = defaultBoxColor
-        .mix(Color('blue'), Math.abs(mouseY))
+        .mix(Color(uniformColor), Math.abs(mouseVelY))
         .hex();
       boxColorsHex = boxColorsHex.map(() => uniformBoxColorHex);
     } else {
-      boxColorsHex = boxColors.map((color) =>
-        color.mix(Color(defaultBoxColorHex), 1 - Math.abs(mouseY)).hex()
-      );
+      // boxColorsHex = boxColors.map((color) =>
+      //   color.mix(Color(defaultBoxColorHex), 1 - Math.abs(mouseVelY)).hex()
+      // );
+
+      // console.log(Math.sin(time / 2));
+      // boxColorsHex = boxColors.map((color) =>
+      //   color.mix(Color(defaultBoxColorHex), Math.sin(time)).hex()
+      // );
+
+      // const nextColor = colorsRotate >= numOfColors - 1 ? 0 : colorsRotate + 1;
+
+      if (colorFadeCount >= 1) {
+        let rotatedColors = colorsRotate;
+        const movingColor = rotatedColors.shift();
+        rotatedColors.push(movingColor);
+        setColorsRotate(rotatedColors);
+        colorFadeCount = 0;
+      } else {
+        colorFadeCount += colorFadeResolution;
+      }
+
+      for (let r = 0; r < numOfColors; r++) {
+        let next = r + 1 >= numOfColors ? 0 : r + 1;
+        // mix box colors together
+        const tempColor = colorsRotate[r].mix(
+          colorsRotate[next],
+          colorFadeCount
+        );
+        // mix default color at center
+        boxColorsHex[r] = defaultBoxColor
+          .mix(tempColor, Math.abs(mouseVelY))
+          .hex();
+      }
     }
+    // console.log(boxColorsHex);
 
     // Update each boxes position, rotation, etc...
     logoPoints3d.forEach((position, idx) => {

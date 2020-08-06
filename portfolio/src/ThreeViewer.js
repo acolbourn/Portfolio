@@ -111,8 +111,11 @@ export default function ThreeViewer() {
       onMouseMove={onMouseMove}
       onTouchMove={onTouchMove}
     >
-      <ambientLight />
-      <pointLight position={[150, 150, 150]} intensity={0.55} />
+      {/* <ambientLight />
+      <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
+      <ambientLight intensity={1.1} />
+      <pointLight position={[100, 100, 100]} intensity={2.2} />
+      <pointLight position={[-100, -100, -100]} intensity={2.5} color='red' />
       <group scale={[scale, scale, scale]}>
         <Suspense fallback={null}>
           {/* <Logo3d /> */}

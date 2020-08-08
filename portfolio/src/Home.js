@@ -4,7 +4,7 @@ import HomeFallback from './HomeFallback';
 import WEBGL from './3dAnimations/webGLCheck';
 
 // import Logo from './Logo';
-import ThreeViewer from './ThreeViewer';
+import ThreeViewer from './3dAnimations/ThreeViewer';
 // import Cannon from './Cannon.js';
 // import SwarmViewer from './SwarmViewer';
 

@@ -1,19 +1,29 @@
-import React from 'react';
-import { extend } from 'react-three-fiber';
+import React, { useRef } from 'react';
+import { extend, useFrame } from 'react-three-fiber';
 import { Text } from 'troika-three-text';
-
+import { MeshWobbleMaterial } from 'drei';
+// Original blue '#99ccff'
 // Register Text as a react-three-fiber element
 extend({ Text });
 
 export default function TextGeometry({ text, position, fontSize }) {
   const opts = {
     fontSize: fontSize,
-    color: '#99ccff',
+    color: '#0047AB',
     maxWidth: 300,
     lineHeight: 1,
     letterSpacing: 0,
     textAlign: 'justify',
   };
+
+  const materialRef = useRef();
+
+  // Scale wobble intensity from 0 to max as mouse moves center to bottom
+  const maxWobble = 0.7;
+  useFrame((state) => {
+    materialRef.current.factor =
+      state.mouse.y < 0 ? state.mouse.y * maxWobble : 0;
+  });
 
   return (
     <text
@@ -27,7 +37,14 @@ export default function TextGeometry({ text, position, fontSize }) {
       anchorX='center'
       anchorY='middle'
     >
-      <meshPhongMaterial attach='material' color={opts.color} />
+      {/* <meshPhongMaterial attach='material' color={opts.color} /> */}
+      <MeshWobbleMaterial
+        ref={materialRef}
+        attach='material'
+        color='black'
+        factor={0}
+        speed={0.5}
+      />
     </text>
   );
 }

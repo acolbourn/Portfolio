@@ -1,16 +1,12 @@
 import * as THREE from 'three';
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame } from 'react-three-fiber';
 import Color from 'color';
 import logoPoints from './logoPoints.js';
 import { getRandomSpherePoints, scaleMouse } from './LogoBoxesHelpers';
 
-const colorPalette = ['#1b262c', '#0f4c75', '#00b7c2']; // Colors when mouse at bottom of screen
-// const colorPalette = ['#1b262c', '#0f4c75', '#3282b8', '#bbe1fa']; // Colors when mouse at bottom of screen
-// const colorPalette = ['#142850', '#27496d', '#0c7b93', '#00a8cc']; // Colors when mouse at bottom of screen
-// const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
-// const colorPalette = ['#f70776', '#c3195d', '#680747', '#141010']; // Colors when mouse at bottom of screen
-// const colorPalette = ['#525252', '#414141', '#313131', '#1b1b1b', '#111111']; // Colors when mouse at bottom of screen
+// const colorPalette = ['#1b262c', '#0f4c75', '#00b7c2']; // Colors when mouse at bottom of screen
+const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
 
 const uniformColorOptions = ['black', 'blue', '#0047AB', '#002456'];
 const uniformColor = uniformColorOptions[2]; // Color when mouse at top of screen
@@ -52,8 +48,14 @@ logoPoints.forEach((point) => {
   }
 });
 
-export default function LogoBoxes({ mouse, meshPosition, meshScale }) {
+export default function LogoBoxes({
+  mouse,
+  meshPosition,
+  meshScale,
+  fadeDelay,
+}) {
   const ref = useRef(); // Mesh ref
+  const [isLoading, setIsLoading] = useState(true);
 
   // Initialize empty color array
   const colorArray = useMemo(
@@ -90,6 +92,19 @@ export default function LogoBoxes({ mouse, meshPosition, meshScale }) {
   //   console.log('here');
   //   setTimeout(() => (mouse.current[0] = 0), 2000);
   // }, []);
+
+  // Start boxes spread out and assemble after delay
+  useEffect(() => {
+    mouse.current[0] = 1000;
+    let timer1 = setTimeout(() => {
+      mouse.current[0] = 0;
+      setIsLoading(false);
+    }, fadeDelay);
+    // Clear timeout on unmount
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, []);
 
   useFrame((state) => {
     let i = 0;
@@ -168,6 +183,7 @@ export default function LogoBoxes({ mouse, meshPosition, meshScale }) {
       position={meshPosition}
       rotation={[0, 0, Math.PI]}
       scale={meshScale}
+      visible={!isLoading}
     >
       <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
         <instancedBufferAttribute

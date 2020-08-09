@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 
 import { Canvas } from 'react-three-fiber';
+import { Stats } from 'drei';
+
 import LogoBoxes from './LogoBoxes.js';
 import TextGeometry from './TextGeometry';
 import useWidth from '../hooks/useWidth';
@@ -15,9 +17,9 @@ import Light from './Light';
 export default function ThreeViewer() {
   const [scale, setScale] = useState(0.9);
   const [positions, setPositions] = useState({
-    logo: [0, -4, 0],
-    name: [0, 23.5, 0],
-    jobTitles: [0, 18, 0],
+    logo: [0, -6, 0],
+    name: [0, 21, 0],
+    jobTitles: [0, 17, 0],
   });
   const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
   const screenWidth = useWidth();
@@ -31,26 +33,37 @@ export default function ThreeViewer() {
           name: [0, 21, 0],
           jobTitles: [0, 16, 0],
         });
+        setFontSizes({ name: 4.8, titles: 1.7 });
         aspect < 0.52 ? setScale(0.55) : setScale(0.65);
         break;
       case 'sm':
         setPositions({
           logo: [0, -6, 0],
           name: [0, 21, 0],
-          jobTitles: [0, 16, 0],
+          jobTitles: [0, 17, 0],
         });
+        // setFontSizes({ name: 4.8, titles: 1.7 });
+        setFontSizes({ name: 3.8, titles: 1.45 });
         setScale(0.75);
         break;
       case 'md':
       case 'lg':
       case 'xl':
+        // setPositions({
+        //   logo: [0, 0, 0],
+        //   name: [0, 24.5, 0],
+        //   jobTitles: [0, 20.2, 0],
+        // });
+        // setFontSizes({ name: 3.8, titles: 1.2 });
+        // setScale(0.9);
         setPositions({
-          logo: [0, 0, 0],
-          name: [0, 24.5, 0],
-          jobTitles: [0, 20.2, 0],
+          logo: [0, -6, 0],
+          name: [0, 21, 0],
+          jobTitles: [0, 17, 0],
         });
-        setFontSizes({ name: 3.8, titles: 1.2 });
-        setScale(0.9);
+        // setFontSizes({ name: 4.8, titles: 1.7 });
+        setFontSizes({ name: 4, titles: 1.5 });
+        setScale(0.83);
         break;
       default:
         setScale(0.7);
@@ -62,6 +75,7 @@ export default function ThreeViewer() {
     mouse.current = [x - window.innerWidth / 2, y - window.innerHeight / 2];
   }, []);
   const onTouchMove = useCallback((event) => {
+    event.preventDefault();
     let touch = event.touches[0];
     let x = touch.clientX;
     let y = touch.clientY;
@@ -75,6 +89,7 @@ export default function ThreeViewer() {
       onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
       onMouseMove={onMouseMove}
       onTouchMove={onTouchMove}
+      pixelRatio={window.devicePixelRatio * 1.5}
     >
       {/* <ambientLight />
       <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
@@ -87,6 +102,7 @@ export default function ThreeViewer() {
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
             mouse={mouse}
+            fadeDelay={4000}
           />
         </Suspense>
         <Suspense fallback={null}>
@@ -94,6 +110,7 @@ export default function ThreeViewer() {
             text={'Alex Colbourn'}
             position={positions.name}
             fontSize={fontSizes.name}
+            fadeDelay={1000}
           />
         </Suspense>
         <Suspense fallback={null}>
@@ -101,9 +118,11 @@ export default function ThreeViewer() {
             text={'Web Developer / Robotics Engineer'}
             position={positions.jobTitles}
             fontSize={fontSizes.titles}
+            fadeDelay={2500}
           />
         </Suspense>
       </group>
+      <Stats />
     </Canvas>
   );
 }

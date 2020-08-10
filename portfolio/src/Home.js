@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '0',
     minHeight: '0',
     overflow: 'hidden',
+    touchAction: 'none',
   },
 }));
 

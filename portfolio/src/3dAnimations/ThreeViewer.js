@@ -8,11 +8,11 @@ import React, {
 
 import { Canvas } from 'react-three-fiber';
 import { Stats } from 'drei';
-
 import LogoBoxes from './LogoBoxes.js';
 import TextGeometry from './TextGeometry';
 import useWidth from '../hooks/useWidth';
 import Light from './Light';
+import { scaleMouse } from './LogoBoxesHelpers';
 
 export default function ThreeViewer() {
   const [scale, setScale] = useState(0.9);
@@ -22,6 +22,7 @@ export default function ThreeViewer() {
     jobTitles: [0, 17, 0],
   });
   const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
+  const [disableMouse, setDisableMouse] = useState(true);
   const screenWidth = useWidth();
 
   useEffect(() => {
@@ -70,16 +71,49 @@ export default function ThreeViewer() {
     }
   }, [screenWidth]);
 
-  const mouse = useRef([0, 0]);
+  // Disable mouse in components initially for intro animation
+  const mouseDisableTime = 11000;
+  useEffect(() => {
+    let timer1 = setTimeout(() => {
+      setDisableMouse(false);
+    }, mouseDisableTime);
+    // Clear timeout on unmount
+    return () => {
+      clearTimeout(timer1);
+    };
+  });
+
+  // Process mouse/touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
+  const mouse = useRef([0, 0, 0]);
+  // Process mouse movements
   const onMouseMove = useCallback(({ clientX: x, clientY: y }) => {
-    mouse.current = [x - window.innerWidth / 2, y - window.innerHeight / 2];
+    const mouseX = x - window.innerWidth / 2;
+    const mouseY = y - window.innerHeight / 2;
+    // Scale Y here since multiple components share Y but not X scaling
+    const mouseYScaled = scaleMouse(
+      mouseY,
+      window.innerHeight,
+      'linear',
+      75,
+      1
+    );
+    mouse.current = [mouseX, mouseY, mouseYScaled];
   }, []);
+  // Process mobile/touchscreen movements
   const onTouchMove = useCallback((event) => {
     event.preventDefault();
-    let touch = event.touches[0];
-    let x = touch.clientX;
-    let y = touch.clientY;
-    mouse.current = [x - window.innerWidth / 2, y - window.innerHeight / 2];
+    const touch = event.touches[0];
+    const mouseX = touch.clientX - window.innerWidth / 2;
+    const mouseY = touch.clientY - window.innerHeight / 2;
+    // Scale Y here since multiple components share Y but not X scaling
+    const mouseYScaled = scaleMouse(
+      mouseY,
+      window.innerHeight,
+      'linear',
+      75,
+      1
+    );
+    mouse.current = [mouseX, mouseY, mouseYScaled];
   }, []);
 
   return (
@@ -89,20 +123,24 @@ export default function ThreeViewer() {
       onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
       onMouseMove={onMouseMove}
       onTouchMove={onTouchMove}
+      onTouchStart={(e) => e.preventDefault()}
+      onTouchEnd={(e) => e.preventDefault()}
+      onTouchCancel={(e) => e.preventDefault()}
       pixelRatio={window.devicePixelRatio * 1.5}
     >
       {/* <ambientLight />
       <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
       <ambientLight intensity={1.1} />
       <pointLight position={[100, 100, 100]} intensity={2.2} />
-      <Light maxIntensity={2.5} />
+      <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
         <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
             mouse={mouse}
-            fadeDelay={4000}
+            fadeDelay={3000}
+            disableMouse={disableMouse}
           />
         </Suspense>
         <Suspense fallback={null}>
@@ -110,7 +148,9 @@ export default function ThreeViewer() {
             text={'Alex Colbourn'}
             position={positions.name}
             fontSize={fontSizes.name}
+            mouse={mouse}
             fadeDelay={1000}
+            disableMouse={disableMouse}
           />
         </Suspense>
         <Suspense fallback={null}>
@@ -118,7 +158,9 @@ export default function ThreeViewer() {
             text={'Web Developer / Robotics Engineer'}
             position={positions.jobTitles}
             fontSize={fontSizes.titles}
+            mouse={mouse}
             fadeDelay={2500}
+            disableMouse={disableMouse}
           />
         </Suspense>
       </group>

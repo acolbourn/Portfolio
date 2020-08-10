@@ -6,7 +6,14 @@ import { MeshWobbleMaterial } from 'drei';
 // Register Text as a react-three-fiber element
 extend({ Text });
 
-export default function TextGeometry({ text, position, fontSize, fadeDelay }) {
+export default function TextGeometry({
+  text,
+  position,
+  fontSize,
+  mouse,
+  fadeDelay,
+  disableMouse,
+}) {
   const [isLoading, setIsLoading] = useState(true);
 
   // Fade in text
@@ -16,7 +23,7 @@ export default function TextGeometry({ text, position, fontSize, fadeDelay }) {
     return () => {
       clearTimeout(timer1);
     };
-  }, []);
+  });
 
   const opts = {
     fontSize: fontSize,
@@ -31,23 +38,37 @@ export default function TextGeometry({ text, position, fontSize, fadeDelay }) {
   // A second ref must be used to access opacity bc troika makes a copy of the material to save processing power so only initial values are updated unless a reference to the copy is made
   const textRef = useRef();
 
-  const maxWobble = 0.7; // Maximum wobble effect of text
+  const maxWobble = 0.5; // Maximum wobble effect of text
   const animateSpeed = 0.5; // Factor to slow down/smooth out mouse by
   let mouseY = 0; // Raw mouse movement
   let mouseVelY = 0; // Smoothed mouse movement
-  let opacity = 0; // Text opacity for fade in
-  const opacityFadeSpeed = 6; // Opacity Fade in speed
+  let opacity = disableMouse ? 0 : 1; // Text opacity for fade in - Note: disableMouse prop triggers rerender so this just ensures opacity=1 after
+  const opacityFadeSpeed = 0.01; // Opacity Fade in speed
 
   useFrame((state) => {
     // Scale wobble intensity from 0 to max as mouse moves center to bottom
-    mouseY = state.mouse.y < 0 ? state.mouse.y : 0;
-    mouseVelY += (mouseY - mouseVelY) * animateSpeed;
+    mouseY = mouse.current[2] > 0 ? mouse.current[2] : 0;
+    if (disableMouse) {
+      mouseVelY = 0;
+    } else {
+      mouseVelY += (mouseY - mouseVelY) * animateSpeed;
+    }
     materialRef.current.factor = mouseVelY * maxWobble;
 
+    // // Rotate Text
+    // const mouseXScaled = scaleMouse(
+    //   mouse.current[0],
+    //   window.innerWidth,
+    //   'linear',
+    //   0,
+    //   0.2
+    // );
+    // textRef.current.rotation.y = mouseXScaled;
+
     // Fade in Text
-    if (!isLoading && opacity < 1000) {
+    if (!isLoading && opacity < 1) {
       opacity = opacity + opacityFadeSpeed;
-      textRef.current.material.opacity = opacity / 1000;
+      textRef.current.material.opacity = opacity;
     }
   });
 

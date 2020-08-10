@@ -53,9 +53,11 @@ export default function LogoBoxes({
   meshPosition,
   meshScale,
   fadeDelay,
+  disableMouse,
 }) {
   const ref = useRef(); // Mesh ref
   const [isLoading, setIsLoading] = useState(true);
+  const [initBoxPosition, setInitBoxPosition] = useState(3000);
 
   // Initialize empty color array
   const colorArray = useMemo(
@@ -86,25 +88,17 @@ export default function LogoBoxes({
     return tempColors;
   }, []);
 
-  // Load with boxes spaced out and animate in after 3s
-  // useEffect(() => {
-  //   mouse.current[0] = 400;
-  //   console.log('here');
-  //   setTimeout(() => (mouse.current[0] = 0), 2000);
-  // }, []);
-
   // Start boxes spread out and assemble after delay
   useEffect(() => {
-    mouse.current[0] = 1000;
     let timer1 = setTimeout(() => {
-      mouse.current[0] = 0;
+      setInitBoxPosition(0);
       setIsLoading(false);
     }, fadeDelay);
     // Clear timeout on unmount
     return () => {
       clearTimeout(timer1);
     };
-  }, []);
+  });
 
   useFrame((state) => {
     let i = 0;
@@ -112,9 +106,16 @@ export default function LogoBoxes({
     // Rotate logo group
     ref.current.rotation.y += 0.01;
 
-    // Scale mouse positions and create velocities for animations
-    mouseX = scaleMouse(mouse.current[0], window.innerWidth, 'log', 75, 300);
-    mouseY = scaleMouse(mouse.current[1], window.innerHeight, 'linear', 75, 1);
+    // Scale mouse positions and velocities for animations
+    if (disableMouse) {
+      // Disable mouse on load and use intro animation values
+      mouseX = initBoxPosition;
+      mouseY = 0;
+    } else {
+      mouseX = scaleMouse(mouse.current[0], window.innerWidth, 'log', 75, 300);
+      mouseY = mouse.current[2];
+    }
+    // "Velocity" in this case just means a slower/smoother animation.
     mouseVelX += (mouseX - mouseVelX) * animateSpeed;
     mouseVelY += (mouseY - mouseVelY) * animateSpeed;
 

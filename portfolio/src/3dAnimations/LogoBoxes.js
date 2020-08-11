@@ -14,6 +14,8 @@ let defaultBoxColor = Color('#2a363b'); // Color at screen center
 const depth = 5; // Layers of boxes in Z direction
 const numOfInstances = logoPoints.length * depth; // Total # of boxes
 const boxSize = 1; // Physical box dimensions
+// const maxBoxDistance = 300 // Max distance boxes spread from each other
+const maxBoxDistance = 6000; // Max distance boxes spread from each other
 const groupPosZ = (depth * boxSize) / 2 - boxSize / 2; // Z center of logo
 const groupPosXY = 0; // X and Y center of logo
 const tempObject = new THREE.Object3D(); // Init box object
@@ -112,7 +114,13 @@ export default function LogoBoxes({
       mouseX = initBoxPosition;
       mouseY = 0;
     } else {
-      mouseX = scaleMouse(mouse.current[0], window.innerWidth, 'log', 75, 300);
+      mouseX = scaleMouse(
+        mouse.current[0],
+        window.innerWidth,
+        'log',
+        75,
+        maxBoxDistance
+      );
       mouseY = mouse.current[2];
     }
     // "Velocity" in this case just means a slower/smoother animation.

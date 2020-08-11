@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 
 import { Canvas } from 'react-three-fiber';
-import { Stats } from 'drei';
+import { Stars } from 'drei';
 import LogoBoxes from './LogoBoxes.js';
 import TextGeometry from './TextGeometry';
 import useWidth from '../hooks/useWidth';
@@ -119,7 +119,8 @@ export default function ThreeViewer() {
   return (
     <Canvas
       gl={{ antialias: false, alpha: false }}
-      camera={{ position: [0, 0, 40], near: 5, far: 200 }}
+      camera={{ position: [0, 0, 40] }}
+      // camera={{ position: [0, 0, 40], near: 5, far: 200 }}
       onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
       onMouseMove={onMouseMove}
       onTouchMove={onTouchMove}
@@ -148,9 +149,7 @@ export default function ThreeViewer() {
             text={'Alex Colbourn'}
             position={positions.name}
             fontSize={fontSizes.name}
-            mouse={mouse}
             fadeDelay={1000}
-            disableMouse={disableMouse}
           />
         </Suspense>
         <Suspense fallback={null}>
@@ -158,13 +157,11 @@ export default function ThreeViewer() {
             text={'Web Developer / Robotics Engineer'}
             position={positions.jobTitles}
             fontSize={fontSizes.titles}
-            mouse={mouse}
             fadeDelay={2500}
-            disableMouse={disableMouse}
           />
         </Suspense>
       </group>
-      <Stats />
+      <Stars />
     </Canvas>
   );
 }

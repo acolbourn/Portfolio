@@ -43,11 +43,16 @@ function scaleMouse(mouseCurrent, windowSize, scaleType, deadZone, maxOutput) {
       const minp = 0;
       const maxp = windowHalf;
       // The result should be between 0 and maxOutput of desired animation
-      const minv = Math.log(1);
-      const maxv = Math.log(maxOutput);
+      // const minv = Math.log(1);
+      // const maxv = Math.log(maxOutput);
+      const logBase = 60000;
+      const baseDivisor = 1 / Math.log(logBase);
+      const minv = Math.log(1) * baseDivisor;
+      const maxv = Math.log(maxOutput) * baseDivisor;
       // calculate adjustment factor
       const scale = (maxv - minv) / (maxp - minp);
-      mouseScaled = Math.exp(minv + scale * (mouseScaled - minp));
+      // mouseScaled = Math.exp(minv + scale * (mouseScaled - minp));
+      mouseScaled = Math.pow(logBase, minv + scale * (mouseScaled - minp));
     } else {
       // else assume standard linear scale using y = mx + b
       const m = maxOutput / (windowHalf - deadZone);

@@ -19,6 +19,17 @@ function getRandomSpherePoints(count) {
   return points;
 }
 
+// Calculate each boxes distance to origin of group (which is offset from canvas origin to position logo)
+function getHypotenuses(groupPosXY, groupPosZ, logoPoints3d) {
+  let hypotenuses = [];
+
+  logoPoints3d.forEach((point) => {
+    const [x, y, z] = point;
+    hypotenuses.push(Math.hypot(x - groupPosXY, y - groupPosXY, z - groupPosZ));
+  });
+  return hypotenuses;
+}
+
 /**
  * Scales mouse movements from window units to desired units.  The center of the screen represents (0,0)
  *
@@ -45,7 +56,7 @@ function scaleMouse(mouseCurrent, windowSize, scaleType, deadZone, maxOutput) {
       // The result should be between 0 and maxOutput of desired animation
       // const minv = Math.log(1);
       // const maxv = Math.log(maxOutput);
-      const logBase = 60000;
+      const logBase = 6;
       const baseDivisor = 1 / Math.log(logBase);
       const minv = Math.log(1) * baseDivisor;
       const maxv = Math.log(maxOutput) * baseDivisor;
@@ -68,4 +79,4 @@ function scaleMouse(mouseCurrent, windowSize, scaleType, deadZone, maxOutput) {
   return mouseScaled * sign;
 }
 
-export { getRandomSpherePoints, scaleMouse };
+export { getRandomSpherePoints, getHypotenuses, scaleMouse };

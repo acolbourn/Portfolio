@@ -3,7 +3,11 @@ import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame } from 'react-three-fiber';
 import Color from 'color';
 import logoPoints from './logoPoints.js';
-import { getRandomSpherePoints, scaleMouse } from './LogoBoxesHelpers';
+import {
+  getRandomSpherePoints,
+  getHypotenuses,
+  scaleMouse,
+} from './LogoBoxesHelpers';
 
 // const colorPalette = ['#1b262c', '#0f4c75', '#00b7c2']; // Colors when mouse at bottom of screen
 const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
@@ -49,6 +53,8 @@ logoPoints.forEach((point) => {
     logoPoints3d.push([point[0], point[1], z]);
   }
 });
+// Calculate each points' distance to group origin;
+const pointsHypotenuses = getHypotenuses(groupPosXY, groupPosZ, logoPoints3d);
 
 export default function LogoBoxes({
   mouse,
@@ -156,20 +162,140 @@ export default function LogoBoxes({
     // Update box positions and rotations.
     logoPoints3d.forEach((position, idx) => {
       const id = i++; // Box id
-      // Calculate point on sphere based on user mouse movement
-      const sphereX = spherePoints[idx].x * mouseVelX;
-      const sphereY = spherePoints[idx].y * mouseVelX;
-      const sphereZ = spherePoints[idx].z * mouseVelX;
+
       // Box position within logo group
       const x = position[0];
       const y = position[1];
       const z = position[2];
+
+      // if mouse is center to right -> explode effect, left to center -> black hole effect
+
+      // // Calculate point on sphere based on user mouse movement
+      // const sphereX = spherePoints[idx].x * mouseVelX;
+      // const sphereY = spherePoints[idx].y * mouseVelX;
+      // const sphereZ = spherePoints[idx].z * mouseVelX;
       // Set position by combining position of entire logo group, each boxes individual position within group, and variable sphere position.
-      tempObject.position.set(
-        groupPosXY - x - sphereX,
-        groupPosXY - y - sphereY,
-        groupPosZ - z - sphereZ
+      // tempObject.position.set(
+      //   groupPosXY - x - sphereX,
+      //   groupPosXY - y - sphereY,
+      //   groupPosZ - z - sphereZ
+      // );
+
+      // Calculate point on sphere based on user mouse movement
+      const sphereDist = mouseVelX >= 0 ? mouseVelX : 0;
+      const sphereX = spherePoints[idx].x * sphereDist;
+      const sphereY = spherePoints[idx].y * sphereDist;
+      const sphereZ = spherePoints[idx].z * sphereDist;
+
+      let mouseLinearX = scaleMouse(
+        mouseVelX,
+        window.innerWidth,
+        'linear',
+        0,
+        1
       );
+      // Use y = mx + b to shift effect range from center of screen/right side to left side/center
+      mouseLinearX = -mouseLinearX - 1;
+
+      // // Collapse to sphere
+      // const wobbleFactor = 0;
+      // const explodeFactor = 5;
+      // tempObject.position.set(
+      //   groupPosXY + (x - groupPosXY) * mouseLinearX,
+      //   groupPosXY + (y - groupPosXY) * mouseLinearX,
+      //   groupPosZ + (z - groupPosZ) * mouseLinearX
+      // );
+
+      // let rightWeight = mouse.current[0] <= 0 ? 0 : mouseVelX;
+
+      // Collapse to sphere right to center
+      const wobbleFactor = 0;
+      const explodeFactor = 5;
+      tempObject.position.set(
+        groupPosXY -
+          (-x - groupPosXY) * mouseLinearX -
+          spherePoints[idx].x * explodeFactor * (1 + mouseLinearX) -
+          sphereX,
+        groupPosXY -
+          (-y - groupPosXY) * mouseLinearX -
+          spherePoints[idx].y * explodeFactor * (1 + mouseLinearX) -
+          sphereY,
+        groupPosZ -
+          (-z - groupPosZ) * mouseLinearX -
+          spherePoints[idx].z * explodeFactor * (1 + mouseLinearX) -
+          sphereZ
+      );
+
+      // // Collapse to sphere right to center
+      // const wobbleFactor = 0;
+      // const explodeFactor = 5;
+      // tempObject.position.set(
+      //   groupPosXY -
+      //     (x - groupPosXY) * mouseLinearX -
+      //     spherePoints[idx].x * explodeFactor * (1 - mouseLinearX),
+      //   groupPosXY -
+      //     (y - groupPosXY) * mouseLinearX -
+      //     spherePoints[idx].y * explodeFactor * (1 - mouseLinearX),
+      //   groupPosZ -
+      //     (z - groupPosZ) * mouseLinearX -
+      //     spherePoints[idx].z * explodeFactor * (1 - mouseLinearX)
+      // );
+
+      // // Weird Combo Bend and explode effect
+      // const wobbleFactor = (Math.sin(time) / 2) * mouseLinearX;
+      // const explodeFactor = 5;
+      // tempObject.position.set(
+      //   groupPosXY -
+      //     (x - groupPosXY) * mouseLinearX -
+      //     pointsHypotenuses[idx] * wobbleFactor -
+      //     spherePoints[idx].x *
+      //       wobbleFactor *
+      //       explodeFactor *
+      //       (1 - mouseLinearX),
+      //   groupPosXY -
+      //     (y - groupPosXY) * mouseLinearX -
+      //     pointsHypotenuses[idx] * wobbleFactor -
+      //     spherePoints[idx].y *
+      //       wobbleFactor *
+      //       explodeFactor *
+      //       (1 - mouseLinearX),
+      //   groupPosZ -
+      //     (z - groupPosZ) * mouseLinearX -
+      //     pointsHypotenuses[idx] * wobbleFactor -
+      //     spherePoints[idx].z *
+      //       wobbleFactor *
+      //       explodeFactor *
+      //       (1 - mouseLinearX)
+      // );
+
+      // // Moving Bend effect
+      // const wobbleFactor = Math.sin(time) / 2;
+      // tempObject.position.set(
+      //   groupPosXY -
+      //     (x - groupPosXY) * mouseLinearX -
+      //     pointsHypotenuses[idx] * wobbleFactor,
+      //   groupPosXY -
+      //     (y - groupPosXY) * mouseLinearX -
+      //     pointsHypotenuses[idx] * wobbleFactor,
+      //   groupPosZ -
+      //     (z - groupPosZ) * mouseLinearX -
+      //     pointsHypotenuses[idx] * wobbleFactor
+      // );
+
+      // // Shrink to 0 in formation
+      // tempObject.position.set(
+      //   groupPosXY - (x - groupPosXY) * mouseLinearX,
+      //   groupPosXY - (y - groupPosXY) * mouseLinearX,
+      //   groupPosZ - (z - groupPosZ) * mouseLinearX
+      // );
+
+      // Weird Bendy effect
+      // tempObject.position.set(
+      //   groupPosXY - x - pointsHypotenuses[idx] * mouseLinearX,
+      //   groupPosXY - y - pointsHypotenuses[idx] * mouseLinearX,
+      //   groupPosZ - z - pointsHypotenuses[idx] * mouseLinearX
+      // );
+
       // Rotate individual boxes using current time.  This gives a wave like effect bc time will be slightly different as each box is set in the loop.
       tempObject.rotation.y =
         Math.sin(x / 4 + time) +

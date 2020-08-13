@@ -51,7 +51,7 @@ function scaleMouse(mouseCurrent, windowSize, scaleType, deadZone, maxOutput) {
     if (scaleType === 'log') {
       // Calculate logarithmic function so animations start slow towards center and accelerate towards edge of screen
       // position is between 0 and half of window length
-      const minp = 0;
+      const minp = deadZone;
       const maxp = windowHalf;
       // The result should be between 0 and maxOutput of desired animation
       // const minv = Math.log(1);

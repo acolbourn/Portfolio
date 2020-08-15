@@ -5,14 +5,25 @@ import React, {
   useState,
   useEffect,
 } from 'react';
+import {
+  EffectComposer,
+  DepthOfField,
+  Bloom,
+  Noise,
+  Vignette,
+} from 'react-postprocessing';
 
 import { Canvas } from 'react-three-fiber';
-import { Stars } from 'drei';
+import { Stars, StandardEffects } from 'drei';
 import LogoBoxes from './LogoBoxes.js';
-import TextGeometry from './TextGeometry';
+import Letter from './Letter';
 import useWidth from '../hooks/useWidth';
 import Light from './Light';
 import { scaleMouse } from './LogoBoxesHelpers';
+import Effects from './Effects';
+import FadingBloom from './FadingBloom';
+// import WobbleSphere from './WobbleSphere';
+import Word from './Word';
 
 export default function ThreeViewer() {
   const [scale, setScale] = useState(0.9);
@@ -144,24 +155,50 @@ export default function ThreeViewer() {
             disableMouse={disableMouse}
           />
         </Suspense>
-        <Suspense fallback={null}>
-          <TextGeometry
-            text={'Alex Colbourn'}
-            position={positions.name}
-            fontSize={fontSizes.name}
-            fadeDelay={1000}
-          />
-        </Suspense>
-        <Suspense fallback={null}>
-          <TextGeometry
-            text={'Web Developer / Robotics Engineer'}
-            position={positions.jobTitles}
-            fontSize={fontSizes.titles}
-            fadeDelay={2500}
-          />
-        </Suspense>
+        {/* <Letter
+          text={'Alex Colbourn'}
+          position={positions.name}
+          fontSize={fontSizes.name}
+          fadeDelay={1000}
+        />
+        <Letter
+          text={'Web Developer / Robotics Engineer'}
+          position={positions.jobTitles}
+          fontSize={fontSizes.titles}
+          fadeDelay={2500}
+        /> */}
+        <Word
+          text={'Alex Colbourn'}
+          position={positions.name}
+          fontSize={fontSizes.name}
+          fadeDelay={1000}
+        />
       </group>
       <Stars />
+      {/* <Effects
+        mouse={mouse}
+        bloomStrength={0.8}
+        bloomRadius={1}
+        bloomThreshold={0}
+      /> */}
+      {/* <FadingBloom /> */}
+      {/* <WobbleSphere />
+      <EffectComposer>
+        <DepthOfField
+          focusDistance={0}
+          focalLength={0.02}
+          bokehScale={2}
+          height={480}
+        />         
+        <Bloom
+          luminanceThreshold={0}
+          luminanceSmoothing={0.9}
+          height={1}
+          opacity={3}
+        />
+        <Noise opacity={0.025} />
+        <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
+     </Canvas>/ </EffectComposer> */}
     </Canvas>
   );
 }

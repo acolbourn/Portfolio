@@ -1,11 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, Suspense } from 'react';
 import { extend, useFrame } from 'react-three-fiber';
+import { MeshWobbleMaterial } from 'drei';
 import { Text } from 'troika-three-text';
 
 // Register Text as a react-three-fiber element
 extend({ Text });
 
-export default function TextGeometry({ text, position, fontSize, fadeDelay }) {
+export default function Letter({ text, position, fontSize, fadeDelay }) {
   const [isLoading, setIsLoading] = useState(true);
   const opacity = useRef(0); // useRef instead of useState to keep animation loop from stalling
   const opacityFadeSpeed = 0.01; // Opacity Fade in speed
@@ -38,19 +39,26 @@ export default function TextGeometry({ text, position, fontSize, fadeDelay }) {
   });
 
   return (
-    <text
-      ref={textRef}
-      position={position}
-      rotation={[0, 0, 0]}
-      {...opts}
-      font={
-        'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff'
-      }
-      text={text}
-      anchorX='center'
-      anchorY='middle'
-    >
-      <meshPhongMaterial attach='material' />
-    </text>
+    <Suspense fallback={null}>
+      <text
+        ref={textRef}
+        position={position}
+        rotation={[0, 0, 0]}
+        {...opts}
+        font={
+          'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff'
+        }
+        text={text}
+        anchorX='center'
+        anchorY='middle'
+      >
+        {/* <meshPhongMaterial attach='material' /> */}
+        <MeshWobbleMaterial
+          attach='material'
+          factor={1} // Strength, 0 disables the effect (default=1)
+          speed={10} // Speed (default=1)
+        />
+      </text>
+    </Suspense>
   );
 }

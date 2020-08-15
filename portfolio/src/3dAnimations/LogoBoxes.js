@@ -143,7 +143,7 @@ export default function LogoBoxes({
         // );
       } else {
         let implodeScale = scaleLinear()
-          .domain([-deadZone, -windowHalf / 1.5])
+          .domain([-deadZone, -windowHalf])
           .range([0, -1])
           .clamp(true);
         mouseX = implodeScale(mouse.current[0]);
@@ -244,24 +244,41 @@ export default function LogoBoxes({
       const explodeZ = spherePoints[idx].z * sphereDist;
 
       // Implosion Animation
-      const wobbleFactor = 0;
-      const explodeFactor = 5;
+
       // // Set mouse to 0 on right side of screen to bypass implosion effect
       // const mouseFilterd = mouseVelX <= 0 ? mouseVelX : 0;
       // // Use y = mx + b to shift effect range from center of screen/right side to left side/center
       // const mouseShiftedX = -mouseFilterd - 1;
+      // Shift scale so left edge of screen is 0, middle is -1
       let shiftScale = scaleLinear().domain([-1, 0]).range([0, -1]).clamp(true);
       const mouseShiftedX = shiftScale(mouseVelX);
+      const wobbleFactor = 0;
+      // From left edge to mid left, collapse sphere to origin
+      let sphereScale = scalePow()
+        .exponent(0.3)
+        .domain([0, -0.5])
+        .range([1, 5])
+        .clamp(true);
+      const sphereRadius = sphereScale(mouseShiftedX);
+      // if (idx === 0) {
+      //   console.log(sphereRadius);
+      // }
+      // From center to mid left, transition for logo to sphere
+      let logo2SphereScale = scaleLinear()
+        .domain([-0.5, -1])
+        .range([0, -1])
+        .clamp(true);
+      const logo2Sphere = logo2SphereScale(mouseShiftedX);
       // Generate implode functions
       const implodeX =
-        (-x - groupPosXY) * mouseShiftedX -
-        spherePoints[idx].x * explodeFactor * (1 + mouseShiftedX);
+        (-x - groupPosXY) * logo2Sphere -
+        spherePoints[idx].x * sphereRadius * (1 + logo2Sphere);
       const implodeY =
-        (-y - groupPosXY) * mouseShiftedX -
-        spherePoints[idx].y * explodeFactor * (1 + mouseShiftedX);
+        (-y - groupPosXY) * logo2Sphere -
+        spherePoints[idx].y * sphereRadius * (1 + logo2Sphere);
       const implodeZ =
-        (-z - groupPosZ) * mouseShiftedX -
-        spherePoints[idx].z * explodeFactor * (1 + mouseShiftedX);
+        (-z - groupPosZ) * logo2Sphere -
+        spherePoints[idx].z * sphereRadius * (1 + logo2Sphere);
 
       // // Collapse to sphere
       // const wobbleFactor = 0;

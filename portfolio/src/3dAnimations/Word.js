@@ -1,14 +1,39 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import Letter from './Letter';
 
-export default function Word({ fontSize, fadeDelay, text }) {
-  return [...text].map((letter) => (
-    <Suspense fallback={null}>
+export default function Word({
+  fontSize,
+  fadeDelay,
+  text,
+  letterSpacing,
+  position,
+  mouse,
+  blackholeCenter,
+}) {
+  const letters = [...text];
+  const [x, y, z] = position;
+  // Calculate letter positions and center
+  // const center = (letters.length * letterSpacing) / 2;
+  // const offset = x - center;
+  let positionsX = [];
+  let positionCurrent = 0;
+  letters.forEach(() => {
+    positionsX.push(positionCurrent);
+    positionCurrent += letterSpacing;
+  });
+  const center = positionsX[positionsX.length - 1] / 2;
+  const offset = x - center;
+  let positions = positionsX.map((posX) => [posX + offset, y + 5, z]);
+
+  return letters.map((letter, idx) => (
+    <Suspense key={idx} fallback={null}>
       <Letter
         text={letter}
-        position={[0, 0, 0]}
+        position={positions[idx]}
         fontSize={fontSize}
         fadeDelay={fadeDelay}
+        mouse={mouse}
+        blackholeCenter={blackholeCenter}
       />
     </Suspense>
   ));

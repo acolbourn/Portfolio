@@ -24,6 +24,7 @@ import Effects from './Effects';
 import FadingBloom from './FadingBloom';
 // import WobbleSphere from './WobbleSphere';
 import Word from './Word';
+import TextGeometry from './TextGeometry';
 
 export default function ThreeViewer() {
   const [scale, setScale] = useState(0.9);
@@ -167,11 +168,22 @@ export default function ThreeViewer() {
           fontSize={fontSizes.titles}
           fadeDelay={2500}
         /> */}
+        <Suspense fallback={null}>
+          <TextGeometry
+            text={'Alex Colbourn'}
+            position={positions.name}
+            fontSize={fontSizes.name}
+            fadeDelay={1000}
+          />
+        </Suspense>
         <Word
           text={'Alex Colbourn'}
           position={positions.name}
           fontSize={fontSizes.name}
+          letterSpacing={3.17}
           fadeDelay={1000}
+          mouse={mouse}
+          blackholeCenter={positions.logo}
         />
       </group>
       <Stars />

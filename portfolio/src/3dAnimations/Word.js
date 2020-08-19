@@ -25,7 +25,7 @@ export default function Word({
   const offset = x - center;
   let positions = positionsX.map((posX) => [posX + offset, y + 5, z]);
 
-  return letters.map((letter, idx) => (
+  const letterComponents = letters.map((letter, idx) => (
     <Suspense key={idx} fallback={null}>
       <Letter
         text={letter}
@@ -33,8 +33,13 @@ export default function Word({
         fontSize={fontSize}
         fadeDelay={fadeDelay}
         mouse={mouse}
-        blackholeCenter={blackholeCenter}
       />
     </Suspense>
   ));
+
+  return (
+    <mesh position={[blackholeCenter[0], blackholeCenter[1], 0]}>
+      {letterComponents}
+    </mesh>
+  );
 }

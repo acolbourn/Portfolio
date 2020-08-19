@@ -12,7 +12,7 @@ import {
   Noise,
   Vignette,
 } from 'react-postprocessing';
-
+import { scaleLinear } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
 import { Stars, StandardEffects } from 'drei';
 import LogoBoxes from './LogoBoxes.js';
@@ -96,12 +96,18 @@ export default function ThreeViewer() {
   });
 
   // Process mouse/touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
-  const mouse = useRef([0, 0, 0]);
+  const mouse = useRef([0, 0, 0, 0]); // [raw X, raw Y, scaled X, scaled Y]
+  const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
+  // Mouse X scaling
+  let mouseXScaled = scaleLinear()
+    .domain([-window.innerWidth / 2, -deadZone])
+    .range([0, 1])
+    .clamp(true);
   // Process mouse movements
   const onMouseMove = useCallback(({ clientX: x, clientY: y }) => {
     const mouseX = x - window.innerWidth / 2;
     const mouseY = y - window.innerHeight / 2;
-    // Scale Y here since multiple components share Y but not X scaling
+    // Scale X and Y
     const mouseYScaled = scaleMouse(
       mouseY,
       window.innerHeight,
@@ -109,7 +115,7 @@ export default function ThreeViewer() {
       75,
       1
     );
-    mouse.current = [mouseX, mouseY, mouseYScaled];
+    mouse.current = [mouseX, mouseY, mouseXScaled(mouseX), mouseYScaled];
   }, []);
   // Process mobile/touchscreen movements
   const onTouchMove = useCallback((event) => {
@@ -117,7 +123,7 @@ export default function ThreeViewer() {
     const touch = event.touches[0];
     const mouseX = touch.clientX - window.innerWidth / 2;
     const mouseY = touch.clientY - window.innerHeight / 2;
-    // Scale Y here since multiple components share Y but not X scaling
+    // Scale X and Y
     const mouseYScaled = scaleMouse(
       mouseY,
       window.innerHeight,
@@ -125,7 +131,7 @@ export default function ThreeViewer() {
       75,
       1
     );
-    mouse.current = [mouseX, mouseY, mouseYScaled];
+    mouse.current = [mouseX, mouseY, mouseXScaled(mouseX), mouseYScaled];
   }, []);
 
   return (
@@ -151,6 +157,7 @@ export default function ThreeViewer() {
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
+            deadZone={deadZone}
             mouse={mouse}
             fadeDelay={3000}
             disableMouse={disableMouse}

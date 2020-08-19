@@ -9,7 +9,7 @@ export default function Light({ maxIntensity, mouse, disableMouse }) {
   useFrame(() => {
     light.current.intensity = disableMouse
       ? 0
-      : maxIntensity * Math.abs(mouse.current[2]);
+      : maxIntensity * Math.abs(mouse.current[3]);
   });
 
   return (

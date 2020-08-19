@@ -47,7 +47,6 @@ const animateSpeedY = 0.02; // Delay time for user mouse position to smooth out 
 const explodeSpeed = 0.02; // Delay time for user mouse position to smooth out explosion animation effect
 const implodeSpeed = 0.2; // Delay time for user mouse position to smooth out implosion animation effect
 let animateVel = explodeSpeed; // Delayed animation speed changes for smoother animation
-const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
 let colorIndex = 0; // Current color index to select varying color when mouse at bottom of screen
 let offset; // Starting index of next color used in render loop
 // Create array with xy points copied to each depth in z direction
@@ -66,6 +65,7 @@ export default function LogoBoxes({
   meshScale,
   fadeDelay,
   disableMouse,
+  deadZone,
 }) {
   const ref = useRef(); // Mesh ref
   const [isLoading, setIsLoading] = useState(true);
@@ -156,7 +156,7 @@ export default function LogoBoxes({
         //   1
         // );
       }
-      mouseY = mouse.current[2];
+      mouseY = mouse.current[3];
     }
 
     // Create smooth scale between implosion/explosion animation speeds

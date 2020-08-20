@@ -22,9 +22,26 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   const initialRadius = spherePosition.radius;
   const initialPhi = spherePosition.phi;
   const initialTheta = spherePosition.theta;
-  const numOfRotations = 3 * (Math.PI * 2);
+  // const numOfRotations = 1 * (Math.PI * 2);
   let positionXYZ = new THREE.Vector3();
   positionXYZ.setFromSpherical(spherePosition);
+
+  // Create rotation axis
+  const origin = new THREE.Vector3(0, 0, 0);
+  const xAxis = new THREE.Vector3(1, 0, 0);
+  const yAxis = new THREE.Vector3(0, 1, 0);
+  const zAxis = new THREE.Vector3(0, 0, 1);
+  // Create quaternions and normalize
+  let xQuat = new THREE.Quaternion();
+  xQuat.normalize();
+  let yQuat = new THREE.Quaternion();
+  yQuat.normalize();
+  let zQuat = new THREE.Quaternion();
+  zQuat.normalize();
+
+  // From cylinder pointing at dot on sphere example
+  let rotationMatrix = new THREE.Matrix4();
+  let targetQuaternion = new THREE.Quaternion();
 
   // Fade in text
   useEffect(() => {
@@ -45,6 +62,7 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   };
 
   const textRef = useRef();
+
   useFrame(() => {
     // Fade in Text
     if (!isLoading && opacity.current < 1) {
@@ -60,23 +78,84 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
     // );
 
     // Collapse to center and rotate
-    const phiRotations = 0;
-    // const phiRotations = numOfRotations * mouse.current[2];
-    const thetaRotations = 0;
-    // const thetaRotations = numOfRotations * mouse.current[2];
-    const phiSpinFactor = spherePosition.phi + 0.01;
+
+    // const phiRotations = THREE.Math.degToRad(0);
+    let phiRotations = THREE.Math.degToRad(180) * mouse.current[2];
+    const phiSign = phiRotations >= 0 ? 1 : -1;
+    let thetaRotations;
+    if (phiSign < 0) {
+      phiRotations = Math.abs(phiRotations);
+      thetaRotations = THREE.Math.degToRad(180);
+    } else {
+      thetaRotations = THREE.Math.degToRad(0);
+    }
+
+    // const thetaRotations = THREE.Math.degToRad(180) * mouse.current[2];
+    // const phiSpinFactor = spherePosition.phi + 0.01;
+    const phiSpinFactor = 0;
     // const thetaSpinFactor = spherePosition.theta + 0.01;
     const thetaSpinFactor = 0;
 
-    spherePosition.set(
-      initialRadius * mouse.current[2],
-      phiSpinFactor + phiRotations,
-      thetaRotations + thetaSpinFactor
-    );
+    // makeSafe Restricts the polar angle phi to be between 0.000001 and pi - 0.000001.
+    spherePosition
+      .set(
+        // initialRadius * mouse.current[2],
+        initialRadius,
+        phiSpinFactor + phiRotations,
+        thetaRotations + thetaSpinFactor
+      )
+      .makeSafe();
 
     // Convert to cartesian coordinates and update
     positionXYZ.setFromSpherical(spherePosition);
     textRef.current.position.set(positionXYZ.x, positionXYZ.y, positionXYZ.z);
+    // textRef.current.rotation.set(spherePosition.theta, 0, 0);
+    textRef.current.lookAt(origin);
+    textRef.current.rotateX(THREE.Math.degToRad(-90));
+    // flip to counteract lookat function which flips for positive values
+    console.log(phiRotations);
+    if (phiSign >= 0) {
+      textRef.current.rotateY(THREE.Math.degToRad(180));
+    }
+
+    // from cone pointing to dot on sphere example
+    // rotationMatrix.lookAt(
+    //   textRef.current.position.normalize(),
+    //   origin.normalize(),
+    //   textRef.current.up
+    // );
+    // targetQuaternion.setFromRotationMatrix(rotationMatrix);
+    // textRef.current.quaternion.set(targetQuaternion);
+
+    // // Spin around normal axis
+    // var normalToSphereQuat = new THREE.Quaternion();
+    // //we set the axis around which the rotation will occur. It needs to be normalized
+    // var axis = new THREE.Vector3(
+    //   positionXYZ.x,
+    //   positionXYZ.y,
+    //   positionXYZ.z
+    // ).normalize();
+    // //and the angle value (radians)
+    // var angle = 0.01;
+    // normalToSphereQuat.setFromAxisAngle(axis, angle);
+    // textRef.current.applyQuaternion(normalToSphereQuat);
+
+    //and the angle value (radians)
+    // var angle = 0.01;
+    // console.log(spherePosition.phi);
+    // xQuat.setFromAxisAngle(xAxis, spherePosition.phi);
+    // textRef.current.applyQuaternion(xQuat);
+
+    // let axis = new THREE.Vector3(
+    //   positionXYZ.x,
+    //   positionXYZ.y,
+    //   positionXYZ.z
+    // ).normalize();
+    // let currentQuat = new THREE.Quaternion();
+    // currentQuat.setFromAxisAngle(axis, THREE.Math.degToRad(180));
+    // currentQuat.normalize();
+
+    // textRef.current.rotateX(THREE.Math.degToRad(360 * mouse.current[2]));
   });
 
   return (
@@ -138,14 +217,11 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
           factor={2}
           speed={100}
         /> */}
+        <axesHelper />
+        {/* <arrowHelper /> */}
       </Text>
     </Suspense>
   );
-}
-
-function degrees_to_radians(degrees) {
-  var pi = Math.PI;
-  return degrees * (pi / 180);
 }
 
 // THREE.Object3D.prototype.rotateAroundWorldAxis = (function () {
@@ -195,15 +271,15 @@ function degrees_to_radians(degrees) {
 // textRef.current.rotation.set(0, 0, 1);
 
 // var timer = Date.now() * 0.00025;
-// textRef.current.rotateAroundWorldAxis(point, xAxis, degrees_to_radians(90));
+// textRef.current.rotateAroundWorldAxis(point, xAxis, THREE.Math.degToRad(90));
 // textRef.current.rotateAroundWorldAxis(point, axis, Math.sin(timer * 7));
 
 // // Apply rotations to temporary object and then only apply final result to avoid rendering intermediate steps of calculation
 // // tempObject.position.set(x - implodeX, y - implodeY, z - implodeZ);
 // tempObject.position.set(x, y, z);
-// xQuat.setFromAxisAngle(xAxis, degrees_to_radians(360 * mouse.current[2]));
-// // yQuat.setFromAxisAngle(yAxis, degrees_to_radians(360 * mouse.current[2]));
-// // zQuat.setFromAxisAngle(zAxis, degrees_to_radians(360 * mouse.current[2]));
+// xQuat.setFromAxisAngle(xAxis, THREE.Math.degToRad(360 * mouse.current[2]));
+// // yQuat.setFromAxisAngle(yAxis, THREE.Math.degToRad(360 * mouse.current[2]));
+// // zQuat.setFromAxisAngle(zAxis, THREE.Math.degToRad(360 * mouse.current[2]));
 // tempObject.quaternion.multiplyQuaternions(xQuat, tempObject.quaternion);
 // // tempObject.quaternion.multiplyQuaternions(yQuat, tempObject.quaternion);
 // // tempObject.quaternion.multiplyQuaternions(zQuat, tempObject.quaternion);
@@ -224,21 +300,21 @@ function degrees_to_radians(degrees) {
 // const zSpeed = 1;
 
 // if (enableX) {
-//   xQuat.setFromAxisAngle(xAxis, degrees_to_radians(xSpeed + randomFactor));
+//   xQuat.setFromAxisAngle(xAxis, THREE.Math.degToRad(xSpeed + randomFactor));
 //   textRef.current.quaternion.multiplyQuaternions(
 //     xQuat,
 //     textRef.current.quaternion
 //   );
 // }
 // if (enableY) {
-//   yQuat.setFromAxisAngle(yAxis, degrees_to_radians(ySpeed + randomFactor));
+//   yQuat.setFromAxisAngle(yAxis, THREE.Math.degToRad(ySpeed + randomFactor));
 //   textRef.current.quaternion.multiplyQuaternions(
 //     yQuat,
 //     textRef.current.quaternion
 //   );
 // }
 // if (enableZ) {
-//   zQuat.setFromAxisAngle(zAxis, degrees_to_radians(zSpeed + randomFactor));
+//   zQuat.setFromAxisAngle(zAxis, THREE.Math.degToRad(zSpeed + randomFactor));
 //   textRef.current.quaternion.multiplyQuaternions(
 //     zQuat,
 //     textRef.current.quaternion

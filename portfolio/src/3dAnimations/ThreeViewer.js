@@ -100,9 +100,14 @@ export default function ThreeViewer() {
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
   // Mouse X scaling
   let mouseXScaled = scaleLinear()
-    .domain([-window.innerWidth / 2, -deadZone])
-    .range([0, 1])
+    .domain([-window.innerWidth / 2, window.innerWidth / 2])
+    .range([-1, 1])
     .clamp(true);
+  // // Mouse X scaling
+  // let mouseXScaled = scaleLinear()
+  //   .domain([-window.innerWidth / 2, -deadZone])
+  //   .range([0, 1])
+  //   .clamp(true);
   // Process mouse movements
   const onMouseMove = useCallback(({ clientX: x, clientY: y }) => {
     const mouseX = x - window.innerWidth / 2;
@@ -153,7 +158,7 @@ export default function ThreeViewer() {
       <pointLight position={[100, 100, 100]} intensity={2.2} />
       <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
@@ -162,7 +167,7 @@ export default function ThreeViewer() {
             fadeDelay={3000}
             disableMouse={disableMouse}
           />
-        </Suspense>
+        </Suspense> */}
         {/* <Letter
           text={'Alex Colbourn'}
           position={positions.name}
@@ -184,7 +189,7 @@ export default function ThreeViewer() {
           />
         </Suspense>
         <Word
-          text={'Alex Colbourn'}
+          text={'e'}
           position={positions.name}
           fontSize={fontSizes.name}
           letterSpacing={3.17}

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, Suspense } from 'react';
+import React, { useRef, useEffect, useState, Suspense, useMemo } from 'react';
 import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
 import { MeshWobbleMaterial, Text } from 'drei';
@@ -16,6 +16,8 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   const opacityFadeSpeed = 0.01; // Opacity Fade in speed
   // Get random point on a sphere that letter will move to
   // const spherePoint = getRandomSpherePoints(1);
+
+  console.log('Loaded');
 
   let spherePosition = new THREE.Spherical();
   spherePosition.setFromCartesianCoords(x, y, z);
@@ -42,6 +44,26 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   // From cylinder pointing at dot on sphere example
   let rotationMatrix = new THREE.Matrix4();
   let targetQuaternion = new THREE.Quaternion();
+
+  let phiPath = []; // phi angles, each array value is animation step
+  let rotationIndex = 0; // Current step of rotation path array
+  let thetaRotation = 0; // Current theta rotation
+  let phiSign = 1; // Current sign of phi to flip rotation at 180 degree sign swap
+
+  useEffect(() => {
+    // Create rotation paths
+    const phiResolution = 0.01;
+    // Build path from 0 to 180 degrees
+    for (let i = 0; i <= Math.PI; i += phiResolution) {
+      phiPath.push(i);
+    }
+    // Build path from 180 degrees to 0 bc in spherical coordinates 0 to 180 is halfway around sphere, then theta is reversed and 180 to 0 is rest of sphere
+    const phiSize = phiPath.length;
+    phiPath.push(-1); // loop uses this value to trigger theta to flip
+    for (let j = Math.PI - phiResolution; j > 0; j -= phiResolution) {
+      phiPath.push(j);
+    }
+  });
 
   // Fade in text
   useEffect(() => {
@@ -77,32 +99,54 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
     //   initialTheta * mouse.current[2]
     // );
 
-    // Collapse to center and rotate
-
-    // const phiRotations = THREE.Math.degToRad(0);
-    let phiRotations = THREE.Math.degToRad(180) * mouse.current[2];
-    const phiSign = phiRotations >= 0 ? 1 : -1;
-    let thetaRotations;
-    if (phiSign < 0) {
-      phiRotations = Math.abs(phiRotations);
-      thetaRotations = THREE.Math.degToRad(180);
-    } else {
-      thetaRotations = THREE.Math.degToRad(0);
+    // Flip theta when phi is at 180 to move around opposite side of sphere
+    // The -1 value is a flag inserted to trigger flip
+    if (phiPath[rotationIndex] === -1) {
+      thetaRotation = THREE.Math.degToRad(180);
+      phiSign = -1;
+      // increment counter an extra time so value after -1 flag is used
+      if (rotationIndex < phiPath.length - 1) {
+        rotationIndex += 1;
+      } else {
+        rotationIndex = 0;
+      }
+    } else if (rotationIndex === 0) {
+      thetaRotation = THREE.Math.degToRad(0);
+      phiSign = 1;
     }
 
-    // const thetaRotations = THREE.Math.degToRad(180) * mouse.current[2];
+    // const phiRotation = THREE.Math.degToRad(0);
+    let phiRotation = phiPath[rotationIndex];
+    if (rotationIndex < phiPath.length - 1) {
+      rotationIndex += 3;
+    } else {
+      rotationIndex = 0;
+    }
+
+    // // let phiRotation = THREE.Math.degToRad(180) * mouse.current[2];
+    // const phiSign = phiRotation >= 0 ? 1 : -1;
+    // if (phiSign < 0) {
+    //   phiRotation = Math.abs(phiRotation);
+    //   thetaRotation = THREE.Math.degToRad(180);
+    // } else {
+    //   thetaRotation = THREE.Math.degToRad(0);
+    // }
+
+    // const thetaRotation = THREE.Math.degToRad(180) * mouse.current[2];
     // const phiSpinFactor = spherePosition.phi + 0.01;
     const phiSpinFactor = 0;
     // const thetaSpinFactor = spherePosition.theta + 0.01;
     const thetaSpinFactor = 0;
 
+    // console.log('Phi: ', phiRotation);
+    // console.log('Theta: ', thetaRotation);
     // makeSafe Restricts the polar angle phi to be between 0.000001 and pi - 0.000001.
     spherePosition
       .set(
-        // initialRadius * mouse.current[2],
-        initialRadius,
-        phiSpinFactor + phiRotations,
-        thetaRotations + thetaSpinFactor
+        initialRadius * mouse.current[2],
+        // initialRadius,
+        phiSpinFactor + phiRotation,
+        thetaRotation + thetaSpinFactor
       )
       .makeSafe();
 
@@ -113,7 +157,6 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
     textRef.current.lookAt(origin);
     textRef.current.rotateX(THREE.Math.degToRad(-90));
     // flip to counteract lookat function which flips for positive values
-    console.log(phiRotations);
     if (phiSign >= 0) {
       textRef.current.rotateY(THREE.Math.degToRad(180));
     }

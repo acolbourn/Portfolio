@@ -180,16 +180,16 @@ export default function ThreeViewer() {
           fontSize={fontSizes.titles}
           fadeDelay={2500}
         /> */}
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}>
           <TextGeometry
             text={'Alex Colbourn'}
             position={positions.name}
             fontSize={fontSizes.name}
             fadeDelay={1000}
           />
-        </Suspense>
+        </Suspense> */}
         <Word
-          text={'e'}
+          text={'Alex Colbourn'}
           position={positions.name}
           fontSize={fontSizes.name}
           letterSpacing={3.17}

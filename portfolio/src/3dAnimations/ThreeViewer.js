@@ -158,7 +158,7 @@ export default function ThreeViewer() {
       <pointLight position={[100, 100, 100]} intensity={2.2} />
       <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
-        {/* <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
@@ -167,7 +167,7 @@ export default function ThreeViewer() {
             fadeDelay={3000}
             disableMouse={disableMouse}
           />
-        </Suspense> */}
+        </Suspense>
         {/* <Letter
           text={'Alex Colbourn'}
           position={positions.name}

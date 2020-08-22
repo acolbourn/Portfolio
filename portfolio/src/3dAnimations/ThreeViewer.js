@@ -1,30 +1,30 @@
 import React, {
-  Suspense,
+  // Suspense,
   useRef,
   useCallback,
   useState,
   useEffect,
 } from 'react';
-import {
-  EffectComposer,
-  DepthOfField,
-  Bloom,
-  Noise,
-  Vignette,
-} from 'react-postprocessing';
+// import {
+//   EffectComposer,
+//   DepthOfField,
+//   Bloom,
+//   Noise,
+//   Vignette,
+// } from 'react-postprocessing';
 import { scaleLinear } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
-import { Stars, StandardEffects } from 'drei';
-import LogoBoxes from './LogoBoxes.js';
-import Letter from './Letter';
+import { Stars } from 'drei';
+// import LogoBoxes from './LogoBoxes.js';
+// import Letter from './Letter';
 import useWidth from '../hooks/useWidth';
 import Light from './Light';
 import { scaleMouse } from './LogoBoxesHelpers';
-import Effects from './Effects';
-import FadingBloom from './FadingBloom';
+// import Effects from './Effects';
+// import FadingBloom from './FadingBloom';
 // import WobbleSphere from './WobbleSphere';
 import Word from './Word';
-import TextGeometry from './TextGeometry';
+// import TextGeometry from './TextGeometry';
 
 export default function ThreeViewer() {
   const [scale, setScale] = useState(0.9);
@@ -109,35 +109,41 @@ export default function ThreeViewer() {
   //   .range([0, 1])
   //   .clamp(true);
   // Process mouse movements
-  const onMouseMove = useCallback(({ clientX: x, clientY: y }) => {
-    const mouseX = x - window.innerWidth / 2;
-    const mouseY = y - window.innerHeight / 2;
-    // Scale X and Y
-    const mouseYScaled = scaleMouse(
-      mouseY,
-      window.innerHeight,
-      'linear',
-      75,
-      1
-    );
-    mouse.current = [mouseX, mouseY, mouseXScaled(mouseX), mouseYScaled];
-  }, []);
+  const onMouseMove = useCallback(
+    ({ clientX: x, clientY: y }) => {
+      const mouseX = x - window.innerWidth / 2;
+      const mouseY = y - window.innerHeight / 2;
+      // Scale X and Y
+      const mouseYScaled = scaleMouse(
+        mouseY,
+        window.innerHeight,
+        'linear',
+        deadZone,
+        1
+      );
+      mouse.current = [mouseX, mouseY, mouseXScaled(mouseX), mouseYScaled];
+    },
+    [mouseXScaled]
+  );
   // Process mobile/touchscreen movements
-  const onTouchMove = useCallback((event) => {
-    event.preventDefault();
-    const touch = event.touches[0];
-    const mouseX = touch.clientX - window.innerWidth / 2;
-    const mouseY = touch.clientY - window.innerHeight / 2;
-    // Scale X and Y
-    const mouseYScaled = scaleMouse(
-      mouseY,
-      window.innerHeight,
-      'linear',
-      75,
-      1
-    );
-    mouse.current = [mouseX, mouseY, mouseXScaled(mouseX), mouseYScaled];
-  }, []);
+  const onTouchMove = useCallback(
+    (event) => {
+      event.preventDefault();
+      const touch = event.touches[0];
+      const mouseX = touch.clientX - window.innerWidth / 2;
+      const mouseY = touch.clientY - window.innerHeight / 2;
+      // Scale X and Y
+      const mouseYScaled = scaleMouse(
+        mouseY,
+        window.innerHeight,
+        'linear',
+        deadZone,
+        1
+      );
+      mouse.current = [mouseX, mouseY, mouseXScaled(mouseX), mouseYScaled];
+    },
+    [mouseXScaled]
+  );
 
   return (
     <Canvas
@@ -158,7 +164,7 @@ export default function ThreeViewer() {
       <pointLight position={[100, 100, 100]} intensity={2.2} />
       <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
@@ -167,7 +173,7 @@ export default function ThreeViewer() {
             fadeDelay={3000}
             disableMouse={disableMouse}
           />
-        </Suspense>
+        </Suspense> */}
         {/* <Letter
           text={'Alex Colbourn'}
           position={positions.name}

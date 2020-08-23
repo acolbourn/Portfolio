@@ -15,7 +15,7 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   const opacityFadeSpeed = 0.01; // Opacity Fade in speed
   const [letterSpring, set, stop] = useSpring(() => ({
     position: [x, y, z],
-    rotation: [0, 0, 0],
+    quaternion: [0, 0, 0, 1],
     config: { mass: 20, tension: 150, friction: 50 },
   }));
 
@@ -36,7 +36,9 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   const zDir = z - holeZ;
   let vectorToHole = new THREE.Vector3(xDir, yDir, zDir).normalize();
   const initDistToHole = Math.hypot(xDir, yDir, zDir); // Initial distance to blackhole center
-  const tempObject = new THREE.Object3D(); // Init object for applying rotation around sphere in background, then apply values to actual object
+  let tempObject = new THREE.Object3D(); // Not displayed, object for rotation calculations that are then applied to each letter.
+  tempObject.position.set(x, y, z);
+  // console.log(tempObject.quaternion);
 
   // Fade in text
   useEffect(() => {
@@ -144,9 +146,12 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
       tempObject.position.add(blackHolePos);
 
       // If position isn't at blackhole center or further than initial position, translate towards blackhole.  Ensure center/init positions aren't exceeded
-      const transDist = mouse.current[2]; // amount to move towards/away from hole
-
-      tempObject.translateOnAxis(vectorToHole, mouse.current[2]);
+      const gravity = 0.05;
+      if (mouse.current[2] >= -0.5) {
+        tempObject.translateOnAxis(vectorToHole, gravity); // move towards hole
+      } else if (mouse.current[2] < -0.5) {
+        tempObject.translateOnAxis(vectorToHole, -1 * gravity); // move away from hole
+      }
 
       set({
         position: [
@@ -154,11 +159,22 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
           tempObject.position.y,
           tempObject.position.z,
         ],
-        rotation: [0, 0, 0],
+        quaternion: [
+          tempObject.quaternion.x,
+          tempObject.quaternion.y,
+          tempObject.quaternion.z,
+          tempObject.quaternion.w,
+        ],
       });
     } else if (mouse.current[2] > 0) {
       rotateX += 0.1;
-      set({ position: [x, y, z], rotation: [rotateX, 0, 0] });
+      set({ position: [x, y, z], quaternion: [0, 0, 0, 1] });
+      // Reset calculations so animations start from initial positions instead of jumping to previous calculated positions
+      tempObject.position.set(x, y, z);
+      tempObject.quaternion.set(0, 0, 0, 1);
+      xQuat.set(0, 0, 0, 1);
+      yQuat.set(0, 0, 0, 1);
+      zQuat.set(0, 0, 0, 1);
     }
   });
 

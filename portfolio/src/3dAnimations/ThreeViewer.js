@@ -1,5 +1,5 @@
 import React, {
-  // Suspense,
+  Suspense,
   useRef,
   useCallback,
   useState,
@@ -15,7 +15,7 @@ import React, {
 import { scaleLinear } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
 import { Stars } from 'drei';
-// import LogoBoxes from './LogoBoxes.js';
+import LogoBoxes from './LogoBoxes.js';
 // import Letter from './Letter';
 import useWidth from '../hooks/useWidth';
 import Light from './Light';
@@ -96,12 +96,16 @@ export default function ThreeViewer() {
   });
 
   // Process mouse/touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
-  const mouse = useRef([0, 0, 0, 0]); // [raw X, raw Y, scaled X, scaled Y]
+  const mouse = useRef([0, 0, 0, 0, 1]); // [raw X, raw Y, scaled X, scaled Y]
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
   // Mouse X scaling
   let mouseXScaled = scaleLinear()
     .domain([-window.innerWidth / 2, window.innerWidth / 2])
     .range([-1, 1])
+    .clamp(true);
+  let mouseXScaledLetters = scaleLinear()
+    .domain([-window.innerWidth / 2, -deadZone])
+    .range([0, 1])
     .clamp(true);
   // // Mouse X scaling
   // let mouseXScaled = scaleLinear()
@@ -121,7 +125,13 @@ export default function ThreeViewer() {
         deadZone,
         1
       );
-      mouse.current = [mouseX, mouseY, mouseXScaled(mouseX), mouseYScaled];
+      mouse.current = [
+        mouseX,
+        mouseY,
+        mouseXScaled(mouseX),
+        mouseYScaled,
+        mouseXScaledLetters(mouseX),
+      ];
     },
     [mouseXScaled]
   );
@@ -140,7 +150,13 @@ export default function ThreeViewer() {
         deadZone,
         1
       );
-      mouse.current = [mouseX, mouseY, mouseXScaled(mouseX), mouseYScaled];
+      mouse.current = [
+        mouseX,
+        mouseY,
+        mouseXScaled(mouseX),
+        mouseYScaled,
+        mouseXScaledLetters(mouseX),
+      ];
     },
     [mouseXScaled]
   );
@@ -164,7 +180,7 @@ export default function ThreeViewer() {
       <pointLight position={[100, 100, 100]} intensity={2.2} />
       <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
-        {/* <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
@@ -173,7 +189,7 @@ export default function ThreeViewer() {
             fadeDelay={3000}
             disableMouse={disableMouse}
           />
-        </Suspense> */}
+        </Suspense>
         {/* <Letter
           text={'Alex Colbourn'}
           position={positions.name}

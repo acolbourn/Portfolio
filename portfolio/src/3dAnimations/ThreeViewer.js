@@ -12,7 +12,7 @@ import React, {
 //   Noise,
 //   Vignette,
 // } from 'react-postprocessing';
-import { scaleLinear } from 'd3-scale';
+import { scaleLinear, scalePow } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
 import { Stars } from 'drei';
 import LogoBoxes from './LogoBoxes.js';
@@ -96,27 +96,61 @@ export default function ThreeViewer() {
   });
 
   // Process mouse/touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
-  const mouse = useRef([0, 0, 0, 0, 1]); // [raw X, raw Y, scaled X, scaled Y]
+  // const mouse = useRef([0, 0, 0, 0, 1, 1, true, true]); // [raw X, raw Y, scaled X, scaled Y]
+  const mouse = useRef({
+    mouseX: 0, // Raw X
+    mouseY: 0, // Raw Y
+    mouseXScaled: 0, // X scaled linearly from -1 to 1
+    mouseYScaled: 0, // Y scaled linearly from -1 to 1
+    mouseXLeftLin: 0, // X scaled linearly from 0 to 1 on left
+    mouseXRightLin: 0, // X scaled linearly from 0 to 1 on right
+    mouseXLeftLog: 0, // X scaled logarithmically from on left
+    mouseXRightLog: 0, // X scaled logarithmically from on right
+    inDeadZone: true, // true = mouse in center, else false
+    isLeftOrRight: true, // false = mouse on left, true = right
+  });
+  const test = useRef({ test: 'hi' });
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
-  // Mouse X scaling
-  let mouseXScaled = scaleLinear()
-    .domain([-window.innerWidth / 2, window.innerWidth / 2])
+  const windowHalf = window.innerWidth / 2;
+  // Scaling functions
+  let mouseXScale = scaleLinear()
+    .domain([-windowHalf, windowHalf])
     .range([-1, 1])
     .clamp(true);
-  let mouseXScaledLetters = scaleLinear()
-    .domain([-window.innerWidth / 2, -deadZone])
+  let mouseXLeftLinScale = scaleLinear()
+    .domain([-windowHalf, -deadZone])
+    .range([0, 1])
+    .clamp(true);
+  let mouseXRightLinScale = scaleLinear()
+    .domain([deadZone, windowHalf])
+    .range([0, 1])
+    .clamp(true);
+  let mouseXRightLogScale = scalePow()
+    .exponent(10)
+    .domain([deadZone, windowHalf])
     .range([0, 1])
     .clamp(true);
   // // Mouse X scaling
   // let mouseXScaled = scaleLinear()
-  //   .domain([-window.innerWidth / 2, -deadZone])
+  //   .domain([-windowHalf, -deadZone])
   //   .range([0, 1])
   //   .clamp(true);
+
   // Process mouse movements
   const onMouseMove = useCallback(
     ({ clientX: x, clientY: y }) => {
-      const mouseX = x - window.innerWidth / 2;
+      const mouseX = x - windowHalf;
       const mouseY = y - window.innerHeight / 2;
+      let inDeadZone = true; // true if mouse x in center of screen
+      let isLeftOrRight = false; // false if mouse x on left side of screen, true if on right
+      // Determine if mouse x position is in deadzone
+      if (mouseX <= deadZone && mouseX >= -1 * deadZone) {
+        inDeadZone = true;
+      } else {
+        inDeadZone = false;
+      }
+      // Determine which side of screen mouse is on
+      isLeftOrRight = mouseX < 0 ? false : true;
       // Scale X and Y
       const mouseYScaled = scaleMouse(
         mouseY,
@@ -125,41 +159,67 @@ export default function ThreeViewer() {
         deadZone,
         1
       );
-      mouse.current = [
-        mouseX,
-        mouseY,
-        mouseXScaled(mouseX),
-        mouseYScaled,
-        mouseXScaledLetters(mouseX),
-      ];
+      // mouse.current = [
+      //   mouseX,
+      //   mouseY,
+      //   mouseXScaled(mouseX),
+      //   mouseYScaled,
+      //   mouseXScaledLeft(mouseX),
+      //   mouseXScaledRight(mouseX),
+      //   inDeadZone,
+      //   isLeftOrRight,
+      // ];
+      mouse.current = {
+        mouseX: mouseX,
+        mouseY: mouseY,
+        mouseXScaled: mouseXScale(mouseX),
+        mouseYScaled: mouseYScaled,
+        mouseXLeftLin: mouseXLeftLinScale(mouseX),
+        mouseXRightLin: mouseXRightLinScale(mouseX),
+        mouseXLeftLog: 0,
+        mouseXRightLog: mouseXRightLogScale(mouseX),
+        inDeadZone: inDeadZone,
+        isLeftOrRight: isLeftOrRight,
+      };
     },
-    [mouseXScaled]
+    [mouseXScale, mouseXLeftLinScale, mouseXRightLinScale, windowHalf]
   );
-  // Process mobile/touchscreen movements
-  const onTouchMove = useCallback(
-    (event) => {
-      event.preventDefault();
-      const touch = event.touches[0];
-      const mouseX = touch.clientX - window.innerWidth / 2;
-      const mouseY = touch.clientY - window.innerHeight / 2;
-      // Scale X and Y
-      const mouseYScaled = scaleMouse(
-        mouseY,
-        window.innerHeight,
-        'linear',
-        deadZone,
-        1
-      );
-      mouse.current = [
-        mouseX,
-        mouseY,
-        mouseXScaled(mouseX),
-        mouseYScaled,
-        mouseXScaledLetters(mouseX),
-      ];
-    },
-    [mouseXScaled]
-  );
+  // // Process mobile/touchscreen movements
+  // const onTouchMove = useCallback(
+  //   (event) => {
+  //     event.preventDefault();
+  //     const touch = event.touches[0];
+  //     const mouseX = touch.clientX - windowHalf;
+  //     const mouseY = touch.clientY - window.innerHeight / 2;
+  //     // Determine if touch x position is in deadzone
+  //     if (mouse.current[0] <= deadZone && mouse.current[0] >= -1 * deadZone) {
+  //       inDeadZone = true;
+  //     } else {
+  //       inDeadZone = false;
+  //     }
+  //     // Determine which side of screen mouse is on
+  //     isLeftOrRight = mouseX < 0 ? false : true;
+  //     // Scale X and Y
+  //     const mouseYScaled = scaleMouse(
+  //       mouseY,
+  //       window.innerHeight,
+  //       'linear',
+  //       deadZone,
+  //       1
+  //     );
+  //     mouse.current = [
+  //       mouseX,
+  //       mouseY,
+  //       mouseXScaled(mouseX),
+  //       mouseYScaled,
+  //       mouseXScaledLeft(mouseX),
+  //       mouseXScaledRight(mouseX),
+  //       inDeadZone,
+  //       isLeftOrRight,
+  //     ];
+  //   },
+  //   [mouseXScaled]
+  // );
 
   return (
     <Canvas
@@ -168,7 +228,7 @@ export default function ThreeViewer() {
       // camera={{ position: [0, 0, 40], near: 5, far: 200 }}
       onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
       onMouseMove={onMouseMove}
-      onTouchMove={onTouchMove}
+      // onTouchMove={onTouchMove}
       onTouchStart={(e) => e.preventDefault()}
       onTouchEnd={(e) => e.preventDefault()}
       onTouchCancel={(e) => e.preventDefault()}
@@ -180,7 +240,7 @@ export default function ThreeViewer() {
       <pointLight position={[100, 100, 100]} intensity={2.2} />
       <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
@@ -189,7 +249,7 @@ export default function ThreeViewer() {
             fadeDelay={3000}
             disableMouse={disableMouse}
           />
-        </Suspense>
+        </Suspense> */}
         {/* <Letter
           text={'Alex Colbourn'}
           position={positions.name}
@@ -218,6 +278,7 @@ export default function ThreeViewer() {
           fadeDelay={1000}
           mouse={mouse}
           blackholeCenter={positions.logo}
+          test={test}
         />
       </group>
       <Stars />

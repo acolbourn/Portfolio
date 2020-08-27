@@ -2,13 +2,9 @@ import * as THREE from 'three';
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame } from 'react-three-fiber';
 import Color from 'color';
-import { scaleLinear, scaleLog, scalePow } from 'd3-scale';
+import { scaleLinear, scalePow } from 'd3-scale';
 import logoPoints from './logoPoints.js';
-import {
-  getRandomSpherePoints,
-  getHypotenuses,
-  scaleMouse,
-} from './LogoBoxesHelpers';
+import { getRandomSpherePoints } from './LogoBoxesHelpers';
 
 // const colorPalette = ['#1b262c', '#0f4c75', '#00b7c2']; // Colors when mouse at bottom of screen
 const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
@@ -39,8 +35,8 @@ const colorIds = new Array(numOfInstances)
   .map(() => Math.floor(Math.random() * numOfColors));
 // Create random points on a sphere to assign each box to for exploding effect
 const spherePoints = getRandomSpherePoints(numOfInstances);
-let mouseX = 0; // Mouse X Position
-let mouseY = 0; // Mouse Y Position
+// let mouseX = 0; // Mouse X Position
+// let mouseY = 0; // Mouse Y Position
 let mouseVelX = 0; // Delayed mouse X position for smoother animation
 let mouseVelY = 0; // Delayed mouse Y position for smoother animation
 const animateSpeedY = 0.02; // Delay time for user mouse position to smooth out animation effect in Y direction
@@ -57,7 +53,7 @@ logoPoints.forEach((point) => {
   }
 });
 // Calculate each points' distance to group origin;
-const pointsHypotenuses = getHypotenuses(groupPosXY, groupPosZ, logoPoints3d);
+// const pointsHypotenuses = getHypotenuses(groupPosXY, groupPosZ, logoPoints3d);
 
 export default function LogoBoxes({
   mouse,
@@ -113,6 +109,18 @@ export default function LogoBoxes({
   });
 
   useFrame((state) => {
+    let { mouseX, mouseYScaled } = mouse.current;
+    const {
+      // mouseXScaled,
+      // mouseYScaled,
+      // mouseXLeftLin,
+      // mouseXRightLin,
+      // mouseXLeftLog,
+      // mouseXRightLog,
+      // inDeadZone,
+      isLeftOrRight,
+    } = mouse.current;
+
     let i = 0;
     const time = state.clock.getElapsedTime();
     const windowHalf = window.innerWidth / 2; // Half window width for scaling
@@ -124,39 +132,23 @@ export default function LogoBoxes({
     if (disableMouse) {
       // Disable mouse on load and use intro animation values
       mouseX = initBoxPosition;
-      mouseY = 0;
+      mouseYScaled = 0;
     } else {
       // if on right side of screen, scale logorathmically for explosion, else on left side scale linearly for implosion
-      if (mouse.current[0] >= 0) {
+      if (isLeftOrRight) {
         let explodeScale = scalePow()
           .exponent(10)
           .domain([deadZone, windowHalf])
           .range([0, maxBoxDistance])
           .clamp(true);
-        mouseX = explodeScale(mouse.current[0]);
-        // mouseX = scaleMouse(
-        //   mouse.current[0],
-        //   window.innerWidth,
-        //   'log',
-        //   deadZone,
-        //   maxBoxDistance
-        // );
+        mouseX = explodeScale(mouseX);
       } else {
         let implodeScale = scaleLinear()
           .domain([-deadZone, -windowHalf])
           .range([0, -1])
           .clamp(true);
-        mouseX = implodeScale(mouse.current[0]);
-
-        // mouseX = scaleMouse(
-        //   mouse.current[0],
-        //   window.innerWidth,
-        //   'linear',
-        //   deadZone,
-        //   1
-        // );
+        mouseX = implodeScale(mouseX);
       }
-      mouseY = mouse.current[3];
     }
 
     // Create smooth scale between implosion/explosion animation speeds
@@ -166,13 +158,12 @@ export default function LogoBoxes({
       .domain([windowHalf / 2, -windowHalf])
       .range([explodeSpeed, implodeSpeed])
       .clamp(true);
-    let scaledAnimationSpeed = animateScale(mouse.current[0]);
+    let scaledAnimationSpeed = animateScale(mouse.current.mouseX);
 
     // "Velocity" in this case just means a slower/smoother animation.
     animateVel += (scaledAnimationSpeed - animateVel) * 0.02;
-    // console.log('mouse: ', mouse.current[0], '    speed: ', animateVel);
     mouseVelX += (mouseX - mouseVelX) * animateVel;
-    mouseVelY += (mouseY - mouseVelY) * animateSpeedY;
+    mouseVelY += (mouseYScaled - mouseVelY) * animateSpeedY;
 
     // Shrink scale on implosion
     // const windowOffset = 20; // Offset so it implodes slighlty before edge
@@ -252,7 +243,7 @@ export default function LogoBoxes({
       // Shift scale so left edge of screen is 0, middle is -1
       let shiftScale = scaleLinear().domain([-1, 0]).range([0, -1]).clamp(true);
       const mouseShiftedX = shiftScale(mouseVelX);
-      const wobbleFactor = 0;
+      // const wobbleFactor = 0;
       // From left edge to mid left, collapse sphere to origin
       let sphereScale = scalePow()
         .exponent(0.3)

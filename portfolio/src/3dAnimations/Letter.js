@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
 import { Text } from 'drei';
 import { useSpring, animated } from 'react-spring/three';
-import { scaleLinear, scaleLog, scalePow } from 'd3-scale';
+import { scaleLinear, scalePow } from 'd3-scale';
 
 // Register Text as a react-three-fiber element
 extend({ Text });
@@ -12,9 +12,10 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   const textRef = useRef();
   const [x, y, z] = position;
   const [isLoading, setIsLoading] = useState(true);
-  const opacity = useRef(0); // useRef instead of useState to keep animation loop from stalling
+  const opacity = useRef(0); // useRef instead of useState to keep animation loop from triggering re-render
   const opacityFadeSpeed = 0.01; // Opacity Fade in speed
-  const [letterSpring, set, stop] = useSpring(() => ({
+  // Init react-spring variables, used for smooth movement
+  const [letterSpring, set] = useSpring(() => ({
     position: [x, y, z],
     quaternion: [0, 0, 0, 1],
     scale: [1, 1, 1],
@@ -46,7 +47,7 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
     .domain([0, 1])
     .range([0, 1])
     .clamp(true);
-  let rotationSpeedScale = scaleLinear() // Scale function for rotation speed
+  let rotSpeedLeftScale = scaleLinear() // Scale function for rotation speed when mouse on left of screen
     .domain([0, 1])
     .range([1, 0.2])
     .clamp(true);
@@ -73,9 +74,8 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   const enableX = true;
   const enableY = true;
   const enableZ = true;
-  const rotateSpeed = 0.005;
   // const randomFactor = 1;
-  const randomFactor = getRndInteger(80, 100) / 100;
+  // const randomFactor = getRndInteger(80, 100) / 100;
   const xSpeedMax = getRndInteger(-100, 100) / 100; // Max X rotation speed
   const ySpeedMax = getRndInteger(80, 100) / 100; // Max Y rotation speed
   const zSpeedMax = getRndInteger(80, 100) / 100; // Max Z rotation speed
@@ -86,64 +86,36 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   // const ySpeedMax = 0.3 * randomFactor;
   // const zSpeedMax = 0.3;
 
-  let rotateX = 0;
+  // let rotateX = 0;
   useFrame(() => {
+    const {
+      // mouseX,
+      // mouseY,
+      // mouseXScaled,
+      // mouseYScaled,
+      mouseXLeftLin,
+      mouseXRightLin,
+      // mouseXLeftLog,
+      mouseXRightLog,
+      inDeadZone,
+      isLeftOrRight,
+    } = mouse.current;
     // Fade in Text
     if (!isLoading && opacity.current < 1) {
       opacity.current = opacity.current + opacityFadeSpeed;
     }
     textRef.current.material.opacity = opacity.current;
 
-    // // Calculate rotation quaternion's
-    // if (enableX) {
-    //   xQuat.setFromAxisAngle(xAxis, THREE.Math.degToRad(xSpeed));
-    //   textRef.current.quaternion.multiplyQuaternions(
-    //     xQuat,
-    //     textRef.current.quaternion
-    //   );
-    // }
-    // if (enableY) {
-    //   yQuat.setFromAxisAngle(yAxis, THREE.Math.degToRad(ySpeed));
-    //   textRef.current.quaternion.multiplyQuaternions(
-    //     yQuat,
-    //     textRef.current.quaternion
-    //   );
-    // }
-    // if (enableZ) {
-    //   zQuat.setFromAxisAngle(zAxis, THREE.Math.degToRad(zSpeed));
-    //   textRef.current.quaternion.multiplyQuaternions(
-    //     zQuat,
-    //     textRef.current.quaternion
-    //   );
-    // }
+    // If mouse on left/right of screen animate the letter being sucked into or out of blackhole depending on mouse position, else if mouse is in the center deadzone, reset text to center
+    if (!inDeadZone) {
+      // Scale rotation speeds, faster close to hole, slower further
+      if (isLeftOrRight) {
+        rotationSpeed = 0.1;
+      } else {
+        rotationSpeed = rotSpeedLeftScale(mouseXLeftLin);
+      }
 
-    // // Apply rotation
-    // textRef.current.position.sub(blackHolePos);
-    // enableX && textRef.current.position.applyQuaternion(xQuat);
-    // enableY && textRef.current.position.applyQuaternion(yQuat);
-    // enableZ && textRef.current.position.applyQuaternion(zQuat);
-    // textRef.current.position.add(blackHolePos);
-
-    // // Calculate distance to blackhole center
-    // const currentDistToHole = Math.hypot(
-    //   textRef.current.position.x,
-    //   textRef.current.position.y,
-    //   textRef.current.position.z
-    // );
-    // // If position isn't at blackhole center or further than initial position, translate towards blackhole.  Ensure center/init positions aren't exceeded
-    // const transDist = mouse.current[4]; // amount to move towards/away from hole
-
-    // if (
-    //   currentDistToHole + transDist >= 0 &&
-    //   currentDistToHole <= initDistToHole - transDist
-    // ) {
-    //   textRef.current.translateOnAxis(vectorToHole, mouse.current[4]);
-    // }
-
-    // React-Spring
-    if (mouse.current[4] < 1) {
-      // Scale rotation speeds, get faster closer to blackhole and slower further
-      rotationSpeed = rotationSpeedScale(mouse.current[4]);
+      // Calculate 3d rotation speeds
       xSpeed = xSpeedMax * rotationSpeed;
       ySpeed = ySpeedMax * rotationSpeed;
       zSpeed = zSpeedMax * rotationSpeed;
@@ -175,29 +147,38 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
         tempObject.position.z
       );
 
-      const gravity = 0.5; // Speed to move towards/away from blackhole
-      const orbit = initDistToHole * Math.abs(mouse.current[4]); // Orbit to maintain
-      // console.log('orbit: ', orbit, '     Dist To Hole: ', currentDistToHole);
-      // Move toward or away from orbit controlled by mouse x position
-      if (currentDistToHole < orbit) {
-        tempObject.translateOnAxis(vectorToHole, gravity); // move towards hole
-      } else if (currentDistToHole > orbit) {
-        tempObject.translateOnAxis(vectorToHole, -1 * gravity); // move away from hole
+      let orbit; // Orbit to maintain
+      // if on left of screen, shrink orbit to hole, on right expand
+      if (isLeftOrRight) {
+        const maxOrbit = 6000; // Max distance of travel towards stars
+        orbit = initDistToHole + maxOrbit * mouseXRightLog;
+        // console.log(mouseXRightLog);
+      } else {
+        orbit = initDistToHole * mouseXLeftLin;
       }
 
-      // Scale letter scale exponentially
-      const letterScale = scaleScale(mouse.current[4]);
+      const gravity = 10; // Speed to move towards/away from blackhole
+      const eventHorizon = 10; // Distance at which letters vanish
+      if (currentDistToHole <= eventHorizon) {
+        tempObject.position.set([0, 0, 0]);
+      } else {
+        // Maintain orbit set by mouse position
+        if (currentDistToHole < orbit) {
+          tempObject.translateOnAxis(vectorToHole, gravity); // move towards hole
+        } else if (currentDistToHole > orbit) {
+          tempObject.translateOnAxis(vectorToHole, -1 * gravity); // move away from hole
+        }
+      }
 
-      // if (mouse.current[4] >= -0.5) {
-      //   // If distance to blackhole is positive, keep moving towards hole
-      //   console.log(currentDistToHole);
-      //   if (currentDistToHole > 0) {
-      //     tempObject.translateOnAxis(vectorToHole, gravity); // move towards hole
-      //   }
-      // } else if (mouse.current[4] < -0.5) {
-      //   tempObject.translateOnAxis(vectorToHole, -1 * gravity); // move away from hole
-      // }
+      // Scale letter if on left of screen to shrink as it gets closer to blackhole, scale to 1 if on right
+      let letterScale = 1; // Scale of each letter
+      if (isLeftOrRight) {
+        letterScale = 1;
+      } else {
+        letterScale = scaleScale(mouseXLeftLin);
+      }
 
+      // Send calculations to react-spring to apply update
       set({
         position: [
           tempObject.position.x,
@@ -212,10 +193,11 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
         ],
         scale: [letterScale, letterScale, letterScale],
       });
-    } else if (mouse.current[4] > 0) {
-      rotateX += 0.1;
-      set({ position: [x, y, z], quaternion: [0, 0, 0, 1], scale: [1, 1, 1] });
+    } else if (inDeadZone) {
       // Reset calculations so animations start from initial positions instead of jumping to previous calculated positions
+
+      // rotateX += 0.1;
+      set({ position: [x, y, z], quaternion: [0, 0, 0, 1], scale: [1, 1, 1] });
       tempObject.position.set(x, y, z);
       tempObject.quaternion.set(0, 0, 0, 1);
       xQuat.set(0, 0, 0, 1);

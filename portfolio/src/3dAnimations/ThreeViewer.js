@@ -112,13 +112,14 @@ export default function ThreeViewer() {
   const test = useRef({ test: 'hi' });
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
   const windowHalf = window.innerWidth / 2;
+  const blackHoleZone = (windowHalf - deadZone) * 0.1; // 10% mouse zone on left side of screen where scaling is 0 so everything is sucked into blackhole
   // Scaling functions
   let mouseXScale = scaleLinear()
     .domain([-windowHalf, windowHalf])
     .range([-1, 1])
     .clamp(true);
   let mouseXLeftLinScale = scaleLinear()
-    .domain([-windowHalf, -deadZone])
+    .domain([-windowHalf + blackHoleZone, -deadZone])
     .range([0, 1])
     .clamp(true);
   let mouseXRightLinScale = scaleLinear()
@@ -240,7 +241,7 @@ export default function ThreeViewer() {
       <pointLight position={[100, 100, 100]} intensity={2.2} />
       <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
-        {/* <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
@@ -249,7 +250,7 @@ export default function ThreeViewer() {
             fadeDelay={3000}
             disableMouse={disableMouse}
           />
-        </Suspense> */}
+        </Suspense>
         {/* <Letter
           text={'Alex Colbourn'}
           position={positions.name}

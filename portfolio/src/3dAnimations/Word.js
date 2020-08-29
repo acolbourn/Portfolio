@@ -7,6 +7,8 @@ export default function Word({
   text,
   letterSpacing,
   position,
+  rotation,
+  color,
   mouse,
   blackholeCenter,
 }) {
@@ -30,8 +32,10 @@ export default function Word({
       <Letter
         text={letter}
         position={positions[idx]}
+        rotation={rotation}
         fontSize={fontSize}
         fadeDelay={fadeDelay}
+        color={color}
         mouse={mouse}
       />
     </Suspense>

@@ -19,7 +19,6 @@ import LogoBoxes from './LogoBoxes.js';
 // import Letter from './Letter';
 import useWidth from '../hooks/useWidth';
 import Light from './Light';
-import { scaleMouse } from './LogoBoxesHelpers';
 // import Effects from './Effects';
 // import FadingBloom from './FadingBloom';
 // import WobbleSphere from './WobbleSphere';
@@ -32,10 +31,16 @@ export default function ThreeViewer() {
     logo: [0, -6, 0],
     name: [0, 21, 0],
     jobTitles: [0, 17, 0],
+    instructionsX: [0, 30, 0],
+    instructionsY: [0, 35, 0],
+    instructionsUp: [0, 38, 0],
+    instructionsDown: [0, 33, 0],
   });
   const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
   const [disableMouse, setDisableMouse] = useState(true);
   const screenWidth = useWidth();
+  const mainTextColor = '#0047AB';
+  const instructionTextColor = 'white';
 
   useEffect(() => {
     const aspect = window.innerWidth / window.innerHeight;
@@ -45,6 +50,10 @@ export default function ThreeViewer() {
           logo: [0, -6, 0],
           name: [0, 21, 0],
           jobTitles: [0, 16, 0],
+          instructionsX: [0, 30, 0],
+          instructionsY: [0, 35, 0],
+          instructionsUp: [0, 38, 0],
+          instructionsDown: [0, 33, 0],
         });
         setFontSizes({ name: 4.8, titles: 1.7 });
         aspect < 0.52 ? setScale(0.55) : setScale(0.65);
@@ -54,6 +63,10 @@ export default function ThreeViewer() {
           logo: [0, -6, 0],
           name: [0, 21, 0],
           jobTitles: [0, 17, 0],
+          instructionsX: [0, 30, 0],
+          instructionsY: [0, 35, 0],
+          instructionsUp: [0, 38, 0],
+          instructionsDown: [0, 33, 0],
         });
         // setFontSizes({ name: 4.8, titles: 1.7 });
         setFontSizes({ name: 3.8, titles: 1.45 });
@@ -73,6 +86,10 @@ export default function ThreeViewer() {
           logo: [0, -6, 0],
           name: [0, 21, 0],
           jobTitles: [0, 17, 0],
+          instructionsX: [0, 30, 0],
+          instructionsY: [0, 35, 0],
+          instructionsUp: [0, 38, 0],
+          instructionsDown: [0, 33, 0],
         });
         // setFontSizes({ name: 4.8, titles: 1.7 });
         setFontSizes({ name: 4, titles: 1.5 });
@@ -109,72 +126,73 @@ export default function ThreeViewer() {
     inDeadZone: true, // true = mouse in center, else false
     isLeftOrRight: true, // false = mouse on left, true = right
   });
-  const test = useRef({ test: 'hi' });
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
-  const windowHalf = window.innerWidth / 2;
-  const blackHoleZone = (windowHalf - deadZone) * 0.1; // 10% mouse zone on left side of screen where scaling is 0 so everything is sucked into blackhole
+  const windowHalfX = window.innerWidth / 2;
+  const windowHalfY = window.innerHeight / 2;
+  const blackHoleZone = (windowHalfX - deadZone) * 0.1; // 10% mouse zone on left side of screen where scaling is 0 so everything is sucked into blackhole
   // Scaling functions
   let mouseXScale = scaleLinear()
-    .domain([-windowHalf, windowHalf])
+    .domain([-windowHalfX, windowHalfX])
+    .range([-1, 1])
+    .clamp(true);
+  let mouseYScale = scaleLinear()
+    .domain([-windowHalfY, windowHalfY])
     .range([-1, 1])
     .clamp(true);
   let mouseXLeftLinScale = scaleLinear()
-    .domain([-windowHalf + blackHoleZone, -deadZone])
+    .domain([-windowHalfX + blackHoleZone, -deadZone])
     .range([0, 1])
     .clamp(true);
   let mouseXRightLinScale = scaleLinear()
-    .domain([deadZone, windowHalf])
+    .domain([deadZone, windowHalfX])
     .range([0, 1])
     .clamp(true);
   let mouseXRightLogScale = scalePow()
     .exponent(10)
-    .domain([deadZone, windowHalf])
+    .domain([deadZone, windowHalfX])
     .range([0, 1])
     .clamp(true);
   // // Mouse X scaling
   // let mouseXScaled = scaleLinear()
-  //   .domain([-windowHalf, -deadZone])
+  //   .domain([-windowHalfX, -deadZone])
   //   .range([0, 1])
   //   .clamp(true);
 
-  // Process mouse movements
-  const onMouseMove = useCallback(
-    ({ clientX: x, clientY: y }) => {
-      const mouseX = x - windowHalf;
-      const mouseY = y - window.innerHeight / 2;
-      let inDeadZone = true; // true if mouse x in center of screen
-      let isLeftOrRight = false; // false if mouse x on left side of screen, true if on right
+  // Process mouse and touchscreen movements
+  const handleMouseAndTouch = useCallback(
+    (event) => {
+      let mouseX, mouseY;
+
+      // Detect if mouse event or touchscreen event
+      const eventType = event.nativeEvent.type;
+      if (eventType === 'mousemove') {
+        mouseX = event.clientX - windowHalfX;
+        mouseY = event.clientY - window.innerHeight / 2;
+      } else if (eventType === 'touchmove') {
+        event.preventDefault();
+        const touch = event.touches[0];
+        mouseX = touch.clientX - windowHalfX;
+        mouseY = touch.clientY - window.innerHeight / 2;
+      }
+
       // Determine if mouse x position is in deadzone
+      let inDeadZone = true; // true if mouse x in center of screen
       if (mouseX <= deadZone && mouseX >= -1 * deadZone) {
         inDeadZone = true;
       } else {
         inDeadZone = false;
       }
+
       // Determine which side of screen mouse is on
+      let isLeftOrRight = false; // false if mouse on left, true if on right
       isLeftOrRight = mouseX < 0 ? false : true;
-      // Scale X and Y
-      const mouseYScaled = scaleMouse(
-        mouseY,
-        window.innerHeight,
-        'linear',
-        deadZone,
-        1
-      );
-      // mouse.current = [
-      //   mouseX,
-      //   mouseY,
-      //   mouseXScaled(mouseX),
-      //   mouseYScaled,
-      //   mouseXScaledLeft(mouseX),
-      //   mouseXScaledRight(mouseX),
-      //   inDeadZone,
-      //   isLeftOrRight,
-      // ];
+
+      // Update mouse ref
       mouse.current = {
         mouseX: mouseX,
         mouseY: mouseY,
         mouseXScaled: mouseXScale(mouseX),
-        mouseYScaled: mouseYScaled,
+        mouseYScaled: mouseYScale(mouseY),
         mouseXLeftLin: mouseXLeftLinScale(mouseX),
         mouseXRightLin: mouseXRightLinScale(mouseX),
         mouseXLeftLog: 0,
@@ -183,44 +201,15 @@ export default function ThreeViewer() {
         isLeftOrRight: isLeftOrRight,
       };
     },
-    [mouseXScale, mouseXLeftLinScale, mouseXRightLinScale, windowHalf]
+    [
+      mouseXScale,
+      mouseYScale,
+      mouseXLeftLinScale,
+      mouseXRightLinScale,
+      mouseXRightLogScale,
+      windowHalfX,
+    ]
   );
-  // // Process mobile/touchscreen movements
-  // const onTouchMove = useCallback(
-  //   (event) => {
-  //     event.preventDefault();
-  //     const touch = event.touches[0];
-  //     const mouseX = touch.clientX - windowHalf;
-  //     const mouseY = touch.clientY - window.innerHeight / 2;
-  //     // Determine if touch x position is in deadzone
-  //     if (mouse.current[0] <= deadZone && mouse.current[0] >= -1 * deadZone) {
-  //       inDeadZone = true;
-  //     } else {
-  //       inDeadZone = false;
-  //     }
-  //     // Determine which side of screen mouse is on
-  //     isLeftOrRight = mouseX < 0 ? false : true;
-  //     // Scale X and Y
-  //     const mouseYScaled = scaleMouse(
-  //       mouseY,
-  //       window.innerHeight,
-  //       'linear',
-  //       deadZone,
-  //       1
-  //     );
-  //     mouse.current = [
-  //       mouseX,
-  //       mouseY,
-  //       mouseXScaled(mouseX),
-  //       mouseYScaled,
-  //       mouseXScaledLeft(mouseX),
-  //       mouseXScaledRight(mouseX),
-  //       inDeadZone,
-  //       isLeftOrRight,
-  //     ];
-  //   },
-  //   [mouseXScaled]
-  // );
 
   return (
     <Canvas
@@ -228,8 +217,8 @@ export default function ThreeViewer() {
       camera={{ position: [0, 0, 40] }}
       // camera={{ position: [0, 0, 40], near: 5, far: 200 }}
       onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
-      onMouseMove={onMouseMove}
-      // onTouchMove={onTouchMove}
+      onMouseMove={handleMouseAndTouch}
+      onTouchMove={handleMouseAndTouch}
       onTouchStart={(e) => e.preventDefault()}
       onTouchEnd={(e) => e.preventDefault()}
       onTouchCancel={(e) => e.preventDefault()}
@@ -272,14 +261,66 @@ export default function ThreeViewer() {
           />
         </Suspense> */}
         <Word
+          text={'<'}
+          position={positions.instructionsUp}
+          rotation={[0, 0, -Math.PI / 2]}
+          fontSize={fontSizes.titles}
+          letterSpacing={1.2}
+          color={instructionTextColor}
+          fadeDelay={3000}
+          mouse={mouse}
+          blackholeCenter={positions.logo}
+        />
+        <Word
+          text={'Colors'}
+          position={positions.instructionsY}
+          fontSize={fontSizes.titles}
+          letterSpacing={1.2}
+          color={instructionTextColor}
+          fadeDelay={3000}
+          mouse={mouse}
+          blackholeCenter={positions.logo}
+        />
+        <Word
+          text={'<'}
+          position={positions.instructionsDown}
+          rotation={[0, 0, Math.PI / 2]}
+          fontSize={fontSizes.titles}
+          letterSpacing={1.2}
+          color={instructionTextColor}
+          fadeDelay={3000}
+          mouse={mouse}
+          blackholeCenter={positions.logo}
+        />
+        <Word
+          text={'< Big Bang >'}
+          position={positions.instructionsX}
+          fontSize={fontSizes.titles}
+          letterSpacing={1.2}
+          color={instructionTextColor}
+          fadeDelay={3000}
+          mouse={mouse}
+          blackholeCenter={positions.logo}
+        />
+        <Word
           text={'Alex Colbourn'}
           position={positions.name}
           fontSize={fontSizes.name}
           letterSpacing={3.17}
+          color={mainTextColor}
           fadeDelay={1000}
           mouse={mouse}
           blackholeCenter={positions.logo}
-          test={test}
+        />
+        <Word
+          text={'Web Developer / Robotics Engineer'}
+          position={positions.jobTitles}
+          fontSize={fontSizes.titles}
+          letterSpacing={1.2}
+          color={mainTextColor}
+          fadeDelay={2500}
+          mouse={mouse}
+          blackholeCenter={positions.logo}
         />
       </group>
       <Stars />

@@ -3,27 +3,38 @@ import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
 import { Text } from 'drei';
 import { useSpring, animated } from 'react-spring/three';
-import { scaleLinear, scalePow } from 'd3-scale';
+import { scalePow } from 'd3-scale';
 
 // Register Text as a react-three-fiber element
 extend({ Text });
 
-export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
+export default function Letter({
+  text,
+  position,
+  rotation,
+  fontSize,
+  color,
+  fadeDelay,
+  mouse,
+}) {
   const textRef = useRef();
   const [x, y, z] = position;
   const [isLoading, setIsLoading] = useState(true);
   const opacity = useRef(0); // useRef instead of useState to keep animation loop from triggering re-render
   const opacityFadeSpeed = 0.01; // Opacity Fade in speed
-  const massFull = 20; // react-spring mass
+  const massImplode = 20; // react-spring mass when imploding
+  const massExplode = 1; // react-spring mass when exploding
+  let massCurrent = massImplode; // current react-spring mass
+  const frictionImplode = 50; // react-spring friction when imploding
+  const frictionExplode = 40; // react-spring friction when imploding
+  let frictionCurrent = frictionImplode; // current react-spring friction
   // Init react-spring variables, used for smooth movement
   const [letterSpring, set] = useSpring(() => ({
     position: [x, y, z],
     quaternion: [0, 0, 0, 1],
     scale: [1, 1, 1],
     opacity: 1,
-    // config: { mass: 1, tension: 120, friction: 14 },
-    config: { mass: massFull, tension: 150, friction: 50 },
-    // config: { mass: 20, tension: 150, friction: 50 },
+    config: { mass: massCurrent, tension: 150, friction: frictionCurrent },
   }));
 
   // Create rotation variables
@@ -45,7 +56,6 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   const initDistToHole = Math.hypot(xDir, yDir, zDir); // Initial distance to blackhole center
   let tempObject = new THREE.Object3D(); // Not displayed, object for rotation calculations that are then applied to each letter.
   tempObject.position.set(x, y, z);
-  // console.log(tempObject.quaternion);
   let scaleScale = scalePow() // Scale function of letter scale
     .exponent(0.1)
     .domain([0, 1])
@@ -56,12 +66,8 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
     .domain([0, 1])
     .range([THREE.Math.degToRad(30), THREE.Math.degToRad(0.1)])
     .clamp(true);
-  // const constRotation = THREE.Math.degToRad(0.1); // fixed slow rotation on right
+
   const constRotation = 0; // fixed slow rotation on right
-  // let rotSpeedLeftScale = scaleLinear() // Scale function for rotation speed when mouse on left of screen
-  //   .domain([0, 1])
-  //   .range([1, 0.2])
-  //   .clamp(true);
   let rotationSpeed; // rotation speed scaled (inverse of mouse x)
 
   // Fade in text
@@ -75,7 +81,7 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
 
   const opts = {
     fontSize: fontSize,
-    color: '#0047AB',
+    color: color,
     maxWidth: 300,
     lineHeight: 1,
     letterSpacing: 0,
@@ -85,20 +91,15 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
   const enableX = true;
   const enableY = true;
   const enableZ = true;
-  // const randomFactor = 1;
-  // const randomFactor = getRndInteger(80, 100) / 100;
+
   // Generate random speed percentages so each letter travels in a different orbit
   const speedFactor = 10;
   let xSpeedMax = getRndInteger(-speedFactor, 100) / 100; // Max X rotation speed
   let ySpeedMax = getRndInteger(speedFactor, 100) / 100; // Max Y rotation speed
   let zSpeedMax = getRndInteger(speedFactor, 100) / 100; // Max Z rotation speed
-  // let xSpeedMax = getRndInteger(-100, 100) / 100; // Max X rotation speed
   let xSpeed; // Current X rotation speed
   let ySpeed; // Current Y rotation speed
   let zSpeed; // Current Z rotation speed
-  // const xSpeedMax = 0.5 * randomFactor;
-  // const ySpeedMax = 0.3 * randomFactor;
-  // const zSpeedMax = 0.3;
 
   useFrame(() => {
     const {
@@ -107,7 +108,7 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
       // mouseXScaled,
       // mouseYScaled,
       mouseXLeftLin,
-      // mouseXRightLin,
+      mouseXRightLin,
       // mouseXLeftLog,
       mouseXRightLog,
       inDeadZone,
@@ -117,7 +118,7 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
     if (!isLoading && opacity.current < 1) {
       opacity.current = opacity.current + opacityFadeSpeed;
     }
-    // textRef.current.material.opacity = opacity.current;
+    textRef.current.material.opacity = opacity.current;
 
     // If mouse on left/right of screen, animate letter being sucked into or out of blackhole. Else if mouse in center deadzone, reset text
     if (!inDeadZone) {
@@ -176,7 +177,13 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
       // Set travel distance towards/away from blackhole
       const holeOffset = 0.01; // Offset so letters never reach singularity
       // let transDistance = 10 * mouseXLeftLin; // Speed to move towards/away from blackhole
-      let transDistance = 1;
+      let transDistance = 1; // Distance to move towards/away from blackhole
+      if (isLeftOrRight) {
+        transDistance = 1 + 10 * mouseXRightLog + 2 * mouseXRightLin;
+      } else {
+        transDistance = 1;
+      }
+
       // Ensure travel doesn't move past blackhole center
       if (transDistance >= currentDistToHole - holeOffset) {
         // limit distance when mouse on far left of screen
@@ -200,6 +207,18 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
         letterScale = scaleScale(mouseXLeftLin);
       }
 
+      // Set react-sping mass
+      if (isLeftOrRight) {
+        massCurrent = massExplode;
+        // Reduce friction closer to right edge to speed up explosion
+        frictionCurrent = frictionImplode - frictionExplode * mouseXRightLog;
+        // frictionCurrent = frictionImplode ;
+      } else {
+        // reduce mass when near blackhole to avoid springing out of hole
+        massCurrent = mouseXLeftLin < 0.01 ? 1 : massImplode;
+        frictionCurrent = frictionImplode;
+      }
+
       // Send calculations to react-spring to apply update
       set({
         position: [
@@ -215,10 +234,9 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
         ],
         scale: [letterScale, letterScale, letterScale],
         config: {
-          // reduce mass when near blackhole to avoid springing out of hole
-          mass: mouseXLeftLin < 0.01 ? 1 : massFull,
+          mass: massCurrent,
           tension: 150,
-          friction: 50,
+          friction: frictionCurrent,
         },
       });
     } else if (inDeadZone) {
@@ -251,6 +269,7 @@ export default function Letter({ text, position, fontSize, fadeDelay, mouse }) {
           }
           anchorX='center'
           anchorY='middle'
+          rotation={rotation}
         >
           {text}
           {/* <MeshWobbleMaterial

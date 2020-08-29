@@ -10,7 +10,9 @@ export default function Word({
   rotation,
   color,
   mouse,
+  common,
   blackholeCenter,
+  maxSpeeds,
 }) {
   const letters = [...text];
   const [x, y, z] = position;
@@ -37,6 +39,8 @@ export default function Word({
         fadeDelay={fadeDelay}
         color={color}
         mouse={mouse}
+        common={common}
+        maxSpeeds={maxSpeeds}
       />
     </Suspense>
   ));

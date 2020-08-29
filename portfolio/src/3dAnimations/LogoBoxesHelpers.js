@@ -79,4 +79,8 @@ function scaleMouse(mouseCurrent, windowSize, scaleType, deadZone, maxOutput) {
   return mouseScaled * sign;
 }
 
-export { getRandomSpherePoints, getHypotenuses, scaleMouse };
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+export { getRandomSpherePoints, getHypotenuses, scaleMouse, getRndInteger };

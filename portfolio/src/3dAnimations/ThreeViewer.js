@@ -14,7 +14,7 @@ import React, {
 // } from 'react-postprocessing';
 import { scaleLinear, scalePow } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
-import { Stars } from 'drei';
+import { Stars, Stats } from 'drei';
 import LogoBoxes from './LogoBoxes.js';
 // import Letter from './Letter';
 import useWidth from '../hooks/useWidth';
@@ -22,7 +22,7 @@ import Light from './Light';
 // import Effects from './Effects';
 // import FadingBloom from './FadingBloom';
 // import WobbleSphere from './WobbleSphere';
-import Word from './Word';
+import HeaderText from './HeaderText.js';
 // import TextGeometry from './TextGeometry';
 
 export default function ThreeViewer() {
@@ -39,8 +39,6 @@ export default function ThreeViewer() {
   const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
   const [disableMouse, setDisableMouse] = useState(true);
   const screenWidth = useWidth();
-  const mainTextColor = '#0047AB';
-  const instructionTextColor = 'white';
 
   useEffect(() => {
     const aspect = window.innerWidth / window.innerHeight;
@@ -240,90 +238,11 @@ export default function ThreeViewer() {
             disableMouse={disableMouse}
           />
         </Suspense>
-        {/* <Letter
-          text={'Alex Colbourn'}
-          position={positions.name}
-          fontSize={fontSizes.name}
-          fadeDelay={1000}
-        />
-        <Letter
-          text={'Web Developer / Robotics Engineer'}
-          position={positions.jobTitles}
-          fontSize={fontSizes.titles}
-          fadeDelay={2500}
-        /> */}
-        {/* <Suspense fallback={null}>
-          <TextGeometry
-            text={'Alex Colbourn'}
-            position={positions.name}
-            fontSize={fontSizes.name}
-            fadeDelay={1000}
-          />
-        </Suspense> */}
-        <Word
-          text={'<'}
-          position={positions.instructionsUp}
-          rotation={[0, 0, -Math.PI / 2]}
-          fontSize={fontSizes.titles}
-          letterSpacing={1.2}
-          color={instructionTextColor}
-          fadeDelay={3000}
-          mouse={mouse}
-          blackholeCenter={positions.logo}
-        />
-        <Word
-          text={'Colors'}
-          position={positions.instructionsY}
-          fontSize={fontSizes.titles}
-          letterSpacing={1.2}
-          color={instructionTextColor}
-          fadeDelay={3000}
-          mouse={mouse}
-          blackholeCenter={positions.logo}
-        />
-        <Word
-          text={'<'}
-          position={positions.instructionsDown}
-          rotation={[0, 0, Math.PI / 2]}
-          fontSize={fontSizes.titles}
-          letterSpacing={1.2}
-          color={instructionTextColor}
-          fadeDelay={3000}
-          mouse={mouse}
-          blackholeCenter={positions.logo}
-        />
-        <Word
-          text={'< Big Bang >'}
-          position={positions.instructionsX}
-          fontSize={fontSizes.titles}
-          letterSpacing={1.2}
-          color={instructionTextColor}
-          fadeDelay={3000}
-          mouse={mouse}
-          blackholeCenter={positions.logo}
-        />
-        <Word
-          text={'Alex Colbourn'}
-          position={positions.name}
-          fontSize={fontSizes.name}
-          letterSpacing={3.17}
-          color={mainTextColor}
-          fadeDelay={1000}
-          mouse={mouse}
-          blackholeCenter={positions.logo}
-        />
-        <Word
-          text={'Web Developer / Robotics Engineer'}
-          position={positions.jobTitles}
-          fontSize={fontSizes.titles}
-          letterSpacing={1.2}
-          color={mainTextColor}
-          fadeDelay={2500}
-          mouse={mouse}
-          blackholeCenter={positions.logo}
-        />
+
+        <HeaderText positions={positions} fontSizes={fontSizes} mouse={mouse} />
       </group>
       <Stars />
+      <Stats />
       {/* <Effects
         mouse={mouse}
         bloomStrength={0.8}

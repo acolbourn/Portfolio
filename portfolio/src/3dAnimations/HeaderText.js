@@ -1,7 +1,6 @@
-import React, { useRef, useEffect, useState, Suspense } from 'react';
+import React, { useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from 'react-three-fiber';
-import { useSpring, animated } from 'react-spring/three';
 import { scalePow } from 'd3-scale';
 import { getRndInteger } from './LogoBoxesHelpers';
 import Word from './Word';
@@ -71,7 +70,7 @@ export default function HeaderText({ positions, fontSizes, mouse }) {
       mouseXRightLin,
       // mouseXLeftLog,
       mouseXRightLog,
-      inDeadZone,
+      // inDeadZone,
       isLeftOrRight,
     } = mouse.current;
 

@@ -86,9 +86,9 @@ export default function Letter({
       // mouseXScaled,
       // mouseYScaled,
       mouseXLeftLin,
-      mouseXRightLin,
+      // mouseXRightLin,
       // mouseXLeftLog,
-      mouseXRightLog,
+      // mouseXRightLog,
       inDeadZone,
       isLeftOrRight,
     } = mouse.current;
@@ -201,11 +201,11 @@ export default function Letter({
       <animated.mesh {...letterSpring} opacity={0}>
         <Text
           ref={textRef}
-          glyphGeometryDetail={32}
           {...opts}
-          font={
-            'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff'
-          }
+          // font={
+          //   'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff'
+          // }
+          font={'/fonts/syncopate-v11-latin-regular.woff'}
           anchorX='center'
           anchorY='middle'
           rotation={rotation}

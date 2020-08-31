@@ -150,11 +150,6 @@ export default function ThreeViewer() {
     .domain([deadZone, windowHalfX])
     .range([0, 1])
     .clamp(true);
-  // // Mouse X scaling
-  // let mouseXScaled = scaleLinear()
-  //   .domain([-windowHalfX, -deadZone])
-  //   .range([0, 1])
-  //   .clamp(true);
 
   // Process mouse and touchscreen movements
   const handleMouseAndTouch = useCallback(
@@ -165,12 +160,12 @@ export default function ThreeViewer() {
       const eventType = event.nativeEvent.type;
       if (eventType === 'mousemove') {
         mouseX = event.clientX - windowHalfX;
-        mouseY = event.clientY - window.innerHeight / 2;
+        mouseY = event.clientY - windowHalfY;
       } else if (eventType === 'touchmove') {
         event.preventDefault();
         const touch = event.touches[0];
         mouseX = touch.clientX - windowHalfX;
-        mouseY = touch.clientY - window.innerHeight / 2;
+        mouseY = touch.clientY - windowHalfY;
       }
 
       // Determine if mouse x position is in deadzone
@@ -206,6 +201,7 @@ export default function ThreeViewer() {
       mouseXRightLinScale,
       mouseXRightLogScale,
       windowHalfX,
+      windowHalfY,
     ]
   );
 
@@ -228,7 +224,7 @@ export default function ThreeViewer() {
       <pointLight position={[100, 100, 100]} intensity={2.2} />
       <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
@@ -237,7 +233,7 @@ export default function ThreeViewer() {
             fadeDelay={3000}
             disableMouse={disableMouse}
           />
-        </Suspense>
+        </Suspense> */}
 
         <HeaderText positions={positions} fontSizes={fontSizes} mouse={mouse} />
       </group>

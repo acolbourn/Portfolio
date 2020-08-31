@@ -6,7 +6,6 @@ import { scaleLinear, scalePow } from 'd3-scale';
 import logoPoints from './logoPoints.js';
 import { getRandomSpherePoints } from './LogoBoxesHelpers';
 
-// const colorPalette = ['#1b262c', '#0f4c75', '#00b7c2']; // Colors when mouse at bottom of screen
 const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
 const uniformColorOptions = ['black', 'blue', '#0047AB', '#002456'];
 const uniformColor = uniformColorOptions[2]; // Color when mouse at top of screen
@@ -35,8 +34,6 @@ const colorIds = new Array(numOfInstances)
   .map(() => Math.floor(Math.random() * numOfColors));
 // Create random points on a sphere to assign each box to for exploding effect
 const spherePoints = getRandomSpherePoints(numOfInstances);
-// let mouseX = 0; // Mouse X Position
-// let mouseY = 0; // Mouse Y Position
 let mouseVelX = 0; // Delayed mouse X position for smoother animation
 let mouseVelY = 0; // Delayed mouse Y position for smoother animation
 const animateSpeedY = 0.02; // Delay time for user mouse position to smooth out animation effect in Y direction

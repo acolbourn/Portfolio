@@ -26,8 +26,9 @@ export default function Letter({
   // Init react-spring variables, used for smooth movement
   const [letterSpring, set] = useSpring(() => ({
     position: [x, y, z],
-    quaternion: [0, 0, 0, 1],
+    // quaternion: [0, 0, 0, 1],
     scale: [1, 1, 1],
+    rotation: [0, 0, 50],
     config: { mass: 20, tension: 150, friction: 50 },
   }));
 
@@ -78,6 +79,7 @@ export default function Letter({
   let ySpeed; // Current Y rotation speed
   let zSpeed; // Current Z rotation speed
 
+  let tempRot = 0;
   useFrame(() => {
     // import mouse data
     const {
@@ -111,25 +113,28 @@ export default function Letter({
 
     // If mouse on left/right of screen, animate letter being sucked into or out of blackhole. Else if mouse in center deadzone, reset text
     if (!inDeadZone) {
-      // Calculate 3d rotation speeds
-      xSpeed = maxSpeed.x * rotationSpeed;
-      ySpeed = maxSpeed.y * rotationSpeed;
-      zSpeed = maxSpeed.z * rotationSpeed;
+      // Only calculate rotations on left of screen for implosion effect
+      if (!isLeftOrRight) {
+        // Calculate 3d rotation speeds
+        xSpeed = maxSpeed.x * rotationSpeed;
+        ySpeed = maxSpeed.y * rotationSpeed;
+        zSpeed = maxSpeed.z * rotationSpeed;
 
-      // Calculate and multiply rotation quaternion's
-      xQuat.setFromAxisAngle(xAxis, xSpeed);
-      yQuat.setFromAxisAngle(yAxis, ySpeed);
-      zQuat.setFromAxisAngle(zAxis, zSpeed);
-      tempObject.quaternion.multiplyQuaternions(xQuat, tempObject.quaternion);
-      tempObject.quaternion.multiplyQuaternions(yQuat, tempObject.quaternion);
-      tempObject.quaternion.multiplyQuaternions(zQuat, tempObject.quaternion);
+        // Calculate and multiply rotation quaternion's
+        xQuat.setFromAxisAngle(xAxis, xSpeed);
+        yQuat.setFromAxisAngle(yAxis, ySpeed);
+        zQuat.setFromAxisAngle(zAxis, zSpeed);
+        tempObject.quaternion.multiplyQuaternions(xQuat, tempObject.quaternion);
+        tempObject.quaternion.multiplyQuaternions(yQuat, tempObject.quaternion);
+        tempObject.quaternion.multiplyQuaternions(zQuat, tempObject.quaternion);
 
-      // Apply rotation
-      tempObject.position.sub(blackHolePos);
-      tempObject.position.applyQuaternion(xQuat);
-      tempObject.position.applyQuaternion(yQuat);
-      tempObject.position.applyQuaternion(zQuat);
-      tempObject.position.add(blackHolePos);
+        // Apply rotation
+        tempObject.position.sub(blackHolePos);
+        tempObject.position.applyQuaternion(xQuat);
+        tempObject.position.applyQuaternion(yQuat);
+        tempObject.position.applyQuaternion(zQuat);
+        tempObject.position.add(blackHolePos);
+      }
 
       // Calculate current distance to blackhole center
       const currentDistToHole = Math.hypot(
@@ -185,7 +190,19 @@ export default function Letter({
       });
     } else if (inDeadZone) {
       // Reset calculations so animations start from initial positions instead of jumping to previous calculated positions
-      set({ position: [x, y, z], quaternion: [0, 0, 0, 1], scale: [1, 1, 1] });
+      set({
+        position: [x, y, z],
+        quaternion: [0, 0, 0, 1],
+        scale: [1, 1, 1],
+      });
+      // tempRot += 0.01;
+      // set({
+      //   position: [x, y, z],
+      //   // quaternion: [0, 0, 0, 1],
+      //   scale: [1, 1, 1],
+      //   rotation: [0, 0, tempRot],
+      //   // translate3d: [0, 0, 0],
+      // });
       tempObject.position.set(x, y, z);
       tempObject.quaternion.set(0, 0, 0, 1);
       xQuat.set(0, 0, 0, 1);

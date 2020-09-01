@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import HomeFallback from './HomeFallback';
 import WEBGL from './3dAnimations/webGLCheck';
+import GraphicsMenu from './3dAnimations/GraphicsMenu';
 
 // import Logo from './Logo';
 import ThreeViewer from './3dAnimations/ThreeViewer';
@@ -33,18 +34,30 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
-  let content;
+  const [graphics, setGraphics] = React.useState('high');
+  const handleGraphicsChange = (event) => {
+    setGraphics(event.target.value);
+  };
+  let content; // Page content depending on graphics capability
 
   // Check for webGL compatibility, then render 3d or 2d version
-  if (WEBGL.isWebGLAvailable()) {
+  if (WEBGL.isWebGLAvailable() && graphics !== 'bad') {
     content = (
       <div className={classes.threeViewport}>
-        <ThreeViewer />
+        <ThreeViewer graphics={graphics} />
       </div>
     );
   } else {
     content = <HomeFallback />;
   }
 
-  return <div className={classes.root}>{content}</div>;
+  return (
+    <div className={classes.root}>
+      <GraphicsMenu
+        handleGraphicsChange={handleGraphicsChange}
+        graphics={graphics}
+      />
+      {content}
+    </div>
+  );
 }

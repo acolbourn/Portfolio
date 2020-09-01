@@ -12,6 +12,7 @@ import React, {
 //   Noise,
 //   Vignette,
 // } from 'react-postprocessing';
+import { ControlsProvider, Controls, useControl } from 'react-three-gui';
 import { scaleLinear, scalePow } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
 import { Stars, Stats } from 'drei';
@@ -25,7 +26,7 @@ import Light from './Light';
 import HeaderText from './HeaderText.js';
 // import TextGeometry from './TextGeometry';
 
-export default function ThreeViewer() {
+export default function ThreeViewer({ graphics }) {
   const [scale, setScale] = useState(0.9);
   const [positions, setPositions] = useState({
     logo: [0, -6, 0],
@@ -38,6 +39,8 @@ export default function ThreeViewer() {
   });
   const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
   const [disableMouse, setDisableMouse] = useState(true);
+  const posX = useControl('Pos X', { type: 'number', spring: true });
+  const rotateXY = useControl('Rotation', { type: 'xypad', distance: Math.PI });
   const screenWidth = useWidth();
 
   useEffect(() => {
@@ -206,6 +209,7 @@ export default function ThreeViewer() {
   );
 
   return (
+    // <ControlsProvider>
     <Canvas
       gl={{ antialias: false, alpha: false }}
       camera={{ position: [0, 0, 40] }}
@@ -224,7 +228,7 @@ export default function ThreeViewer() {
       <pointLight position={[100, 100, 100]} intensity={2.2} />
       <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
       <group scale={[scale, scale, scale]}>
-        {/* <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <LogoBoxes
             meshPosition={positions.logo}
             meshScale={[1, 1, 1]}
@@ -232,10 +236,15 @@ export default function ThreeViewer() {
             mouse={mouse}
             fadeDelay={3000}
             disableMouse={disableMouse}
+            graphics={graphics}
           />
-        </Suspense> */}
-
-        <HeaderText positions={positions} fontSizes={fontSizes} mouse={mouse} />
+        </Suspense>
+        <HeaderText
+          positions={positions}
+          fontSizes={fontSizes}
+          mouse={mouse}
+          graphics={graphics}
+        />
       </group>
       <Stars />
       <Stats />

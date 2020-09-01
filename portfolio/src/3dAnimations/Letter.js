@@ -17,18 +17,19 @@ export default function Letter({
   mouse,
   common,
   maxSpeeds,
+  graphics,
 }) {
   const textRef = useRef();
   const [x, y, z] = position;
   const [isLoading, setIsLoading] = useState(true);
+  const [prevGraphics, setPrevGraphics] = useState(graphics);
   const opacity = useRef(0); // useRef instead of useState to keep animation loop from triggering re-render
   const opacityFadeSpeed = 0.01; // Opacity Fade in speed
   // Init react-spring variables, used for smooth movement
   const [letterSpring, set] = useSpring(() => ({
     position: [x, y, z],
-    // quaternion: [0, 0, 0, 1],
+    quaternion: [0, 0, 0, 1],
     scale: [1, 1, 1],
-    rotation: [0, 0, 50],
     config: { mass: 20, tension: 150, friction: 50 },
   }));
 
@@ -63,6 +64,11 @@ export default function Letter({
       clearTimeout(timer1);
     };
   });
+
+  // // Initialize previous graphics state
+  // useEffect(() => {
+
+  // })
 
   const opts = {
     fontSize: fontSize,
@@ -111,105 +117,139 @@ export default function Letter({
     }
     textRef.current.material.opacity = opacity.current;
 
-    // If mouse on left/right of screen, animate letter being sucked into or out of blackhole. Else if mouse in center deadzone, reset text
-    if (!inDeadZone) {
-      // Only calculate rotations on left of screen for implosion effect
-      if (!isLeftOrRight) {
-        // Calculate 3d rotation speeds
-        xSpeed = maxSpeed.x * rotationSpeed;
-        ySpeed = maxSpeed.y * rotationSpeed;
-        zSpeed = maxSpeed.z * rotationSpeed;
-
-        // Calculate and multiply rotation quaternion's
-        xQuat.setFromAxisAngle(xAxis, xSpeed);
-        yQuat.setFromAxisAngle(yAxis, ySpeed);
-        zQuat.setFromAxisAngle(zAxis, zSpeed);
-        tempObject.quaternion.multiplyQuaternions(xQuat, tempObject.quaternion);
-        tempObject.quaternion.multiplyQuaternions(yQuat, tempObject.quaternion);
-        tempObject.quaternion.multiplyQuaternions(zQuat, tempObject.quaternion);
-
-        // Apply rotation
-        tempObject.position.sub(blackHolePos);
-        tempObject.position.applyQuaternion(xQuat);
-        tempObject.position.applyQuaternion(yQuat);
-        tempObject.position.applyQuaternion(zQuat);
-        tempObject.position.add(blackHolePos);
+    // Only animate letter movements if user selects high graphics
+    if (graphics === 'high') {
+      if (prevGraphics !== 'high') {
+        setPrevGraphics(graphics);
       }
+      // If mouse on left/right of screen, animate letter being sucked into or out of blackhole. Else if mouse in center deadzone, reset text
+      if (!inDeadZone) {
+        // Only calculate rotations on left of screen for implosion effect
+        if (!isLeftOrRight) {
+          // Calculate 3d rotation speeds
+          xSpeed = maxSpeed.x * rotationSpeed;
+          ySpeed = maxSpeed.y * rotationSpeed;
+          zSpeed = maxSpeed.z * rotationSpeed;
 
-      // Calculate current distance to blackhole center
-      const currentDistToHole = Math.hypot(
-        tempObject.position.x,
-        tempObject.position.y,
-        tempObject.position.z
-      );
+          // Calculate and multiply rotation quaternion's
+          xQuat.setFromAxisAngle(xAxis, xSpeed);
+          yQuat.setFromAxisAngle(yAxis, ySpeed);
+          zQuat.setFromAxisAngle(zAxis, zSpeed);
+          tempObject.quaternion.multiplyQuaternions(
+            xQuat,
+            tempObject.quaternion
+          );
+          tempObject.quaternion.multiplyQuaternions(
+            yQuat,
+            tempObject.quaternion
+          );
+          tempObject.quaternion.multiplyQuaternions(
+            zQuat,
+            tempObject.quaternion
+          );
 
-      // Set orbit distance based on mouse
-      // if on left of screen, shrink orbit to hole, on right expand
-      if (isLeftOrRight) {
-        orbit = initDistToHole + explodeOrbit;
-        // console.log(mouseXRightLog);
-      } else {
-        orbit = initDistToHole * mouseXLeftLin;
-      }
-
-      // Ensure travel doesn't move past blackhole center
-      distFiltered = travelDist;
-      if (travelDist >= currentDistToHole - holeOffset) {
-        // limit distance when mouse on far left of screen
-        if (mouseXLeftLin < 0.1) {
-          distFiltered = currentDistToHole - holeOffset;
+          // Apply rotation
+          tempObject.position.sub(blackHolePos);
+          tempObject.position.applyQuaternion(xQuat);
+          tempObject.position.applyQuaternion(yQuat);
+          tempObject.position.applyQuaternion(zQuat);
+          tempObject.position.add(blackHolePos);
         }
-      }
 
-      // Maintain orbit set by mouse position
-      if (currentDistToHole < orbit) {
-        tempObject.translateOnAxis(vectorToHole, distFiltered);
-      } else if (currentDistToHole > orbit) {
-        tempObject.translateOnAxis(vectorToHole, -1 * distFiltered);
-      }
-
-      // Send calculations to react-spring to apply update
-      set({
-        position: [
+        // Calculate current distance to blackhole center
+        const currentDistToHole = Math.hypot(
           tempObject.position.x,
           tempObject.position.y,
-          tempObject.position.z,
-        ],
-        quaternion: [
-          tempObject.quaternion.x,
-          tempObject.quaternion.y,
-          tempObject.quaternion.z,
-          tempObject.quaternion.w,
-        ],
-        scale: [letterScale, letterScale, letterScale],
-        config: {
-          mass: massCurrent,
-          tension: 150,
-          friction: frictionCurrent,
-        },
-      });
-    } else if (inDeadZone) {
-      // Reset calculations so animations start from initial positions instead of jumping to previous calculated positions
-      set({
-        position: [x, y, z],
-        quaternion: [0, 0, 0, 1],
-        scale: [1, 1, 1],
-      });
-      // tempRot += 0.01;
-      // set({
-      //   position: [x, y, z],
-      //   // quaternion: [0, 0, 0, 1],
-      //   scale: [1, 1, 1],
-      //   rotation: [0, 0, tempRot],
-      //   // translate3d: [0, 0, 0],
-      // });
-      tempObject.position.set(x, y, z);
-      tempObject.quaternion.set(0, 0, 0, 1);
-      xQuat.set(0, 0, 0, 1);
-      yQuat.set(0, 0, 0, 1);
-      zQuat.set(0, 0, 0, 1);
-      // Get new random orbit speeds from precomputed array
-      maxSpeed = maxSpeeds[Math.floor(Math.random() * (maxSpeeds.length - 1))];
+          tempObject.position.z
+        );
+
+        // Set orbit distance based on mouse
+        // if on left of screen, shrink orbit to hole, on right expand
+        if (isLeftOrRight) {
+          orbit = initDistToHole + explodeOrbit;
+          // console.log(mouseXRightLog);
+        } else {
+          orbit = initDistToHole * mouseXLeftLin;
+        }
+
+        // Ensure travel doesn't move past blackhole center
+        distFiltered = travelDist;
+        if (travelDist >= currentDistToHole - holeOffset) {
+          // limit distance when mouse on far left of screen
+          if (mouseXLeftLin < 0.1) {
+            distFiltered = currentDistToHole - holeOffset;
+          }
+        }
+
+        // Maintain orbit set by mouse position
+        if (currentDistToHole < orbit) {
+          tempObject.translateOnAxis(vectorToHole, distFiltered);
+        } else if (currentDistToHole > orbit) {
+          tempObject.translateOnAxis(vectorToHole, -1 * distFiltered);
+        }
+
+        // Send calculations to react-spring to apply update
+        set({
+          position: [
+            tempObject.position.x,
+            tempObject.position.y,
+            tempObject.position.z,
+          ],
+          quaternion: [
+            tempObject.quaternion.x,
+            tempObject.quaternion.y,
+            tempObject.quaternion.z,
+            tempObject.quaternion.w,
+          ],
+          scale: [letterScale, letterScale, letterScale],
+          config: {
+            mass: massCurrent,
+            tension: 150,
+            friction: frictionCurrent,
+          },
+        });
+      } else if (inDeadZone) {
+        // Reset calculations so animations start from initial positions instead of jumping to previous calculated positions
+        set({
+          position: [x, y, z],
+          quaternion: [0, 0, 0, 1],
+          scale: [1, 1, 1],
+        });
+        // tempRot += 0.01;
+        // set({
+        //   position: [x, y, z],
+        //   // quaternion: [0, 0, 0, 1],
+        //   scale: [1, 1, 1],
+        //   rotation: [0, 0, tempRot],
+        //   // translate3d: [0, 0, 0],
+        // });
+        tempObject.position.set(x, y, z);
+        tempObject.quaternion.set(0, 0, 0, 1);
+        xQuat.set(0, 0, 0, 1);
+        yQuat.set(0, 0, 0, 1);
+        zQuat.set(0, 0, 0, 1);
+        // Get new random orbit speeds from precomputed array
+        maxSpeed =
+          maxSpeeds[Math.floor(Math.random() * (maxSpeeds.length - 1))];
+      }
+    } else {
+      // else if graphics aren't high reset letters and turn off animations
+      // only run once if transitiong graphics from high to med/low
+      // console.log(prevGraphics);
+      if (prevGraphics === 'high') {
+        set({
+          position: [x, y, z],
+          quaternion: [0, 0, 0, 1],
+          scale: [1, 1, 1],
+        });
+        tempObject.position.set(x, y, z);
+        tempObject.quaternion.set(0, 0, 0, 1);
+        xQuat.set(0, 0, 0, 1);
+        yQuat.set(0, 0, 0, 1);
+        zQuat.set(0, 0, 0, 1);
+        console.log('ran');
+        setPrevGraphics(graphics);
+      }
     }
   });
 

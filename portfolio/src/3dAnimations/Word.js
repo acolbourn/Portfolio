@@ -13,6 +13,7 @@ export default function Word({
   common,
   blackholeCenter,
   maxSpeeds,
+  graphics,
 }) {
   const letters = [...text];
   const [x, y, z] = position;
@@ -41,6 +42,7 @@ export default function Word({
         mouse={mouse}
         common={common}
         maxSpeeds={maxSpeeds}
+        graphics={graphics}
       />
     </Suspense>
   ));

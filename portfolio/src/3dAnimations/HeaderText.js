@@ -5,7 +5,7 @@ import { scalePow } from 'd3-scale';
 import { getRndInteger } from './LogoBoxesHelpers';
 import Word from './Word';
 
-export default function HeaderText({ positions, fontSizes, mouse }) {
+export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   // Process common letter attributes in this component and pass in values with a ref to save as much processing power as possible
   const common = useRef({
     letterScale: 1,
@@ -119,6 +119,7 @@ export default function HeaderText({ positions, fontSizes, mouse }) {
         common={common}
         blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
+        graphics={graphics}
       />
       <Word
         text={'Colors'}
@@ -131,6 +132,7 @@ export default function HeaderText({ positions, fontSizes, mouse }) {
         common={common}
         blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
+        graphics={graphics}
       />
       <Word
         text={'<'}
@@ -144,6 +146,7 @@ export default function HeaderText({ positions, fontSizes, mouse }) {
         common={common}
         blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
+        graphics={graphics}
       />
       <Word
         text={'< Big Bang >'}
@@ -156,6 +159,7 @@ export default function HeaderText({ positions, fontSizes, mouse }) {
         common={common}
         blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
+        graphics={graphics}
       />
       <Word
         text={'Alex Colbourn'}
@@ -168,6 +172,7 @@ export default function HeaderText({ positions, fontSizes, mouse }) {
         common={common}
         blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
+        graphics={graphics}
       />
       <Word
         text={'Web Developer / Robotics Engineer'}
@@ -180,6 +185,7 @@ export default function HeaderText({ positions, fontSizes, mouse }) {
         common={common}
         blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
+        graphics={graphics}
       />
     </>
   );

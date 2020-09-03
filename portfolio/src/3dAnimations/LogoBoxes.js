@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from 'react-three-fiber';
 import Color from 'color';
 import { scaleLinear, scalePow } from 'd3-scale';
@@ -57,12 +57,13 @@ export default function LogoBoxes({
   meshPosition,
   meshScale,
   fadeDelay,
-  disableMouse,
   deadZone,
 }) {
+  console.log('LogoBoxes rendered');
   const ref = useRef(); // Mesh ref
-  const [isLoading, setIsLoading] = useState(true);
-  const [initBoxPosition, setInitBoxPosition] = useState(3000);
+  // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
+  const isLoadingRef = useRef(true); // loading ref for opacity fade
+  const initBoxPositionRef = useRef(3000); // inital box position ref
 
   // Initialize empty color array
   const colorArray = useMemo(
@@ -96,14 +97,14 @@ export default function LogoBoxes({
   // Start boxes spread out and assemble after delay
   useEffect(() => {
     let timer1 = setTimeout(() => {
-      setInitBoxPosition(0);
-      setIsLoading(false);
+      initBoxPositionRef.current = 0;
+      isLoadingRef.current = false;
     }, fadeDelay);
     // Clear timeout on unmount
     return () => {
       clearTimeout(timer1);
     };
-  });
+  }, [fadeDelay]);
 
   useFrame((state) => {
     let { mouseX, mouseYScaled } = mouse.current;
@@ -116,11 +117,15 @@ export default function LogoBoxes({
       // mouseXRightLog,
       // inDeadZone,
       isLeftOrRight,
+      disableMouse,
     } = mouse.current;
 
     let i = 0;
     const time = state.clock.getElapsedTime();
     const windowHalf = window.innerWidth / 2; // Half window width for scaling
+
+    // Turn on visibility after delay for fade in effect
+    ref.current.visible = !isLoadingRef.current;
 
     // Rotate logo group
     ref.current.rotation.y += 0.01;
@@ -128,7 +133,7 @@ export default function LogoBoxes({
     // Scale mouse positions and velocities for animations
     if (disableMouse) {
       // Disable mouse on load and use intro animation values
-      mouseX = initBoxPosition;
+      mouseX = initBoxPositionRef.current;
       mouseYScaled = 0;
     } else {
       // if on right side of screen, scale logorathmically for explosion, else on left side scale linearly for implosion
@@ -379,7 +384,6 @@ export default function LogoBoxes({
       position={meshPosition}
       rotation={[0, 0, Math.PI]}
       scale={meshScale}
-      visible={!isLoading}
     >
       <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
         <instancedBufferAttribute

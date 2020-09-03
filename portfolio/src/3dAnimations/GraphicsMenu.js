@@ -1,5 +1,4 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useEffect, useRef } from 'react';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -9,43 +8,41 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import useStyles from '../styles/GraphicsMenuStyles';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '120px',
-    zIndex: 3000,
-    position: 'absolute',
-    '& .MuiPaper-root': {
-      backgroundColor: theme.colors.background,
-      border: '1px solid',
-      borderColor: theme.colors.primary,
-      opacity: 0.8,
-      top: '8px',
-      left: '5px',
-    },
-    '& .MuiSvgIcon-root': {
-      color: theme.colors.primary,
-      width: '20px',
-    },
-    '& .MuiTypography-root': {
-      fontFamily: theme.fonts.primary,
-      color: theme.colors.primary,
-    },
-    '& .MuiFormControlLabel-label': {
-      fontSize: '14px',
-    },
-  },
-  heading: {
-    fontSize: '15px',
-  },
-}));
+export default function GraphicsMenu({
+  handleGraphicsChange,
+  graphics,
+  currentFPS,
+}) {
+  // Disable warnings until page fully running
+  let disableWarnings = useRef(true);
+  useEffect(() => {
+    let timer1 = setTimeout(() => {
+      disableWarnings.current = false;
+    }, 12000);
+    // Clear timeout on unmount
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, []);
 
-export default function GraphicsMenu({ handleGraphicsChange, graphics }) {
   const classes = useStyles();
+  // Create alerts for low fps so graphics menu blinks and user can select a more appropriate setting
+  let graphicsAlert = classes.normal;
+  const warningLevel = 38;
+  const alertLevel = 20;
+  if (!disableWarnings.current) {
+    if (currentFPS < warningLevel && currentFPS > alertLevel) {
+      graphicsAlert = classes.warning;
+    } else if (currentFPS <= alertLevel) {
+      graphicsAlert = classes.alert;
+    }
+  }
 
   return (
     <div className={classes.root}>
-      <Accordion>
+      <Accordion className={graphicsAlert}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panel1a-content'

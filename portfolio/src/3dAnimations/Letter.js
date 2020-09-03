@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, Suspense } from 'react';
+import React, { useRef, useEffect, Suspense } from 'react';
 import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
 import { Text } from 'drei';
@@ -21,9 +21,10 @@ export default function Letter({
 }) {
   const textRef = useRef();
   const [x, y, z] = position;
-  const [isLoading, setIsLoading] = useState(true);
-  const [prevGraphics, setPrevGraphics] = useState(graphics);
-  const opacity = useRef(0); // useRef instead of useState to keep animation loop from triggering re-render
+  // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
+  const isLoadingRef = useRef(true); // loading ref for opacity fade
+  const prevGraphicsRef = useRef(graphics); // previous graphics setting
+  const opacity = useRef(0);
   const opacityFadeSpeed = 0.01; // Opacity Fade in speed
   // Init react-spring variables, used for smooth movement
   const [letterSpring, set] = useSpring(() => ({
@@ -58,17 +59,14 @@ export default function Letter({
 
   // Fade in text
   useEffect(() => {
-    let timer1 = setTimeout(() => setIsLoading(false), fadeDelay);
+    let timer1 = setTimeout(() => {
+      isLoadingRef.current = false;
+    }, fadeDelay);
     // Clear timeout on unmount
     return () => {
       clearTimeout(timer1);
     };
-  });
-
-  // // Initialize previous graphics state
-  // useEffect(() => {
-
-  // })
+  }, [fadeDelay]);
 
   const opts = {
     fontSize: fontSize,
@@ -85,7 +83,6 @@ export default function Letter({
   let ySpeed; // Current Y rotation speed
   let zSpeed; // Current Z rotation speed
 
-  let tempRot = 0;
   useFrame(() => {
     // import mouse data
     const {
@@ -112,15 +109,15 @@ export default function Letter({
     } = common.current;
 
     // Fade in Text
-    if (!isLoading && opacity.current < 1) {
+    if (!isLoadingRef.current && opacity.current < 1) {
       opacity.current = opacity.current + opacityFadeSpeed;
     }
     textRef.current.material.opacity = opacity.current;
 
     // Only animate letter movements if user selects high graphics
     if (graphics === 'high') {
-      if (prevGraphics !== 'high') {
-        setPrevGraphics(graphics);
+      if (prevGraphicsRef.current !== 'high') {
+        prevGraphicsRef.current = graphics;
       }
       // If mouse on left/right of screen, animate letter being sucked into or out of blackhole. Else if mouse in center deadzone, reset text
       if (!inDeadZone) {
@@ -215,14 +212,6 @@ export default function Letter({
           quaternion: [0, 0, 0, 1],
           scale: [1, 1, 1],
         });
-        // tempRot += 0.01;
-        // set({
-        //   position: [x, y, z],
-        //   // quaternion: [0, 0, 0, 1],
-        //   scale: [1, 1, 1],
-        //   rotation: [0, 0, tempRot],
-        //   // translate3d: [0, 0, 0],
-        // });
         tempObject.position.set(x, y, z);
         tempObject.quaternion.set(0, 0, 0, 1);
         xQuat.set(0, 0, 0, 1);
@@ -235,8 +224,7 @@ export default function Letter({
     } else {
       // else if graphics aren't high reset letters and turn off animations
       // only run once if transitiong graphics from high to med/low
-      // console.log(prevGraphics);
-      if (prevGraphics === 'high') {
+      if (prevGraphicsRef.current === 'high') {
         set({
           position: [x, y, z],
           quaternion: [0, 0, 0, 1],
@@ -247,8 +235,7 @@ export default function Letter({
         xQuat.set(0, 0, 0, 1);
         yQuat.set(0, 0, 0, 1);
         zQuat.set(0, 0, 0, 1);
-        console.log('ran');
-        setPrevGraphics(graphics);
+        prevGraphicsRef.current = graphics;
       }
     }
   });

@@ -12,10 +12,10 @@ import React, {
 //   Noise,
 //   Vignette,
 // } from 'react-postprocessing';
-import { ControlsProvider, Controls, useControl } from 'react-three-gui';
 import { scaleLinear, scalePow } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
 import { Stars, Stats } from 'drei';
+import FPSStats from './FPSStats';
 import LogoBoxes from './LogoBoxes.js';
 // import Letter from './Letter';
 import useWidth from '../hooks/useWidth';
@@ -27,6 +27,7 @@ import HeaderText from './HeaderText.js';
 // import TextGeometry from './TextGeometry';
 
 export default function ThreeViewer({ graphics }) {
+  console.log('ThreeViewer rendered');
   const [scale, setScale] = useState(0.9);
   const [positions, setPositions] = useState({
     logo: [0, -6, 0],
@@ -38,9 +39,7 @@ export default function ThreeViewer({ graphics }) {
     instructionsDown: [0, 33, 0],
   });
   const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
-  const [disableMouse, setDisableMouse] = useState(true);
-  const posX = useControl('Pos X', { type: 'number', spring: true });
-  const rotateXY = useControl('Rotation', { type: 'xypad', distance: Math.PI });
+  // const [disableMouse, setDisableMouse] = useState(true);
   const screenWidth = useWidth();
 
   useEffect(() => {
@@ -101,18 +100,6 @@ export default function ThreeViewer({ graphics }) {
     }
   }, [screenWidth]);
 
-  // Disable mouse in components initially for intro animation
-  const mouseDisableTime = 11000;
-  useEffect(() => {
-    let timer1 = setTimeout(() => {
-      setDisableMouse(false);
-    }, mouseDisableTime);
-    // Clear timeout on unmount
-    return () => {
-      clearTimeout(timer1);
-    };
-  });
-
   // Process mouse/touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
   // const mouse = useRef([0, 0, 0, 0, 1, 1, true, true]); // [raw X, raw Y, scaled X, scaled Y]
   const mouse = useRef({
@@ -126,6 +113,7 @@ export default function ThreeViewer({ graphics }) {
     mouseXRightLog: 0, // X scaled logarithmically from on right
     inDeadZone: true, // true = mouse in center, else false
     isLeftOrRight: true, // false = mouse on left, true = right
+    disableMouse: true, // disable mouse initially for fade in
   });
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
   const windowHalfX = window.innerWidth / 2;
@@ -153,6 +141,18 @@ export default function ThreeViewer({ graphics }) {
     .domain([deadZone, windowHalfX])
     .range([0, 1])
     .clamp(true);
+
+  // Disable mouse in components initially for intro animation
+  const mouseDisableTime = 11000;
+  useEffect(() => {
+    let timer1 = setTimeout(() => {
+      mouse.current.disableMouse = false;
+    }, mouseDisableTime);
+    // Clear timeout on unmount
+    return () => {
+      clearTimeout(timer1);
+    };
+  });
 
   // Process mouse and touchscreen movements
   const handleMouseAndTouch = useCallback(
@@ -195,6 +195,7 @@ export default function ThreeViewer({ graphics }) {
         mouseXRightLog: mouseXRightLogScale(mouseX),
         inDeadZone: inDeadZone,
         isLeftOrRight: isLeftOrRight,
+        disableMouse: mouse.current.disableMouse,
       };
     },
     [
@@ -209,53 +210,52 @@ export default function ThreeViewer({ graphics }) {
   );
 
   return (
-    // <ControlsProvider>
-    <Canvas
-      gl={{ antialias: false, alpha: false }}
-      camera={{ position: [0, 0, 40] }}
-      // camera={{ position: [0, 0, 40], near: 5, far: 200 }}
-      onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
-      onMouseMove={handleMouseAndTouch}
-      onTouchMove={handleMouseAndTouch}
-      onTouchStart={(e) => e.preventDefault()}
-      onTouchEnd={(e) => e.preventDefault()}
-      onTouchCancel={(e) => e.preventDefault()}
-      pixelRatio={window.devicePixelRatio * 1.5}
-    >
-      {/* <ambientLight />
+    <>
+      <Canvas
+        gl={{ antialias: false, alpha: false }}
+        camera={{ position: [0, 0, 40] }}
+        // camera={{ position: [0, 0, 40], near: 5, far: 200 }}
+        onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
+        onMouseMove={handleMouseAndTouch}
+        onTouchMove={handleMouseAndTouch}
+        onTouchStart={(e) => e.preventDefault()}
+        onTouchEnd={(e) => e.preventDefault()}
+        onTouchCancel={(e) => e.preventDefault()}
+        pixelRatio={window.devicePixelRatio * 1.5}
+      >
+        {/* <ambientLight />
       <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
-      <ambientLight intensity={1.1} />
-      <pointLight position={[100, 100, 100]} intensity={2.2} />
-      <Light maxIntensity={2.5} mouse={mouse} disableMouse={disableMouse} />
-      <group scale={[scale, scale, scale]}>
-        <Suspense fallback={null}>
-          <LogoBoxes
-            meshPosition={positions.logo}
-            meshScale={[1, 1, 1]}
-            deadZone={deadZone}
+        <ambientLight intensity={1.1} />
+        <pointLight position={[100, 100, 100]} intensity={2.2} />
+        <Light maxIntensity={2.5} mouse={mouse} />
+        <group scale={[scale, scale, scale]}>
+          <Suspense fallback={null}>
+            <LogoBoxes
+              meshPosition={positions.logo}
+              meshScale={[1, 1, 1]}
+              deadZone={deadZone}
+              mouse={mouse}
+              fadeDelay={3000}
+              graphics={graphics}
+            />
+          </Suspense>
+          <HeaderText
+            positions={positions}
+            fontSizes={fontSizes}
             mouse={mouse}
-            fadeDelay={3000}
-            disableMouse={disableMouse}
             graphics={graphics}
           />
-        </Suspense>
-        <HeaderText
-          positions={positions}
-          fontSizes={fontSizes}
-          mouse={mouse}
-          graphics={graphics}
-        />
-      </group>
-      <Stars />
-      <Stats />
-      {/* <Effects
+        </group>
+        <Stars />
+        <Stats />
+        {/* <Effects
         mouse={mouse}
         bloomStrength={0.8}
         bloomRadius={1}
         bloomThreshold={0}
       /> */}
-      {/* <FadingBloom /> */}
-      {/* <WobbleSphere />
+        {/* <FadingBloom /> */}
+        {/* <WobbleSphere />
       <EffectComposer>
         <DepthOfField
           focusDistance={0}
@@ -272,6 +272,8 @@ export default function ThreeViewer({ graphics }) {
         <Noise opacity={0.025} />
         <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
      </Canvas>/ </EffectComposer> */}
-    </Canvas>
+      </Canvas>
+      <FPSStats style={{ visibility: 'hidden' }} left={'100px'} />
+    </>
   );
 }

@@ -6,6 +6,7 @@ import { getRndInteger } from './LogoBoxesHelpers';
 import Word from './Word';
 
 export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
+  console.log('HeaderText rendered');
   // Process common letter attributes in this component and pass in values with a ref to save as much processing power as possible
   const common = useRef({
     letterScale: 1,
@@ -39,14 +40,14 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
     .range([0, 1])
     .clamp(true);
   const rotSpeedLeftScale = scalePow() // Scale function for rotation speed when mouse on left of screen
-    .exponent(0.1)
+    .exponent(0.05)
     .domain([0, 1])
-    .range([THREE.Math.degToRad(30), THREE.Math.degToRad(0.1)])
+    .range([THREE.Math.degToRad(40), THREE.Math.degToRad(0.1)])
     .clamp(true);
 
   // Generate random speed percentages so each letter travels in a different orbit.  Precompute large array that each letter can pull from at random each time mouse is in deadzone so orbits constantly change.
   let maxSpeeds = [];
-  const speedFactor = 10;
+  const speedFactor = 30;
   const minSpeed = speedFactor / 100;
   for (let i = 0; i < 200; i++) {
     // Random max rotation speeds

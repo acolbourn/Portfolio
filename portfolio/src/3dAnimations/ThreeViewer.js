@@ -143,7 +143,8 @@ export default function ThreeViewer({ graphics }) {
     .clamp(true);
 
   // Disable mouse in components initially for intro animation
-  const mouseDisableTime = 11000;
+  const mouseDisableTime = 0;
+  // const mouseDisableTime = 11000;
   useEffect(() => {
     let timer1 = setTimeout(() => {
       mouse.current.disableMouse = false;

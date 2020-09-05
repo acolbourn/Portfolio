@@ -23,7 +23,8 @@ export default function LogoBoxes({
   const numOfInstances = logoPoints.length * depth; // Total # of boxes
   const boxSize = 1; // Physical box dimensions
   const maxBoxDistance = 6000; // Max distance boxes spread from each other
-  const groupPosZ = (depth * boxSize) / 2 - boxSize / 2; // Z center of logo
+  const meshOffset = -2; // offset so rotation is exactly centered
+  const groupPosZ = meshOffset + (depth * boxSize) / 2 - boxSize / 2; // Z center of logo
   const groupPosXY = 0; // X and Y center of logo
   const tempObject = new THREE.Object3D(); // Init box object
   const tempColor = new THREE.Color(); // Init color object
@@ -108,7 +109,7 @@ export default function LogoBoxes({
   }, [fadeDelay]);
 
   // Scaling functions
-  const implodeScale = scaleLinear().domain([1, 0]).range([0, -1]).clamp(true);
+  // const implodeScale = scaleLinear().domain([1, 0]).range([0, -1]).clamp(true);
   // Create smooth scale between implosion/explosion animation speeds
   // Scale from 3/4 of window to left window edge, right quarter remains constant at explode speed
   const animateScale = scalePow()
@@ -118,17 +119,16 @@ export default function LogoBoxes({
     .clamp(true);
 
   useFrame((state) => {
-    let { mouseYScaled } = mouse.current;
+    let { mouseX, mouseYScaled } = mouse.current;
     const {
-      mouseX,
       // mouseXScaled,
       // mouseYScaled,
       mouseXLeftLin,
       // mouseXRightLin,
       // mouseXLeftLog,
       mouseXRightLog,
-      inDeadZone,
-      isLeftOrRight,
+      // inDeadZone,
+      // isLeftOrRight,
       disableMouse,
     } = mouse.current;
 
@@ -249,90 +249,11 @@ export default function LogoBoxes({
         (-z - groupPosZ) * logo2Sphere -
         spherePoints[idx].z * sphereRadius * (1 + logo2Sphere);
 
-      // // Collapse to sphere
-      // const wobbleFactor = 0;
-      // const explodeFactor = 5;
-      // tempObject.position.set(
-      //   groupPosXY + (x - groupPosXY) * mouseLinearX,
-      //   groupPosXY + (y - groupPosXY) * mouseLinearX,
-      //   groupPosZ + (z - groupPosZ) * mouseLinearX
-      // );
-
-      // let rightWeight = mouse.current[0] <= 0 ? 0 : mouseVelX;
-
-      // Collapse to sphere right to center
-
-      // tempObject.position.set(
-      //   groupPosXY - explodeX,
-      //   groupPosXY - explodeY,
-      //   groupPosZ - explodeZ
-      // );
       tempObject.position.set(
         groupPosXY - implodeX - explodeX,
         groupPosXY - implodeY - explodeY,
         groupPosZ - implodeZ - explodeZ
       );
-      // tempObject.position.set(
-      //   groupPosXY - implodeX,
-      //   groupPosXY - implodeY,
-      //   groupPosZ - implodeZ
-      // );
-
-      // // Collapse to sphere right to center
-      // const wobbleFactor = 0;
-      // const explodeFactor = 5;
-      // tempObject.position.set(
-      //   groupPosXY -
-      //     (x - groupPosXY) * mouseLinearX -
-      //     spherePoints[idx].x * explodeFactor * (1 - mouseLinearX),
-      //   groupPosXY -
-      //     (y - groupPosXY) * mouseLinearX -
-      //     spherePoints[idx].y * explodeFactor * (1 - mouseLinearX),
-      //   groupPosZ -
-      //     (z - groupPosZ) * mouseLinearX -
-      //     spherePoints[idx].z * explodeFactor * (1 - mouseLinearX)
-      // );
-
-      // // Weird Combo Bend and explode effect
-      // const wobbleFactor = (Math.sin(time) / 2) * mouseLinearX;
-      // const explodeFactor = 5;
-      // tempObject.position.set(
-      //   groupPosXY -
-      //     (x - groupPosXY) * mouseLinearX -
-      //     pointsHypotenuses[idx] * wobbleFactor -
-      //     spherePoints[idx].x *
-      //       wobbleFactor *
-      //       explodeFactor *
-      //       (1 - mouseLinearX),
-      //   groupPosXY -
-      //     (y - groupPosXY) * mouseLinearX -
-      //     pointsHypotenuses[idx] * wobbleFactor -
-      //     spherePoints[idx].y *
-      //       wobbleFactor *
-      //       explodeFactor *
-      //       (1 - mouseLinearX),
-      //   groupPosZ -
-      //     (z - groupPosZ) * mouseLinearX -
-      //     pointsHypotenuses[idx] * wobbleFactor -
-      //     spherePoints[idx].z *
-      //       wobbleFactor *
-      //       explodeFactor *
-      //       (1 - mouseLinearX)
-      // );
-
-      // // Moving Bend effect
-      // const wobbleFactor = Math.sin(time) / 2;
-      // tempObject.position.set(
-      //   groupPosXY -
-      //     (x - groupPosXY) * mouseLinearX -
-      //     pointsHypotenuses[idx] * wobbleFactor,
-      //   groupPosXY -
-      //     (y - groupPosXY) * mouseLinearX -
-      //     pointsHypotenuses[idx] * wobbleFactor,
-      //   groupPosZ -
-      //     (z - groupPosZ) * mouseLinearX -
-      //     pointsHypotenuses[idx] * wobbleFactor
-      // );
 
       // // Shrink to 0 in formation
       // tempObject.position.set(
@@ -359,6 +280,8 @@ export default function LogoBoxes({
       tempObject.updateMatrix();
       ref.current.setMatrixAt(id, tempObject.matrix);
     });
+    // Hide if on left edge of screen in blackhole
+    ref.current.visible = !(mouseXLeftLin <= 0);
     ref.current.geometry.attributes.color.needsUpdate = true;
     ref.current.instanceMatrix.needsUpdate = true;
   });

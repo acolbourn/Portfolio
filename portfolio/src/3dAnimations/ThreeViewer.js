@@ -25,6 +25,8 @@ import Light from './Light';
 // import WobbleSphere from './WobbleSphere';
 import HeaderText from './HeaderText.js';
 // import TextGeometry from './TextGeometry';
+import Sun from './Sun';
+import SunBloom from './SunBloom';
 
 export default function ThreeViewer({ graphics }) {
   console.log('ThreeViewer rendered');
@@ -229,6 +231,8 @@ export default function ThreeViewer({ graphics }) {
         <ambientLight intensity={1.1} />
         <pointLight position={[100, 100, 100]} intensity={2.2} />
         <Light maxIntensity={2.5} mouse={mouse} />
+        <spotLight position={[0, 0, 0]} intensity={10} />
+
         <group scale={[scale, scale, scale]}>
           <Suspense fallback={null}>
             <LogoBoxes
@@ -246,6 +250,8 @@ export default function ThreeViewer({ graphics }) {
             mouse={mouse}
             graphics={graphics}
           />
+          <Sun position={positions.logo} mouse={mouse} />
+          <SunBloom mouse={mouse} />
         </group>
         <Stars />
         <Stats />

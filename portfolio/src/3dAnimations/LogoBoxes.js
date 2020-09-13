@@ -32,6 +32,10 @@ export default function LogoBoxes({
   let boxColorsHex = []; // Array of box colors in hex
   let uniformBoxColorHex; // Uniform box color in hex
   let defaultBoxColorHex = defaultBoxColor.hex(); // Default box color in hex
+  const maxRotationSpeed = 0.12; // max rotation speed of logo
+  const minRotationSpeed = 0.001; // min rotation speed of logo
+  const standardRotationSpeed = 0.007; // standard rotation speed of logo
+  // const standardRotationSpeed = 0.01; // standard rotation speed of logo
   // Generate initial color arrays. Use id's to reduce number of computations run each loop.  Only a set number of colors is calculated each time instead of each individual box, and then boxes pull from one of those precalculated limited colors based on their id.
   colorPalette.forEach((color) => boxColors.push(Color(color)));
   boxColors.forEach((color) => boxColorsHex.push(color.hex()));
@@ -127,8 +131,8 @@ export default function LogoBoxes({
       // mouseXRightLin,
       // mouseXLeftLog,
       mouseXRightLog,
-      // inDeadZone,
-      // isLeftOrRight,
+      inDeadZone,
+      isLeftOrRight,
       disableMouse,
     } = mouse.current;
 
@@ -137,9 +141,6 @@ export default function LogoBoxes({
 
     // Turn on visibility after delay for fade in effect
     ref.current.visible = !isLoadingRef.current;
-
-    // Rotate logo group
-    ref.current.rotation.y += 0.01;
 
     // Scale mouse positions and velocities for animations
     if (disableMouse) {
@@ -167,6 +168,23 @@ export default function LogoBoxes({
     mouseVelY += (mouseYScaled - mouseVelY) * animateSpeedY;
     mouseVelExplode += (mouseExplode - mouseVelExplode) * animateVel;
     mouseVelImplode += (mouseImplode - mouseVelImplode) * animateVel;
+
+    // Rotate logo group
+    // Rotate faster as mouse moves from center to left edge/blackhole
+    let rotSpeedScale = scalePow()
+      .exponent(0.3)
+      .domain([0, 1])
+      .range([maxRotationSpeed, minRotationSpeed])
+      .clamp(true);
+    // if mouse in deadzone to right edge, rotate standard speed
+    // else if mouse on left rotate faster from deadzone to left edge
+    if (inDeadZone || isLeftOrRight) {
+      ref.current.rotation.y += standardRotationSpeed;
+    } else {
+      ref.current.rotation.y += rotSpeedScale(mouseVelImplode);
+      // ref.current.rotation.x += rotSpeedScale(mouseVelImplode);
+      // ref.current.rotation.z += rotSpeedScale(mouseVelImplode);
+    }
 
     // Calculate box colors based on mouse position
     if (mouseVelY < 0) {

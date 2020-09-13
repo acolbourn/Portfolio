@@ -14,14 +14,14 @@ export default function Sun({ maxIntensity, mouse, position }) {
 
   // let sunScale = scaleLinear().domain([0, 0.5]).range([2, 1]).clamp(true);
   let sunScaleLog = scalePow()
-    .exponent(0.1)
+    .exponent(0.15)
     .domain([0, 0.3])
-    .range([5, 1])
+    .range([6.5, 1])
     .clamp(true);
 
   // Init react-spring variables, used for smooth movement
   const [sunSpring, set] = useSpring(() => ({
-    scale: [1, 1, 1],
+    scale: [0, 0, 0],
     config: { mass: massCurrent, tension: 150, friction: frictionCurrent },
   }));
 

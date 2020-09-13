@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useFrame } from 'react-three-fiber';
 import Color from 'color';
 import { scaleLinear, scalePow } from 'd3-scale';
+import { useSpring, animated } from 'react-spring/three';
 import logoPoints from './logoPoints.js';
 import { getRandomSpherePoints } from './LogoBoxesHelpers';
 
@@ -32,9 +33,10 @@ export default function LogoBoxes({
   let boxColorsHex = []; // Array of box colors in hex
   let uniformBoxColorHex; // Uniform box color in hex
   let defaultBoxColorHex = defaultBoxColor.hex(); // Default box color in hex
-  const maxRotationSpeed = 0.12; // max rotation speed of logo
-  const minRotationSpeed = 0.001; // min rotation speed of logo
   const standardRotationSpeed = 0.007; // standard rotation speed of logo
+  const maxRotationSpeed = 0.12; // max rotation speed of logo
+  // const minRotationSpeed = 0.001; // min rotation speed of logo
+  const minRotationSpeed = standardRotationSpeed; // min rotation speed of logo
   // const standardRotationSpeed = 0.01; // standard rotation speed of logo
   // Generate initial color arrays. Use id's to reduce number of computations run each loop.  Only a set number of colors is calculated each time instead of each individual box, and then boxes pull from one of those precalculated limited colors based on their id.
   colorPalette.forEach((color) => boxColors.push(Color(color)));
@@ -70,6 +72,19 @@ export default function LogoBoxes({
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
   const isLoadingRef = useRef(true); // loading ref for opacity fade
   const initBoxPositionRef = useRef(3000); // inital box position ref
+
+  // Init react-spring variables, used for smooth movement
+  const springScaleRef = useRef(); // react-spring scale ref
+  const massImplode = 1; // react-spring mass when imploding
+  const massExplode = 20; // react-spring mass when exploding
+  let massCurrent = massImplode; // current react-spring mass
+  const frictionImplode = 30; // react-spring friction when imploding
+  const frictionExplode = 80; // react-spring friction when imploding
+  let frictionCurrent = frictionImplode; // current react-spring friction
+  const [groupScaleSpring, set] = useSpring(() => ({
+    scale: [meshScale[0], meshScale[0], meshScale[0]],
+    config: { mass: massCurrent, tension: 150, friction: frictionCurrent },
+  }));
 
   // Initialize empty color array
   const colorArray = useMemo(
@@ -182,8 +197,6 @@ export default function LogoBoxes({
       ref.current.rotation.y += standardRotationSpeed;
     } else {
       ref.current.rotation.y += rotSpeedScale(mouseVelImplode);
-      // ref.current.rotation.x += rotSpeedScale(mouseVelImplode);
-      // ref.current.rotation.z += rotSpeedScale(mouseVelImplode);
     }
 
     // Calculate box colors based on mouse position
@@ -214,16 +227,11 @@ export default function LogoBoxes({
 
     // exlosion common parameters
     // Set mouse to 0 on left side of screen to bypass explosion effect
-    // const sphereDist = mouseVelX >= 0 ? mouseVelX : 0;
     const sphereDist = mouseVelExplode >= 0 ? mouseVelExplode : 0;
-    // const sphereDist = mouseVelExplode;
 
     // implosion common parameters
-    // Shift scale so left edge of screen is 0, middle is -1
-    // let shiftScale = scaleLinear().domain([-1, 0]).range([0, -1]).clamp(true);
-    // const mouseShiftedX = shiftScale(mouseVelX);
     const mouseShiftedX = -1 * mouseVelImplode;
-    // const wobbleFactor = 0;
+
     // From left edge to mid left, collapse sphere to origin
     let sphereScale = scalePow()
       .exponent(0.3)
@@ -231,9 +239,13 @@ export default function LogoBoxes({
       .range([1, 5])
       .clamp(true);
     const sphereRadius = sphereScale(mouseShiftedX);
-    // if (idx === 0) {
-    //   console.log(sphereRadius);
-    // }
+    // From left edge to mid left, scale logo group from 0 to origina scale
+    let meshGroupScale = scaleLinear()
+      .domain([0, 0.1])
+      .range([0, meshScale[0]])
+      .clamp(true);
+    const groupScale = meshGroupScale(mouseXLeftLin);
+
     // From deadzone to mid left, transition from logo to sphere
     let logo2SphereScale = scaleLinear()
       .domain([-0.5, -1])
@@ -273,20 +285,6 @@ export default function LogoBoxes({
         groupPosZ - implodeZ - explodeZ
       );
 
-      // // Shrink to 0 in formation
-      // tempObject.position.set(
-      //   groupPosXY - (x - groupPosXY) * mouseLinearX,
-      //   groupPosXY - (y - groupPosXY) * mouseLinearX,
-      //   groupPosZ - (z - groupPosZ) * mouseLinearX
-      // );
-
-      // Weird Bendy effect
-      // tempObject.position.set(
-      //   groupPosXY - x - pointsHypotenuses[idx] * mouseLinearX,
-      //   groupPosXY - y - pointsHypotenuses[idx] * mouseLinearX,
-      //   groupPosZ - z - pointsHypotenuses[idx] * mouseLinearX
-      // );
-
       // Rotate individual boxes using current time.  This gives a wave like effect bc time will be slightly different as each box is set in the loop.
       tempObject.rotation.y =
         Math.sin(x / 4 + time) +
@@ -299,26 +297,51 @@ export default function LogoBoxes({
       ref.current.setMatrixAt(id, tempObject.matrix);
     });
     // Hide if on left edge of screen in blackhole
-    ref.current.visible = !(mouseXLeftLin <= 0);
+    // ref.current.visible = !(mouseXLeftLin <= 0);
+    // ref.current.scale.set(groupScale, groupScale, groupScale);
+
+    // if mouse in blackhole zone, shrink scale fast, else expand slow
+    if (mouseXLeftLin <= 0) {
+      massCurrent = massImplode;
+      frictionCurrent = frictionImplode;
+    } else {
+      massCurrent = massExplode;
+      frictionCurrent = frictionExplode;
+    }
+    // Apply react-spring scaling
+    set({
+      scale: [groupScale, groupScale, groupScale],
+      config: { mass: massCurrent, tension: 150, friction: frictionCurrent },
+    });
+
     ref.current.geometry.attributes.color.needsUpdate = true;
     ref.current.instanceMatrix.needsUpdate = true;
   });
 
   return (
-    <instancedMesh
-      ref={ref}
-      args={[null, null, numOfInstances]}
+    <animated.mesh
+      ref={springScaleRef}
+      {...groupScaleSpring}
       position={meshPosition}
-      rotation={[0, 0, Math.PI]}
-      scale={meshScale}
     >
-      <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
-        <instancedBufferAttribute
-          attachObject={['attributes', 'color']}
-          args={[colorArray, 3]}
+      <instancedMesh
+        ref={ref}
+        args={[null, null, numOfInstances]}
+        // position={meshPosition}
+        rotation={[0, 0, Math.PI]}
+        scale={meshScale}
+      >
+        <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
+          <instancedBufferAttribute
+            attachObject={['attributes', 'color']}
+            args={[colorArray, 3]}
+          />
+        </boxBufferGeometry>
+        <meshPhongMaterial
+          attach='material'
+          vertexColors={THREE.VertexColors}
         />
-      </boxBufferGeometry>
-      <meshPhongMaterial attach='material' vertexColors={THREE.VertexColors} />
-    </instancedMesh>
+      </instancedMesh>
+    </animated.mesh>
   );
 }

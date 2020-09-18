@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, Suspense } from 'react';
+import React, { useRef, Suspense } from 'react';
 import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
 import { Text } from 'drei';
@@ -13,19 +13,18 @@ export default function Letter({
   rotation,
   fontSize,
   color,
-  fadeDelay,
   mouse,
   common,
   maxSpeeds,
   graphics,
+  fadeGroup,
+  icon,
 }) {
   const textRef = useRef();
   const [x, y, z] = position;
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
-  const isLoadingRef = useRef(true); // loading ref for opacity fade
   const prevGraphicsRef = useRef(graphics); // previous graphics setting
-  const opacity = useRef(0);
-  const opacityFadeSpeed = 0.01; // Opacity Fade in speed
+
   // Init react-spring variables, used for smooth movement
   const [letterSpring, set] = useSpring(() => ({
     position: [x, y, z],
@@ -56,17 +55,6 @@ export default function Letter({
   let orbit; // Orbit to maintain
   const holeOffset = 0.01; // Offset so letters never reach singularity
   let distFiltered = 1; // Filtered distance so letters don't enter blackhole
-
-  // Fade in text
-  useEffect(() => {
-    let timer1 = setTimeout(() => {
-      isLoadingRef.current = false;
-    }, fadeDelay);
-    // Clear timeout on unmount
-    return () => {
-      clearTimeout(timer1);
-    };
-  }, [fadeDelay]);
 
   const opts = {
     fontSize: fontSize,
@@ -106,13 +94,11 @@ export default function Letter({
       explodeOrbit,
       massCurrent,
       frictionCurrent,
+      opacity,
     } = common.current;
 
-    // Fade in Text
-    if (!isLoadingRef.current && opacity.current < 1) {
-      opacity.current = opacity.current + opacityFadeSpeed;
-    }
-    textRef.current.material.opacity = opacity.current;
+    // Set opacity
+    textRef.current.material.opacity = opacity[fadeGroup];
 
     // Only animate letter movements if user selects high graphics
     if (graphics === 'high') {
@@ -249,7 +235,12 @@ export default function Letter({
           // font={
           //   'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff'
           // }
-          font={'/fonts/syncopate-v11-latin-regular.woff'}
+
+          font={
+            icon
+              ? '/fonts/Font Awesome 5 Free-Solid-900.otf'
+              : '/fonts/syncopate-v11-latin-regular.woff'
+          }
           anchorX='center'
           anchorY='middle'
           rotation={rotation}

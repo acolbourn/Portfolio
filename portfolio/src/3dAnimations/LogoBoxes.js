@@ -6,6 +6,7 @@ import { scaleLinear, scalePow } from 'd3-scale';
 import { useSpring, animated } from 'react-spring/three';
 import logoPoints from './logoPoints.js';
 import { getRandomSpherePoints } from './LogoBoxesHelpers';
+// import RoundBox from './RoundBox';
 
 export default function LogoBoxes({
   mouse,
@@ -331,12 +332,34 @@ export default function LogoBoxes({
         rotation={[0, 0, Math.PI]}
         scale={meshScale}
       >
+        {/* <octahedronBufferGeometry attach='geometry' args={[0.7, 0]}>
+          <instancedBufferAttribute
+            attachObject={['attributes', 'color']}
+            args={[colorArray, 3]}
+          />
+        </octahedronBufferGeometry> */}
+
+        {/* <icosahedronBufferGeometry attach='geometry' args={[0.65, 0]}>
+          <instancedBufferAttribute
+            attachObject={['attributes', 'color']}
+            args={[colorArray, 3]}
+          />
+        </icosahedronBufferGeometry> */}
+        {/* <sphereBufferGeometry attach='geometry' args={[0.65, 32, 32]}>
+          <instancedBufferAttribute
+            attachObject={['attributes', 'color']}
+            args={[colorArray, 3]}
+          />
+        </sphereBufferGeometry> */}
         <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
           <instancedBufferAttribute
             attachObject={['attributes', 'color']}
             args={[colorArray, 3]}
           />
         </boxBufferGeometry>
+
+        {/* <RoundBox colorArray={colorArray} /> */}
+
         <meshPhongMaterial
           attach='material'
           vertexColors={THREE.VertexColors}

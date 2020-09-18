@@ -14,7 +14,7 @@
     "cannon": "^0.6.2",
     "color": "^3.1.2",
     "d3-scale": "^3.2.1",
-    "drei": "0.0.72",
+    "drei": "^1.5.6",
     "formik": "^2.1.4",
     "react": "^16.13.1",
     "react-copy-to-clipboard": "^5.0.2",

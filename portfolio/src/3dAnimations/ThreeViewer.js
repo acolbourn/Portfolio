@@ -24,23 +24,30 @@ import Light from './Light';
 // import FadingBloom from './FadingBloom';
 // import WobbleSphere from './WobbleSphere';
 import HeaderText from './HeaderText.js';
-// import TextGeometry from './TextGeometry';
+import TextGeometry from './TextGeometry';
 import Sun from './Sun';
 import SunBloom from './SunBloom';
 
 export default function ThreeViewer({ graphics }) {
   console.log('ThreeViewer rendered');
   const [scale, setScale] = useState(0.9);
+  const arrowOffset = -8;
   const [positions, setPositions] = useState({
     logo: [0, -6, 0],
     name: [0, 21, 0],
     jobTitles: [0, 17, 0],
     instructionsX: [0, 30, 0],
     instructionsY: [0, 35, 0],
-    instructionsUp: [0, 38, 0],
-    instructionsDown: [0, 33, 0],
+    instructionsTitle: [0, 38, 0],
+    arrowsX: [arrowOffset, 30, 0],
+    arrowsY: [arrowOffset, 35, 0],
   });
-  const [fontSizes, setFontSizes] = useState({ name: 4.8, titles: 1.7 });
+  const [fontSizes, setFontSizes] = useState({
+    name: 4.8,
+    titles: 1.7,
+    arrows: 3,
+    instructionsTitle: 3,
+  });
   // const [disableMouse, setDisableMouse] = useState(true);
   const screenWidth = useWidth();
 
@@ -54,10 +61,16 @@ export default function ThreeViewer({ graphics }) {
           jobTitles: [0, 16, 0],
           instructionsX: [0, 30, 0],
           instructionsY: [0, 35, 0],
-          instructionsUp: [0, 38, 0],
-          instructionsDown: [0, 33, 0],
+          instructionsTitle: [0, 38, 0],
+          arrowsX: [arrowOffset, 30, 0],
+          arrowsY: [arrowOffset, 35, 0],
         });
-        setFontSizes({ name: 4.8, titles: 1.7 });
+        setFontSizes({
+          name: 4.8,
+          titles: 1.7,
+          arrows: 3,
+          instructionsTitle: 3,
+        });
         aspect < 0.52 ? setScale(0.55) : setScale(0.65);
         break;
       case 'sm':
@@ -67,11 +80,17 @@ export default function ThreeViewer({ graphics }) {
           jobTitles: [0, 17, 0],
           instructionsX: [0, 30, 0],
           instructionsY: [0, 35, 0],
-          instructionsUp: [0, 38, 0],
-          instructionsDown: [0, 33, 0],
+          instructionsTitle: [0, 38, 0],
+          arrowsX: [arrowOffset, 30, 0],
+          arrowsY: [arrowOffset, 35, 0],
         });
         // setFontSizes({ name: 4.8, titles: 1.7 });
-        setFontSizes({ name: 3.8, titles: 1.45 });
+        setFontSizes({
+          name: 3.8,
+          titles: 1.45,
+          arrows: 3,
+          instructionsTitle: 3,
+        });
         setScale(0.75);
         break;
       case 'md':
@@ -90,11 +109,12 @@ export default function ThreeViewer({ graphics }) {
           jobTitles: [0, 17, 0],
           instructionsX: [0, 30, 0],
           instructionsY: [0, 35, 0],
-          instructionsUp: [0, 38, 0],
-          instructionsDown: [0, 33, 0],
+          instructionsTitle: [0, 38, 0],
+          arrowsX: [arrowOffset, 38, 0],
+          arrowsY: [arrowOffset, 33, 0],
         });
         // setFontSizes({ name: 4.8, titles: 1.7 });
-        setFontSizes({ name: 4, titles: 1.5 });
+        setFontSizes({ name: 4, titles: 1.5, arrows: 3, instructionsTitle: 3 });
         setScale(0.83);
         break;
       default:
@@ -114,6 +134,7 @@ export default function ThreeViewer({ graphics }) {
     mouseXLeftLog: 0, // X scaled logarithmically from on left
     mouseXRightLog: 0, // X scaled logarithmically from on right
     inDeadZone: true, // true = mouse in center, else false
+    inBlackHoleZone: false, // true = mouse on left edge, else false
     isLeftOrRight: true, // false = mouse on left, true = right
     disableMouse: true, // disable mouse initially for fade in
   });
@@ -121,6 +142,8 @@ export default function ThreeViewer({ graphics }) {
   const windowHalfX = window.innerWidth / 2;
   const windowHalfY = window.innerHeight / 2;
   const blackHoleZone = (windowHalfX - deadZone) * 0.1; // 10% mouse zone on left side of screen where scaling is 0 so everything is sucked into blackhole
+  const blackHoleZoneShited = -windowHalfX + blackHoleZone;
+
   // Scaling functions
   let mouseXScale = scaleLinear()
     .domain([-windowHalfX, windowHalfX])
@@ -182,6 +205,14 @@ export default function ThreeViewer({ graphics }) {
         inDeadZone = false;
       }
 
+      // Determine if mouse x position is in blackhole zone
+      let inBlackHoleZone; // true if mouse x on left edge of screen
+      if (mouseX <= blackHoleZoneShited) {
+        inBlackHoleZone = true;
+      } else {
+        inBlackHoleZone = false;
+      }
+
       // Determine which side of screen mouse is on
       let isLeftOrRight = false; // false if mouse on left, true if on right
       isLeftOrRight = mouseX < 0 ? false : true;
@@ -197,6 +228,7 @@ export default function ThreeViewer({ graphics }) {
         mouseXLeftLog: 0,
         mouseXRightLog: mouseXRightLogScale(mouseX),
         inDeadZone: inDeadZone,
+        inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
         disableMouse: mouse.current.disableMouse,
       };
@@ -209,6 +241,7 @@ export default function ThreeViewer({ graphics }) {
       mouseXRightLogScale,
       windowHalfX,
       windowHalfY,
+      blackHoleZoneShited,
     ]
   );
 
@@ -244,12 +277,20 @@ export default function ThreeViewer({ graphics }) {
               graphics={graphics}
             />
           </Suspense>
-          <HeaderText
-            positions={positions}
-            fontSizes={fontSizes}
-            mouse={mouse}
-            graphics={graphics}
-          />
+          <group scale={[5, 5, 5]} position={[0, -80, 0]}>
+            <HeaderText
+              positions={positions}
+              fontSizes={fontSizes}
+              mouse={mouse}
+              graphics={graphics}
+            />
+
+            <TextGeometry
+              text={'Ale'}
+              position={[0, 20, 0]}
+              fontSize={fontSizes.name}
+            />
+          </group>
           <Sun position={positions.logo} mouse={mouse} />
           <SunBloom mouse={mouse} />
         </group>

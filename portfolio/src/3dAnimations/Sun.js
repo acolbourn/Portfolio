@@ -6,7 +6,7 @@ import { useSpring, animated } from 'react-spring/three';
 export default function Sun({ maxIntensity, mouse, position }) {
   const sun = useRef();
   const massImplode = 1; // react-spring mass when imploding
-  const massExplode = 20; // react-spring mass when exploding
+  const massExplode = 2; // react-spring mass when exploding
   let massCurrent = massImplode; // current react-spring mass
   const frictionImplode = 40; // react-spring friction when imploding
   const frictionExplode = 50; // react-spring friction when imploding
@@ -14,9 +14,9 @@ export default function Sun({ maxIntensity, mouse, position }) {
 
   // let sunScale = scaleLinear().domain([0, 0.5]).range([2, 1]).clamp(true);
   let sunScaleLog = scalePow()
-    .exponent(0.15)
+    .exponent(0.2)
     .domain([0, 0.3])
-    .range([6.5, 1])
+    .range([5, 1])
     .clamp(true);
 
   // Init react-spring variables, used for smooth movement

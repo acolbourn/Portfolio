@@ -47,7 +47,8 @@ export default function TextGeometry({ text, position, fontSize, fadeDelay }) {
         'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff'
       }
       text={text}
-      anchorX='center'
+      // anchorX='center'
+      anchorX='left'
       anchorY='middle'
     >
       <meshPhongMaterial attach='material' />

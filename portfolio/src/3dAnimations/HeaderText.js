@@ -19,8 +19,9 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   });
 
   // Variables
-  const mainTextColor = '#0047AB';
-  const instructionTextColor = 'white';
+  const mainTextColor = '#21a1fc';
+  // const mainTextColor = '#0047AB';
+  const instructionTextColor = '#EFEFEF';
   const constRotation = 0; // fixed slow rotation when mouse on right of screen
   let rotationSpeed; // rotation speed scaled
   let letterScale = 1; // Scale of each letter
@@ -168,9 +169,9 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   return (
     <>
       <Word
-        text={'\uF8CC Controls'}
-        position={positions.instructionsTitle}
-        fontSize={fontSizes.instructionsTitle}
+        text={'\uF8CC'}
+        position={positions.mouseIcon}
+        fontSize={2.4}
         letterSpacing={[1.2]}
         color={instructionTextColor}
         fadeGroup={'group3'}
@@ -180,7 +181,62 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={true}
+        alignText={'left'}
+        scale={[1, 1, 1]}
+        isLine={false}
       />
+      <Word
+        text={'Controls'}
+        position={positions.instructionsTitle}
+        fontSize={fontSizes.titles}
+        letterSpacing={[1.35, 1.4, 1.175, 0.9525, 1.1525, 1.25, 1.075]}
+        color={instructionTextColor}
+        fadeGroup={'group3'}
+        mouse={mouse}
+        common={common}
+        blackholeCenter={positions.logo}
+        maxSpeeds={maxSpeeds}
+        graphics={graphics}
+        icon={false}
+        alignText={'left'}
+        scale={[1.2, 1.2, 1.2]}
+        isLine={false}
+      />
+      <Word
+        text={'_______'}
+        position={positions.instructionsUnderline}
+        fontSize={5}
+        letterSpacing={[2.35]}
+        color={instructionTextColor}
+        fadeGroup={'group3'}
+        mouse={mouse}
+        common={common}
+        blackholeCenter={positions.logo}
+        maxSpeeds={maxSpeeds}
+        graphics={graphics}
+        icon={false}
+        alignText={'center'}
+        scale={[1, 1, 1]}
+        isLine={true}
+      />
+      {/* Vertical line for alignment */}
+      {/* <Word
+        text={'_'}
+        position={[-2.4, 0, 0]}
+        fontSize={5}
+        letterSpacing={[100]}
+        color={instructionTextColor}
+        fadeGroup={'group3'}
+        mouse={mouse}
+        common={common}
+        blackholeCenter={positions.logo}
+        maxSpeeds={maxSpeeds}
+        graphics={graphics}
+        icon={false}
+        alignText={'center'}
+        scale={[1, 1, 1]}
+        isLine={true}
+      /> */}
       <Word
         text={'\uF337'}
         position={positions.arrowsX}
@@ -194,12 +250,15 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={true}
+        alignText={'left'}
+        scale={[1, 1, 1]}
+        isLine={false}
       />
       <Word
         text={'Colors'}
         position={positions.instructionsY}
         fontSize={fontSizes.titles}
-        letterSpacing={[1.2]}
+        letterSpacing={[1.35, 1.225, 1.225, 1.1525, 1.025]}
         color={instructionTextColor}
         fadeGroup={'group3'}
         mouse={mouse}
@@ -208,6 +267,9 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}
+        alignText={'left'}
+        scale={[1, 1, 1]}
+        isLine={false}
       />
       <Word
         text={'\uF338'}
@@ -222,12 +284,15 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={true}
+        alignText={'left'}
+        scale={[1, 1, 1]}
+        isLine={false}
       />
       <Word
         text={'Big Bang'}
         position={positions.instructionsX}
         fontSize={fontSizes.titles}
-        letterSpacing={[1.2]}
+        letterSpacing={[0.825, 0.875, 0, 1.8, 1.25, 1.325, 1.325]}
         color={instructionTextColor}
         fadeGroup={'group3'}
         mouse={mouse}
@@ -236,12 +301,28 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}
+        alignText={'left'}
+        scale={[1, 1, 1]}
+        isLine={false}
       />
       <Word
-        text={'Ale'}
+        text={'Alex Colbourn'}
         position={positions.name}
         fontSize={fontSizes.name}
-        letterSpacing={[2.9, 3.05]}
+        letterSpacing={[
+          2.9,
+          3.05,
+          3.2,
+          1.2,
+          3.5,
+          3.5,
+          3.2,
+          3,
+          3.5,
+          3.5,
+          3.1,
+          2.9,
+        ]}
         color={mainTextColor}
         fadeGroup={'group1'}
         mouse={mouse}
@@ -250,12 +331,48 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}
+        alignText={'center'}
+        scale={[1, 1, 1]}
+        isLine={false}
       />
       <Word
         text={'Web Developer / Robotics Engineer'}
         position={positions.jobTitles}
         fontSize={fontSizes.titles}
-        letterSpacing={[1.2]}
+        letterSpacing={[
+          1.6,
+          1.25,
+          0,
+          1.85,
+          1.3,
+          1.25,
+          1.25,
+          1.2,
+          1.2,
+          1.3,
+          1.25,
+          1.1,
+          0,
+          1.4,
+          0,
+          1.5,
+          1.3,
+          1.3,
+          1.35,
+          1.2,
+          0.75,
+          0.85,
+          1.2,
+          0,
+          1.65,
+          1.2,
+          1.35,
+          0.85,
+          0.9,
+          1.35,
+          1.3,
+          1.1,
+        ]}
         color={mainTextColor}
         fadeGroup={'group2'}
         mouse={mouse}
@@ -264,6 +381,9 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}
+        alignText={'center'}
+        scale={[1, 1, 1]}
+        isLine={false}
       />
     </>
   );

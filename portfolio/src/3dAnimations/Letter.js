@@ -1,8 +1,10 @@
 import React, { useRef, Suspense } from 'react';
 import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
-import { Text } from 'drei';
+import { Text, Line } from 'drei';
 import { useSpring, animated } from 'react-spring/three';
+import { GeometryUtils } from 'three/examples/jsm/utils/GeometryUtils';
+import { Vector3 } from 'three';
 
 // Register Text as a react-three-fiber element
 extend({ Text });
@@ -19,8 +21,10 @@ export default function Letter({
   graphics,
   fadeGroup,
   icon,
+  isLine,
+  letterSpacing,
 }) {
-  const textRef = useRef();
+  const meshRef = useRef();
   const [x, y, z] = position;
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
   const prevGraphicsRef = useRef(graphics); // previous graphics setting
@@ -98,7 +102,7 @@ export default function Letter({
     } = common.current;
 
     // Set opacity
-    textRef.current.material.opacity = opacity[fadeGroup];
+    meshRef.current.material.opacity = opacity[fadeGroup];
 
     // Only animate letter movements if user selects high graphics
     if (graphics === 'high') {
@@ -228,31 +232,33 @@ export default function Letter({
 
   return (
     <Suspense fallback={null}>
-      <animated.mesh {...letterSpring} opacity={0}>
-        <Text
-          ref={textRef}
-          {...opts}
-          // font={
-          //   'https://fonts.gstatic.com/s/syncopate/v9/pe0sMIuPIYBCpEV5eFdCBfe5.woff'
-          // }
-
-          font={
-            icon
-              ? '/fonts/Font Awesome 5 Free-Solid-900.otf'
-              : '/fonts/syncopate-v11-latin-regular.woff'
-          }
-          anchorX='center'
-          anchorY='middle'
-          rotation={rotation}
-        >
-          {text}
-          {/* <MeshWobbleMaterial
-          attach='material'
-          color='blue'
-          factor={2}
-          speed={100}
-        /> */}
-        </Text>
+      <animated.mesh {...letterSpring}>
+        {isLine ? (
+          <Line
+            ref={meshRef}
+            points={[0, 0, 0, letterSpacing[0], 0, 0]}
+            lineWidth={1}
+            color={color}
+            position={[0, 0, 0]}
+            transparent={true}
+            // rotation={[0, 0, THREE.Math.degToRad(90)]} // vertical
+          />
+        ) : (
+          <Text
+            ref={meshRef}
+            {...opts}
+            font={
+              icon
+                ? '/fonts/Font Awesome 5 Free-Solid-900.otf'
+                : '/fonts/syncopate-v11-latin-regular.woff'
+            }
+            anchorX='center'
+            anchorY='middle'
+            rotation={rotation}
+          >
+            {text}
+          </Text>
+        )}
       </animated.mesh>
     </Suspense>
   );

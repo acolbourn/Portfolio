@@ -15,12 +15,13 @@ export default function Word({
   maxSpeeds,
   graphics,
   icon,
+  alignText,
+  scale,
+  isLine,
 }) {
   const letters = [...text];
   const [x, y, z] = position;
-  let currentSpacing; // spacing of current letter
   let spacingArray = []; // Spacing array of each individual letter
-
   const spacingPropLength = letterSpacing.length;
 
   // Create letter spacing array, use last value of user array for all letter spacing if array less than # of letters or 1 value
@@ -32,10 +33,7 @@ export default function Word({
     }
   });
 
-  console.log(spacingArray);
   // Calculate letter positions and center
-  // const center = (letters.length * letterSpacing) / 2;
-  // const offset = x - center;
   let positionsX = [];
   let positionCurrent = 0;
   letters.forEach((val, idx) => {
@@ -43,7 +41,10 @@ export default function Word({
     positionCurrent += spacingArray[idx];
   });
   const center = positionsX[positionsX.length - 1] / 2;
-  const offset = x - center;
+  let offset = x; // text x position offset
+  if (alignText === 'center') {
+    offset = x - center;
+  }
   let positions = positionsX.map((posX) => [posX + offset, y + 5, z]);
 
   const letterComponents = letters.map((letter, idx) => (
@@ -60,12 +61,14 @@ export default function Word({
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={icon}
+        isLine={isLine}
+        letterSpacing={letterSpacing}
       />
     </Suspense>
   ));
 
   return (
-    <mesh position={[blackholeCenter[0], blackholeCenter[1], 0]}>
+    <mesh position={[blackholeCenter[0], blackholeCenter[1], 0]} scale={scale}>
       {letterComponents}
     </mesh>
   );

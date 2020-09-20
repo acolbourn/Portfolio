@@ -13,10 +13,10 @@ export default function SunBloom({ mouse }) {
   const composer = useRef();
   const bloomRef = useRef();
   const { scene, gl, size, camera } = useThree();
-  const minStrength = 0.2; // min bloom strength
+  const minStrength = 0; // min bloom strength
   const maxStrength = 1.5; // max bloom strength
   let strengthScaleLog = scalePow()
-    .exponent(2)
+    .exponent(0.7)
     .domain([0, 1])
     .range([maxStrength, minStrength])
     .clamp(true);
@@ -52,7 +52,7 @@ export default function SunBloom({ mouse }) {
       <unrealBloomPass
         ref={bloomRef}
         attachArray='passes'
-        args={[undefined, 0.8, 1, 0.9]}
+        args={[undefined, 0, 1, 0.9]}
       />
     </effectComposer>
   );

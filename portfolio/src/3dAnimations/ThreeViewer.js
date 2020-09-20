@@ -24,28 +24,34 @@ import Light from './Light';
 // import FadingBloom from './FadingBloom';
 // import WobbleSphere from './WobbleSphere';
 import HeaderText from './HeaderText.js';
-import TextGeometry from './TextGeometry';
+// import TextGeometry from './TextGeometry';
 import Sun from './Sun';
 import SunBloom from './SunBloom';
 
 export default function ThreeViewer({ graphics }) {
   console.log('ThreeViewer rendered');
   const [scale, setScale] = useState(0.9);
-  const arrowOffset = -8;
+  const xIconOffset = -5.1;
+  const yIconOffset = 0.15;
+  const xInstTextOffset = -1.9;
+  const xGroupOff = 1;
+  const yGroupOff = 1;
   const [positions, setPositions] = useState({
-    logo: [0, -6, 0],
+    mouseIcon: [xIconOffset, 35 + yIconOffset, 0],
+    instructionsTitle: [-1.9, 28.1, 0],
+    instructionsUnderline: [0, 32.9, 0],
+    instructionsY: [xInstTextOffset + yGroupOff, 30.5, 0],
+    arrowsY: [xIconOffset + yGroupOff, 30.5 + yIconOffset, 0],
+    instructionsX: [xInstTextOffset - 0.075 + xGroupOff, 27.5, 0],
+    arrowsX: [xIconOffset + xGroupOff, 27.5 + yIconOffset, 0],
     name: [0, 21, 0],
     jobTitles: [0, 17, 0],
-    instructionsX: [0, 30, 0],
-    instructionsY: [0, 35, 0],
-    instructionsTitle: [0, 38, 0],
-    arrowsX: [arrowOffset, 30, 0],
-    arrowsY: [arrowOffset, 35, 0],
+    logo: [0, -6, 0],
   });
   const [fontSizes, setFontSizes] = useState({
-    name: 4.8,
-    titles: 1.7,
-    arrows: 3,
+    name: 3.8,
+    titles: 1.45,
+    arrows: 2.8,
     instructionsTitle: 3,
   });
   // const [disableMouse, setDisableMouse] = useState(true);
@@ -55,66 +61,61 @@ export default function ThreeViewer({ graphics }) {
     const aspect = window.innerWidth / window.innerHeight;
     switch (screenWidth) {
       case 'xs':
-        setPositions({
-          logo: [0, -6, 0],
-          name: [0, 21, 0],
-          jobTitles: [0, 16, 0],
-          instructionsX: [0, 30, 0],
-          instructionsY: [0, 35, 0],
-          instructionsTitle: [0, 38, 0],
-          arrowsX: [arrowOffset, 30, 0],
-          arrowsY: [arrowOffset, 35, 0],
-        });
-        setFontSizes({
-          name: 4.8,
-          titles: 1.7,
-          arrows: 3,
-          instructionsTitle: 3,
-        });
+        // setPositions({
+        //   logo: [0, -6, 0],
+        //   name: [0, 21, 0],
+        //   jobTitles: [0, 16, 0],
+        //   instructionsX: [0, 30, 0],
+        //   instructionsY: [0, 35, 0],
+        //   instructionsTitle: [0, 38, 0],
+        //   arrowsX: [arrowOffset, 30, 0],
+        //   arrowsY: [arrowOffset, 35, 0],
+        // });
+        // setFontSizes({
+        //   name: 4.8,
+        //   titles: 1.7,
+        //   arrows: 3,
+        //   instructionsTitle: 3,
+        // });
         aspect < 0.52 ? setScale(0.55) : setScale(0.65);
         break;
       case 'sm':
-        setPositions({
-          logo: [0, -6, 0],
-          name: [0, 21, 0],
-          jobTitles: [0, 17, 0],
-          instructionsX: [0, 30, 0],
-          instructionsY: [0, 35, 0],
-          instructionsTitle: [0, 38, 0],
-          arrowsX: [arrowOffset, 30, 0],
-          arrowsY: [arrowOffset, 35, 0],
-        });
+        // setPositions({
+        //   logo: [0, -6, 0],
+        //   name: [0, 21, 0],
+        //   jobTitles: [0, 17, 0],
+        //   instructionsX: [0, 30, 0],
+        //   instructionsY: [0, 35, 0],
+        //   instructionsTitle: [0, 38, 0],
+        //   arrowsX: [arrowOffset, 30, 0],
+        //   arrowsY: [arrowOffset, 35, 0],
+        // });
         // setFontSizes({ name: 4.8, titles: 1.7 });
-        setFontSizes({
-          name: 3.8,
-          titles: 1.45,
-          arrows: 3,
-          instructionsTitle: 3,
-        });
+        // setFontSizes({
+        //   name: 3.8,
+        //   titles: 1.45,
+        //   arrows: 3,
+        //   instructionsTitle: 3,
+        // });
         setScale(0.75);
         break;
       case 'md':
       case 'lg':
       case 'xl':
-        // setPositions({
-        //   logo: [0, 0, 0],
-        //   name: [0, 24.5, 0],
-        //   jobTitles: [0, 20.2, 0],
-        // });
         // setFontSizes({ name: 3.8, titles: 1.2 });
         // setScale(0.9);
-        setPositions({
-          logo: [0, -6, 0],
-          name: [0, 21, 0],
-          jobTitles: [0, 17, 0],
-          instructionsX: [0, 30, 0],
-          instructionsY: [0, 35, 0],
-          instructionsTitle: [0, 38, 0],
-          arrowsX: [arrowOffset, 38, 0],
-          arrowsY: [arrowOffset, 33, 0],
-        });
+        // setPositions({
+        //   logo: [0, -6, 0],
+        //   name: [0, 21, 0],
+        //   jobTitles: [0, 17, 0],
+        //   instructionsX: [0, 30, 0],
+        //   instructionsY: [0, 35, 0],
+        //   instructionsTitle: [0, 38, 0],
+        //   arrowsX: [arrowOffset, 38, 0],
+        //   arrowsY: [arrowOffset, 33, 0],
+        // });
         // setFontSizes({ name: 4.8, titles: 1.7 });
-        setFontSizes({ name: 4, titles: 1.5, arrows: 3, instructionsTitle: 3 });
+        // setFontSizes({ name: 4, titles: 1.5, arrows: 3, instructionsTitle: 3 });
         setScale(0.83);
         break;
       default:
@@ -129,7 +130,7 @@ export default function ThreeViewer({ graphics }) {
     mouseY: 0, // Raw Y
     mouseXScaled: 0, // X scaled linearly from -1 to 1
     mouseYScaled: 0, // Y scaled linearly from -1 to 1
-    mouseXLeftLin: 0, // X scaled linearly from 0 to 1 on left
+    mouseXLeftLin: 1, // X scaled linearly from 0 to 1 on left
     mouseXRightLin: 0, // X scaled linearly from 0 to 1 on right
     mouseXLeftLog: 0, // X scaled logarithmically from on left
     mouseXRightLog: 0, // X scaled logarithmically from on right
@@ -277,20 +278,41 @@ export default function ThreeViewer({ graphics }) {
               graphics={graphics}
             />
           </Suspense>
-          <group scale={[5, 5, 5]} position={[0, -80, 0]}>
-            <HeaderText
-              positions={positions}
-              fontSizes={fontSizes}
-              mouse={mouse}
-              graphics={graphics}
-            />
+          <HeaderText
+            positions={positions}
+            fontSizes={fontSizes}
+            mouse={mouse}
+            graphics={graphics}
+          />
+          {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
+            
 
             <TextGeometry
-              text={'Ale'}
-              position={[0, 20, 0]}
+              text={'Alex Colbourn'}
+              position={[-13, 20, 0]}
               fontSize={fontSizes.name}
             />
-          </group>
+            <TextGeometry
+              text={'Web Developer / Robotics Engineer'}
+              position={[-13, 16, 0]}
+              fontSize={fontSizes.titles}
+            />
+            <TextGeometry
+              text={'Big Bang'}
+              position={[-13, 29, 0]}
+              fontSize={fontSizes.titles}
+            />
+            <TextGeometry
+              text={'Colors'}
+              position={[-13, 34, 0]}
+              fontSize={fontSizes.titles}
+            />
+            <TextGeometry
+              text={'Controls'}
+              position={[-13, 37, 0]}
+              fontSize={fontSizes.titles}
+            />
+          </group> */}
           <Sun position={positions.logo} mouse={mouse} />
           <SunBloom mouse={mouse} />
         </group>

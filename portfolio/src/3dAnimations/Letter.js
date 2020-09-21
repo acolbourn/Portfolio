@@ -3,8 +3,6 @@ import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
 import { Text, Line } from 'drei';
 import { useSpring, animated } from 'react-spring/three';
-import { GeometryUtils } from 'three/examples/jsm/utils/GeometryUtils';
-import { Vector3 } from 'three';
 
 // Register Text as a react-three-fiber element
 extend({ Text });
@@ -230,6 +228,9 @@ export default function Letter({
     }
   });
 
+  const mat = new THREE.MeshPhongMaterial();
+  // <meshPhongMaterial attach='material' />;
+
   return (
     <Suspense fallback={null}>
       <animated.mesh {...letterSpring}>
@@ -255,6 +256,7 @@ export default function Letter({
             anchorX='center'
             anchorY='middle'
             rotation={rotation}
+            material={mat}
           >
             {text}
           </Text>

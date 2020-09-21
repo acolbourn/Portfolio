@@ -19,9 +19,15 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   });
 
   // Variables
-  const mainTextColor = '#21a1fc';
-  // const mainTextColor = '#0047AB';
+  // const mainTextColor = '#21a1fc';
+  const mainTextColor = '#0047AB';
+  const instructionTitleColor = mainTextColor;
+  // const instructionTitleColor = '#0047AB';
+  // const instructionTextColor = '#DD0849';
+  const instructionLineColor = '#DD0849';
+  // const instructionLineColor = '#EFEFEF';
   const instructionTextColor = '#EFEFEF';
+  const instructionIconColor = '#EFEFEF';
   const constRotation = 0; // fixed slow rotation when mouse on right of screen
   let rotationSpeed; // rotation speed scaled
   let letterScale = 1; // Scale of each letter
@@ -173,7 +179,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         position={positions.mouseIcon}
         fontSize={2.4}
         letterSpacing={[1.2]}
-        color={instructionTextColor}
+        color={instructionIconColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}
@@ -188,9 +194,9 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
       <Word
         text={'Controls'}
         position={positions.instructionsTitle}
-        fontSize={fontSizes.titles}
-        letterSpacing={[1.35, 1.4, 1.175, 0.9525, 1.1525, 1.25, 1.075]}
-        color={instructionTextColor}
+        fontSize={fontSizes.instructionsTitle}
+        letterSpacing={[1.65, 1.7, 1.5, 1.2, 1.4, 1.55, 1.35]}
+        color={instructionTitleColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}
@@ -199,7 +205,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={false}
         alignText={'left'}
-        scale={[1.2, 1.2, 1.2]}
+        scale={[1, 1, 1]}
         isLine={false}
       />
       <Word
@@ -207,7 +213,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         position={positions.instructionsUnderline}
         fontSize={5}
         letterSpacing={[2.35]}
-        color={instructionTextColor}
+        color={instructionLineColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}
@@ -242,7 +248,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         position={positions.arrowsX}
         fontSize={fontSizes.arrows}
         letterSpacing={[1.2]}
-        color={instructionTextColor}
+        color={instructionIconColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}
@@ -276,7 +282,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         position={positions.arrowsY}
         fontSize={fontSizes.arrows}
         letterSpacing={[1.2]}
-        color={instructionTextColor}
+        color={instructionIconColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}

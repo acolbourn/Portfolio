@@ -24,7 +24,7 @@ import Light from './Light';
 // import FadingBloom from './FadingBloom';
 // import WobbleSphere from './WobbleSphere';
 import HeaderText from './HeaderText.js';
-// import TextGeometry from './TextGeometry';
+import TextGeometry from './TextGeometry';
 import Sun from './Sun';
 import SunBloom from './SunBloom';
 
@@ -38,12 +38,13 @@ export default function ThreeViewer({ graphics }) {
   const yGroupOff = 1;
   const [positions, setPositions] = useState({
     mouseIcon: [xIconOffset, 35 + yIconOffset, 0],
-    instructionsTitle: [-1.9, 28.1, 0],
-    instructionsUnderline: [0, 32.9, 0],
-    instructionsY: [xInstTextOffset + yGroupOff, 30.5, 0],
-    arrowsY: [xIconOffset + yGroupOff, 30.5 + yIconOffset, 0],
-    instructionsX: [xInstTextOffset - 0.075 + xGroupOff, 27.5, 0],
-    arrowsX: [xIconOffset + xGroupOff, 27.5 + yIconOffset, 0],
+    // instructionsTitle: [-1.9, 28.1, 0],
+    instructionsTitle: [-2.4, 34.8, 0],
+    instructionsUnderline: [0, 32.6, 0],
+    instructionsY: [xInstTextOffset + yGroupOff, 30, 0],
+    arrowsY: [xIconOffset + yGroupOff, 30 + yIconOffset, 0],
+    instructionsX: [xInstTextOffset - 0.075 + xGroupOff, 26.5, 0],
+    arrowsX: [xIconOffset + xGroupOff, 26.5 + yIconOffset, 0],
     name: [0, 21, 0],
     jobTitles: [0, 17, 0],
     logo: [0, -6, 0],
@@ -52,7 +53,7 @@ export default function ThreeViewer({ graphics }) {
     name: 3.8,
     titles: 1.45,
     arrows: 2.8,
-    instructionsTitle: 3,
+    instructionsTitle: 1.8,
   });
   // const [disableMouse, setDisableMouse] = useState(true);
   const screenWidth = useWidth();
@@ -249,6 +250,7 @@ export default function ThreeViewer({ graphics }) {
   return (
     <>
       <Canvas
+        // colorManagement
         gl={{ antialias: false, alpha: false }}
         camera={{ position: [0, 0, 40] }}
         // camera={{ position: [0, 0, 40], near: 5, far: 200 }}
@@ -260,13 +262,13 @@ export default function ThreeViewer({ graphics }) {
         onTouchCancel={(e) => e.preventDefault()}
         pixelRatio={window.devicePixelRatio * 1.5}
       >
-        {/* <ambientLight />
-      <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
-        <ambientLight intensity={1.1} />
-        <pointLight position={[100, 100, 100]} intensity={2.2} />
+        <ambientLight intensity={1} />
+        {/* <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
+        {/* <ambientLight intensity={1.1} /> */}
+        <pointLight position={[0, 0, 200]} intensity={1.2} />
+        {/* <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
         <Light maxIntensity={2.5} mouse={mouse} />
-        <spotLight position={[0, 0, 0]} intensity={10} />
-
+        {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}
         <group scale={[scale, scale, scale]}>
           <Suspense fallback={null}>
             <LogoBoxes
@@ -309,15 +311,15 @@ export default function ThreeViewer({ graphics }) {
             />
             <TextGeometry
               text={'Controls'}
-              position={[-13, 37, 0]}
-              fontSize={fontSizes.titles}
+              position={[-3.1, 34, 0]}
+              fontSize={1.8}
             />
           </group> */}
           <Sun position={positions.logo} mouse={mouse} />
           <SunBloom mouse={mouse} />
         </group>
         <Stars />
-        <Stats />
+        <Stats showPanel={1} />
         {/* <Effects
         mouse={mouse}
         bloomStrength={0.8}

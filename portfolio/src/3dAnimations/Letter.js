@@ -58,6 +58,7 @@ export default function Letter({
   const holeOffset = 0.01; // Offset so letters never reach singularity
   let distFiltered = 1; // Filtered distance so letters don't enter blackhole
 
+  // Font options
   const opts = {
     fontSize: fontSize,
     color: color,
@@ -66,6 +67,8 @@ export default function Letter({
     letterSpacing: 0,
     textAlign: 'justify',
   };
+  // Create material
+  const mat = new THREE.MeshPhongMaterial();
 
   // Get new random orbit speeds from precomputed array
   let maxSpeed = maxSpeeds[Math.floor(Math.random() * (maxSpeeds.length - 1))];
@@ -152,7 +155,6 @@ export default function Letter({
         // if on left of screen, shrink orbit to hole, on right expand
         if (isLeftOrRight) {
           orbit = initDistToHole + explodeOrbit;
-          // console.log(mouseXRightLog);
         } else {
           orbit = initDistToHole * mouseXLeftLin;
         }
@@ -228,9 +230,6 @@ export default function Letter({
     }
   });
 
-  const mat = new THREE.MeshPhongMaterial();
-  // <meshPhongMaterial attach='material' />;
-
   return (
     <Suspense fallback={null}>
       <animated.mesh {...letterSpring}>
@@ -242,7 +241,6 @@ export default function Letter({
             color={color}
             position={[0, 0, 0]}
             transparent={true}
-            // rotation={[0, 0, THREE.Math.degToRad(90)]} // vertical
           />
         ) : (
           <Text

@@ -6,20 +6,17 @@ import { scaleLinear, scalePow } from 'd3-scale';
 import { useSpring, animated } from 'react-spring/three';
 import logoPoints from './logoPoints.js';
 import { getRandomSpherePoints } from './LogoBoxesHelpers';
-// import RoundBox from './RoundBox';
 
 export default function LogoBoxes({
   mouse,
   meshPosition,
   meshScale,
   fadeDelay,
-  deadZone,
 }) {
   console.log('LogoBoxes rendered');
 
   const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
-  const uniformColorOptions = ['black', 'blue', '#0047AB', '#002456'];
-  const uniformColor = uniformColorOptions[2]; // Color when mouse at top of screen
+  const uniformColor = '#0047AB'; // Color when mouse at top of screen
   let defaultBoxColor = Color('#2a363b'); // Color at screen center
   const depth = 5; // Layers of boxes in Z direction
   const numOfInstances = logoPoints.length * depth; // Total # of boxes
@@ -33,12 +30,11 @@ export default function LogoBoxes({
   let boxColors = []; // Array of box colors
   let boxColorsHex = []; // Array of box colors in hex
   let uniformBoxColorHex; // Uniform box color in hex
-  let defaultBoxColorHex = defaultBoxColor.hex(); // Default box color in hex
+  let defaultBoxColorHex = defaultBoxColor.hex(); // Default box color hex
   const standardRotationSpeed = 0.007; // standard rotation speed of logo
   const maxRotationSpeed = 0.12; // max rotation speed of logo
-  // const minRotationSpeed = 0.001; // min rotation speed of logo
-  const minRotationSpeed = standardRotationSpeed; // min rotation speed of logo
-  // const standardRotationSpeed = 0.01; // standard rotation speed of logo
+  const windowHalf = window.innerWidth / 2; // Half window width for scaling
+
   // Generate initial color arrays. Use id's to reduce number of computations run each loop.  Only a set number of colors is calculated each time instead of each individual box, and then boxes pull from one of those precalculated limited colors based on their id.
   colorPalette.forEach((color) => boxColors.push(Color(color)));
   boxColors.forEach((color) => boxColorsHex.push(color.hex()));
@@ -48,18 +44,19 @@ export default function LogoBoxes({
   const colorIds = new Array(numOfInstances)
     .fill()
     .map(() => Math.floor(Math.random() * numOfColors));
-  // Create random points on a sphere to assign each box to for exploding effect
+  // Create random sphere points to assign to each box for exploding effect
   const spherePoints = getRandomSpherePoints(numOfInstances);
   let mouseVelX = 0; // Delayed mouse X position for smoother animation
   let mouseVelY = 0; // Delayed mouse Y position for smoother animation
   let mouseVelExplode = 0; // Delayed explode for smoother animation
   let mouseVelImplode = 0; // Delayed implode for smoother animation
-  const animateSpeedY = 0.02; // Delay time for user mouse position to smooth out animation effect in Y direction
-  const explodeSpeed = 0.02; // Delay time for user mouse position to smooth out explosion animation effect
-  const implodeSpeed = 0.2; // Delay time for user mouse position to smooth out implosion animation effect
-  let animateVel = explodeSpeed; // Delayed animation speed changes for smoother animation
+  const animateSpeedY = 0.02; // Mouse smoothing delay Y direction
+  const explodeSpeed = 0.02; // Mouse smoothing delay explosion
+  const implodeSpeed = 0.2; // Mouse smoothing delay implosion
+  let animateVel = explodeSpeed; // Delayed smoothing animation speed
   let colorIndex = 0; // Current color index to select varying color when mouse at bottom of screen
   let offset; // Starting index of next color used in render loop
+
   // Create array with xy points copied to each depth in z direction
   const logoPoints3d = [];
   logoPoints.forEach((point) => {
@@ -67,7 +64,6 @@ export default function LogoBoxes({
       logoPoints3d.push([point[0], point[1], z]);
     }
   });
-  const windowHalf = window.innerWidth / 2; // Half window width for scaling
 
   const ref = useRef(); // Mesh ref
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
@@ -129,7 +125,28 @@ export default function LogoBoxes({
   }, [fadeDelay]);
 
   // Scaling functions
-  // const implodeScale = scaleLinear().domain([1, 0]).range([0, -1]).clamp(true);
+  // From left edge to mid left, collapse sphere to origin
+  let sphereScale = scalePow()
+    .exponent(0.3)
+    .domain([0, -0.5])
+    .range([1, 5])
+    .clamp(true);
+  // From left edge to mid left, scale logo group from 0 to origina scale
+  let meshGroupScale = scaleLinear()
+    .domain([0, 0.1])
+    .range([0, meshScale[0]])
+    .clamp(true);
+  // From deadzone to mid left, transition from logo to sphere
+  let logo2SphereScale = scaleLinear()
+    .domain([-0.5, -1])
+    .range([0, -1])
+    .clamp(true);
+  // Rotate faster as mouse moves from center to left edge/blackhole
+  let rotSpeedScale = scalePow()
+    .exponent(0.3)
+    .domain([0, 1])
+    .range([maxRotationSpeed, standardRotationSpeed])
+    .clamp(true);
   // Create smooth scale between implosion/explosion animation speeds
   // Scale from 3/4 of window to left window edge, right quarter remains constant at explode speed
   const animateScale = scalePow()
@@ -163,14 +180,6 @@ export default function LogoBoxes({
       // Disable mouse on load and use intro animation values
       mouseX = initBoxPositionRef.current;
       mouseYScaled = 0;
-    } else {
-      // // if on right side of screen, scale logorathmically for explosion, else on left side scale linearly for implosion
-      // if (isLeftOrRight) {
-      //   mouseX = maxBoxDistance * mouseXRightLog;
-      // } else {
-      //   mouseX = mouseXLeftLin;
-      //   // mouseX = implodeScale(mouseXLeftLin);
-      // }
     }
     const mouseExplode = maxBoxDistance * mouseXRightLog;
     const mouseImplode = mouseXLeftLin;
@@ -179,19 +188,12 @@ export default function LogoBoxes({
     // "Velocity" in this case just means a slower/smoother animation.
     const scaledAnimationSpeed = animateScale(mouse.current.mouseX);
     animateVel += scaledAnimationSpeed - animateVel;
-    // animateVel += (scaledAnimationSpeed - animateVel) * 0.02;
     mouseVelX += (mouseX - mouseVelX) * animateVel;
     mouseVelY += (mouseYScaled - mouseVelY) * animateSpeedY;
     mouseVelExplode += (mouseExplode - mouseVelExplode) * animateVel;
     mouseVelImplode += (mouseImplode - mouseVelImplode) * animateVel;
 
     // Rotate logo group
-    // Rotate faster as mouse moves from center to left edge/blackhole
-    let rotSpeedScale = scalePow()
-      .exponent(0.3)
-      .domain([0, 1])
-      .range([maxRotationSpeed, minRotationSpeed])
-      .clamp(true);
     // if mouse in deadzone to right edge, rotate standard speed
     // else if mouse on left rotate faster from deadzone to left edge
     if (inDeadZone || isLeftOrRight) {
@@ -214,44 +216,26 @@ export default function LogoBoxes({
         ? (colorIndex = 0)
         : (colorIndex += 1);
       // Mix each variable color with default color based on mouse position.  Since multiple colors are in precomputed color array, offset applies different colors to each box group.  Remove offset to make all boxes cycle through the same colors simultaneously.
+      const absMouseVelY = Math.abs(mouseVelY);
       for (let r = 0; r < numOfColors; r++) {
         boxColorsHex[r] = defaultBoxColor
           .mix(
             blendedColorArray[
               (colorIndex + r * offset) % blendedColorArray.length
             ],
-            Math.abs(mouseVelY)
+            absMouseVelY
           )
           .hex();
       }
     }
 
-    // exlosion common parameters
     // Set mouse to 0 on left side of screen to bypass explosion effect
     const sphereDist = mouseVelExplode >= 0 ? mouseVelExplode : 0;
 
-    // implosion common parameters
+    // Apply common scales
     const mouseShiftedX = -1 * mouseVelImplode;
-
-    // From left edge to mid left, collapse sphere to origin
-    let sphereScale = scalePow()
-      .exponent(0.3)
-      .domain([0, -0.5])
-      .range([1, 5])
-      .clamp(true);
     const sphereRadius = sphereScale(mouseShiftedX);
-    // From left edge to mid left, scale logo group from 0 to origina scale
-    let meshGroupScale = scaleLinear()
-      .domain([0, 0.1])
-      .range([0, meshScale[0]])
-      .clamp(true);
     const groupScale = meshGroupScale(mouseXLeftLin);
-
-    // From deadzone to mid left, transition from logo to sphere
-    let logo2SphereScale = scaleLinear()
-      .domain([-0.5, -1])
-      .range([0, -1])
-      .clamp(true);
     let logo2Sphere = logo2SphereScale(mouseShiftedX);
 
     // Update box positions and rotations.
@@ -280,6 +264,7 @@ export default function LogoBoxes({
         (-z - groupPosZ) * logo2Sphere -
         spherePoints[idx].z * sphereRadius * (1 + logo2Sphere);
 
+      // Set box position
       tempObject.position.set(
         groupPosXY - implodeX - explodeX,
         groupPosXY - implodeY - explodeY,
@@ -297,9 +282,6 @@ export default function LogoBoxes({
       tempObject.updateMatrix();
       ref.current.setMatrixAt(id, tempObject.matrix);
     });
-    // Hide if on left edge of screen in blackhole
-    // ref.current.visible = !(mouseXLeftLin <= 0);
-    // ref.current.scale.set(groupScale, groupScale, groupScale);
 
     // if mouse in blackhole zone, shrink scale fast, else expand slow
     if (mouseXLeftLin <= 0) {
@@ -332,34 +314,12 @@ export default function LogoBoxes({
         rotation={[0, 0, Math.PI]}
         scale={meshScale}
       >
-        {/* <octahedronBufferGeometry attach='geometry' args={[0.7, 0]}>
-          <instancedBufferAttribute
-            attachObject={['attributes', 'color']}
-            args={[colorArray, 3]}
-          />
-        </octahedronBufferGeometry> */}
-
-        {/* <icosahedronBufferGeometry attach='geometry' args={[0.65, 0]}>
-          <instancedBufferAttribute
-            attachObject={['attributes', 'color']}
-            args={[colorArray, 3]}
-          />
-        </icosahedronBufferGeometry> */}
-        {/* <sphereBufferGeometry attach='geometry' args={[0.65, 32, 32]}>
-          <instancedBufferAttribute
-            attachObject={['attributes', 'color']}
-            args={[colorArray, 3]}
-          />
-        </sphereBufferGeometry> */}
         <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
           <instancedBufferAttribute
             attachObject={['attributes', 'color']}
             args={[colorArray, 3]}
           />
         </boxBufferGeometry>
-
-        {/* <RoundBox colorArray={colorArray} /> */}
-
         <meshPhongMaterial
           attach='material'
           vertexColors={THREE.VertexColors}

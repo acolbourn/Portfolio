@@ -40,8 +40,6 @@ export default function SunBloom({ mouse }) {
     } = mouse.current;
 
     bloomRef.current.strength = strengthScaleLog(mouseXLeftLin);
-    // bloomRef.current.radius = mouseXLeftLin;
-    // console.log(bloomRef.current);
     bloomRef.current.needsUpdate = true;
     composer.current.needsUpdate = true;
     composer.current.render();

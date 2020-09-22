@@ -19,19 +19,14 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   });
 
   // Variables
-  // const mainTextColor = '#21a1fc';
   const mainTextColor = '#0047AB';
-  const instructionTitleColor = mainTextColor;
-  // const instructionTitleColor = '#0047AB';
-  // const instructionTextColor = '#DD0849';
-  const instructionLineColor = '#DD0849';
-  // const instructionLineColor = '#EFEFEF';
   const instructionTextColor = '#EFEFEF';
-  const instructionIconColor = '#EFEFEF';
+  // const instructionLineColor = '#DD0849';
+  const instructionLineColor = '#EFEFEF';
   const constRotation = 0; // fixed slow rotation when mouse on right of screen
   let rotationSpeed; // rotation speed scaled
   let letterScale = 1; // Scale of each letter
-  let travelDist = 1; // Distance to move towards/away from blackhole each frame
+  let travelDist = 1; // Distance towards/away from blackhole per frame
   const maxOrbit = 6000; // Max distance of travel towards stars
   let explodeOrbit = 1; // Common explode orbit
   const massImplode = 20; // react-spring mass when imploding
@@ -147,9 +142,8 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
     } else {
       rotationSpeed = rotSpeedLeftScale(mouseXLeftLin);
       letterScale = scaleScale(mouseXLeftLin);
-      // if in blackhole zone, speed up all parameters so letters vanish fast
+      // if in blackhole zone, speed up all parameters so letters vanish
       if (inBlackHoleZone) {
-        // rotationSpeed = 0;
         travelDist = 10;
         massCurrent = 1;
         frictionCurrent = 10;
@@ -179,7 +173,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         position={positions.mouseIcon}
         fontSize={2.4}
         letterSpacing={[1.2]}
-        color={instructionIconColor}
+        color={instructionTextColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}
@@ -188,7 +182,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={true}
         alignText={'left'}
-        scale={[1, 1, 1]}
         isLine={false}
       />
       <Word
@@ -196,7 +189,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         position={positions.instructionsTitle}
         fontSize={fontSizes.instructionsTitle}
         letterSpacing={[1.65, 1.7, 1.5, 1.2, 1.4, 1.55, 1.35]}
-        color={instructionTitleColor}
+        color={mainTextColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}
@@ -205,7 +198,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={false}
         alignText={'left'}
-        scale={[1, 1, 1]}
         isLine={false}
       />
       <Word
@@ -222,7 +214,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={false}
         alignText={'center'}
-        scale={[1, 1, 1]}
         isLine={true}
       />
       {/* Vertical line for alignment */}
@@ -240,7 +231,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={false}
         alignText={'center'}
-        scale={[1, 1, 1]}
         isLine={true}
       /> */}
       <Word
@@ -248,7 +238,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         position={positions.arrowsX}
         fontSize={fontSizes.arrows}
         letterSpacing={[1.2]}
-        color={instructionIconColor}
+        color={instructionTextColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}
@@ -257,7 +247,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={true}
         alignText={'left'}
-        scale={[1, 1, 1]}
         isLine={false}
       />
       <Word
@@ -274,7 +263,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={false}
         alignText={'left'}
-        scale={[1, 1, 1]}
         isLine={false}
       />
       <Word
@@ -282,7 +270,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         position={positions.arrowsY}
         fontSize={fontSizes.arrows}
         letterSpacing={[1.2]}
-        color={instructionIconColor}
+        color={instructionTextColor}
         fadeGroup={'group3'}
         mouse={mouse}
         common={common}
@@ -291,7 +279,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={true}
         alignText={'left'}
-        scale={[1, 1, 1]}
         isLine={false}
       />
       <Word
@@ -308,7 +295,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={false}
         alignText={'left'}
-        scale={[1, 1, 1]}
         isLine={false}
       />
       <Word
@@ -338,7 +324,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={false}
         alignText={'center'}
-        scale={[1, 1, 1]}
         isLine={false}
       />
       <Word
@@ -388,7 +373,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         graphics={graphics}
         icon={false}
         alignText={'center'}
-        scale={[1, 1, 1]}
         isLine={false}
       />
     </>

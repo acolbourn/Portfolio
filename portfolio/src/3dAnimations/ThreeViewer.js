@@ -5,127 +5,58 @@ import React, {
   useState,
   useEffect,
 } from 'react';
-// import {
-//   EffectComposer,
-//   DepthOfField,
-//   Bloom,
-//   Noise,
-//   Vignette,
-// } from 'react-postprocessing';
 import { scaleLinear, scalePow } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
 import { Stars, Stats } from 'drei';
 import FPSStats from './FPSStats';
 import LogoBoxes from './LogoBoxes.js';
-// import Letter from './Letter';
 import useWidth from '../hooks/useWidth';
 import Light from './Light';
-// import Effects from './Effects';
-// import FadingBloom from './FadingBloom';
-// import WobbleSphere from './WobbleSphere';
 import HeaderText from './HeaderText.js';
-import TextGeometry from './TextGeometry';
+// import TextGeometry from './TextGeometry';
 import Sun from './Sun';
 import SunBloom from './SunBloom';
 
 export default function ThreeViewer({ graphics }) {
   console.log('ThreeViewer rendered');
-  const [scale, setScale] = useState(0.9);
-  const xIconOffset = -5.1;
-  const yIconOffset = 0.15;
-  const xInstTextOffset = -1.9;
-  const xGroupOff = 1;
-  const yGroupOff = 1;
-  const [positions, setPositions] = useState({
-    mouseIcon: [xIconOffset, 35 + yIconOffset, 0],
-    // instructionsTitle: [-1.9, 28.1, 0],
+  // Layout variables
+  const [scale, setScale] = useState(0.75); // Overall scale of text/logo
+  const positions = {
+    mouseIcon: [-5.1, 35.15, 0],
     instructionsTitle: [-2.4, 34.8, 0],
     instructionsUnderline: [0, 32.6, 0],
-    instructionsY: [xInstTextOffset + yGroupOff, 30, 0],
-    arrowsY: [xIconOffset + yGroupOff, 30 + yIconOffset, 0],
-    instructionsX: [xInstTextOffset - 0.075 + xGroupOff, 26.5, 0],
-    arrowsX: [xIconOffset + xGroupOff, 26.5 + yIconOffset, 0],
+    instructionsY: [-0.9, 30, 0],
+    arrowsY: [-4.1, 30.15, 0],
+    instructionsX: [-0.975, 26.5, 0],
+    arrowsX: [-4.1, 26.65, 0],
     name: [0, 21, 0],
     jobTitles: [0, 17, 0],
     logo: [0, -6, 0],
-  });
-  const [fontSizes, setFontSizes] = useState({
+  };
+  const fontSizes = {
     name: 3.8,
     titles: 1.45,
     arrows: 2.8,
     instructionsTitle: 1.8,
-  });
-  // const [disableMouse, setDisableMouse] = useState(true);
+  };
   const screenWidth = useWidth();
 
+  // Scale based on screen size
   useEffect(() => {
     const aspect = window.innerWidth / window.innerHeight;
     switch (screenWidth) {
       case 'xs':
-        // setPositions({
-        //   logo: [0, -6, 0],
-        //   name: [0, 21, 0],
-        //   jobTitles: [0, 16, 0],
-        //   instructionsX: [0, 30, 0],
-        //   instructionsY: [0, 35, 0],
-        //   instructionsTitle: [0, 38, 0],
-        //   arrowsX: [arrowOffset, 30, 0],
-        //   arrowsY: [arrowOffset, 35, 0],
-        // });
-        // setFontSizes({
-        //   name: 4.8,
-        //   titles: 1.7,
-        //   arrows: 3,
-        //   instructionsTitle: 3,
-        // });
         aspect < 0.52 ? setScale(0.55) : setScale(0.65);
         break;
       case 'sm':
-        // setPositions({
-        //   logo: [0, -6, 0],
-        //   name: [0, 21, 0],
-        //   jobTitles: [0, 17, 0],
-        //   instructionsX: [0, 30, 0],
-        //   instructionsY: [0, 35, 0],
-        //   instructionsTitle: [0, 38, 0],
-        //   arrowsX: [arrowOffset, 30, 0],
-        //   arrowsY: [arrowOffset, 35, 0],
-        // });
-        // setFontSizes({ name: 4.8, titles: 1.7 });
-        // setFontSizes({
-        //   name: 3.8,
-        //   titles: 1.45,
-        //   arrows: 3,
-        //   instructionsTitle: 3,
-        // });
         setScale(0.75);
         break;
-      case 'md':
-      case 'lg':
-      case 'xl':
-        // setFontSizes({ name: 3.8, titles: 1.2 });
-        // setScale(0.9);
-        // setPositions({
-        //   logo: [0, -6, 0],
-        //   name: [0, 21, 0],
-        //   jobTitles: [0, 17, 0],
-        //   instructionsX: [0, 30, 0],
-        //   instructionsY: [0, 35, 0],
-        //   instructionsTitle: [0, 38, 0],
-        //   arrowsX: [arrowOffset, 38, 0],
-        //   arrowsY: [arrowOffset, 33, 0],
-        // });
-        // setFontSizes({ name: 4.8, titles: 1.7 });
-        // setFontSizes({ name: 4, titles: 1.5, arrows: 3, instructionsTitle: 3 });
-        setScale(0.83);
-        break;
       default:
-        setScale(0.7);
+        setScale(0.75);
     }
   }, [screenWidth]);
 
   // Process mouse/touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
-  // const mouse = useRef([0, 0, 0, 0, 1, 1, true, true]); // [raw X, raw Y, scaled X, scaled Y]
   const mouse = useRef({
     mouseX: 0, // Raw X
     mouseY: 0, // Raw Y
@@ -133,8 +64,8 @@ export default function ThreeViewer({ graphics }) {
     mouseYScaled: 0, // Y scaled linearly from -1 to 1
     mouseXLeftLin: 1, // X scaled linearly from 0 to 1 on left
     mouseXRightLin: 0, // X scaled linearly from 0 to 1 on right
-    mouseXLeftLog: 0, // X scaled logarithmically from on left
-    mouseXRightLog: 0, // X scaled logarithmically from on right
+    mouseXLeftLog: 0, // X scaled logarithmically on left
+    mouseXRightLog: 0, // X scaled logarithmically on right
     inDeadZone: true, // true = mouse in center, else false
     inBlackHoleZone: false, // true = mouse on left edge, else false
     isLeftOrRight: true, // false = mouse on left, true = right
@@ -144,7 +75,7 @@ export default function ThreeViewer({ graphics }) {
   const windowHalfX = window.innerWidth / 2;
   const windowHalfY = window.innerHeight / 2;
   const blackHoleZone = (windowHalfX - deadZone) * 0.1; // 10% mouse zone on left side of screen where scaling is 0 so everything is sucked into blackhole
-  const blackHoleZoneShited = -windowHalfX + blackHoleZone;
+  const blackHoleZoneShifted = -windowHalfX + blackHoleZone;
 
   // Scaling functions
   let mouseXScale = scaleLinear()
@@ -209,14 +140,14 @@ export default function ThreeViewer({ graphics }) {
 
       // Determine if mouse x position is in blackhole zone
       let inBlackHoleZone; // true if mouse x on left edge of screen
-      if (mouseX <= blackHoleZoneShited) {
+      if (mouseX <= blackHoleZoneShifted) {
         inBlackHoleZone = true;
       } else {
         inBlackHoleZone = false;
       }
 
       // Determine which side of screen mouse is on
-      let isLeftOrRight = false; // false if mouse on left, true if on right
+      let isLeftOrRight = false; // false if mouse on left, true if right
       isLeftOrRight = mouseX < 0 ? false : true;
 
       // Update mouse ref
@@ -243,7 +174,7 @@ export default function ThreeViewer({ graphics }) {
       mouseXRightLogScale,
       windowHalfX,
       windowHalfY,
-      blackHoleZoneShited,
+      blackHoleZoneShifted,
     ]
   );
 
@@ -253,7 +184,6 @@ export default function ThreeViewer({ graphics }) {
         // colorManagement
         gl={{ antialias: false, alpha: false }}
         camera={{ position: [0, 0, 40] }}
-        // camera={{ position: [0, 0, 40], near: 5, far: 200 }}
         onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
         onMouseMove={handleMouseAndTouch}
         onTouchMove={handleMouseAndTouch}
@@ -287,63 +217,17 @@ export default function ThreeViewer({ graphics }) {
             graphics={graphics}
           />
           {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
-            
-
             <TextGeometry
               text={'Alex Colbourn'}
               position={[-13, 20, 0]}
               fontSize={fontSizes.name}
-            />
-            <TextGeometry
-              text={'Web Developer / Robotics Engineer'}
-              position={[-13, 16, 0]}
-              fontSize={fontSizes.titles}
-            />
-            <TextGeometry
-              text={'Big Bang'}
-              position={[-13, 29, 0]}
-              fontSize={fontSizes.titles}
-            />
-            <TextGeometry
-              text={'Colors'}
-              position={[-13, 34, 0]}
-              fontSize={fontSizes.titles}
-            />
-            <TextGeometry
-              text={'Controls'}
-              position={[-3.1, 34, 0]}
-              fontSize={1.8}
-            />
+            />            
           </group> */}
           <Sun position={positions.logo} mouse={mouse} />
           <SunBloom mouse={mouse} />
         </group>
         <Stars />
         <Stats showPanel={1} />
-        {/* <Effects
-        mouse={mouse}
-        bloomStrength={0.8}
-        bloomRadius={1}
-        bloomThreshold={0}
-      /> */}
-        {/* <FadingBloom /> */}
-        {/* <WobbleSphere />
-      <EffectComposer>
-        <DepthOfField
-          focusDistance={0}
-          focalLength={0.02}
-          bokehScale={2}
-          height={480}
-        />         
-        <Bloom
-          luminanceThreshold={0}
-          luminanceSmoothing={0.9}
-          height={1}
-          opacity={3}
-        />
-        <Noise opacity={0.025} />
-        <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
-     </Canvas>/ </EffectComposer> */}
       </Canvas>
       <FPSStats style={{ visibility: 'hidden' }} left={'100px'} />
     </>

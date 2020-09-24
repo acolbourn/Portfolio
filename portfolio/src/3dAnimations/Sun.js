@@ -11,6 +11,7 @@ export default function Sun({ maxIntensity, mouse, position }) {
   const frictionImplode = 40; // react-spring friction when imploding
   const frictionExplode = 50; // react-spring friction when imploding
   let frictionCurrent = frictionImplode; // current react-spring friction
+  let clamp = false; // when true, stops spring overshoot
 
   // Sun scaling function
   let sunScaleLog = scalePow()
@@ -22,7 +23,12 @@ export default function Sun({ maxIntensity, mouse, position }) {
   // Init react-spring variables, used for smooth movement
   const [sunSpring, set] = useSpring(() => ({
     scale: [0, 0, 0],
-    config: { mass: massCurrent, tension: 150, friction: frictionCurrent },
+    config: {
+      mass: massCurrent,
+      tension: 150,
+      friction: frictionCurrent,
+      clamp: clamp,
+    },
   }));
 
   useFrame(() => {
@@ -35,15 +41,19 @@ export default function Sun({ maxIntensity, mouse, position }) {
       // mouseXLeftLog,
       // mouseXRightLog,
       // inDeadZone,
+      inBlackHoleZone,
       // isLeftOrRight,
       // disableMouse,
     } = mouse.current;
 
+    let scale;
+
     // Visible from left edge to center left
     if (mouseXLeftLin <= 0.5) {
       sun.current.visible = true;
-      let scale = sunScaleLog(mouseXLeftLin);
-      if (mouseXLeftLin <= 0) {
+      clamp = false;
+      scale = sunScaleLog(mouseXLeftLin);
+      if (inBlackHoleZone) {
         scale = 0;
         massCurrent = massImplode;
         frictionCurrent = frictionImplode;
@@ -51,16 +61,26 @@ export default function Sun({ maxIntensity, mouse, position }) {
         massCurrent = massExplode;
         frictionCurrent = frictionExplode;
       }
+    } else {
+      // scale quickly to 0 to hide
+      // sun.current.visible = false;
+      scale = 0;
+      massCurrent = massImplode;
+      frictionCurrent = 0.01;
+      clamp = true;
+    }
+
+    // Update React-Spring
+    if (mouseXLeftLin <= 0.9) {
       set({
         scale: [scale, scale, scale],
         config: {
           mass: massCurrent,
           tension: 150,
           friction: frictionCurrent,
+          clamp: clamp,
         },
       });
-    } else {
-      sun.current.visible = false;
     }
   });
 

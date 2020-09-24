@@ -122,7 +122,12 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
             opacity[key] = 0;
           }
         } else {
-          opacity[key] = 1;
+          // Fade opacity to 1 in active zone
+          if (opacity[key] < 1) {
+            opacity[key] = opacity[key] + opacityFadeBlackholeSpeed;
+          } else {
+            opacity[key] = 1;
+          }
         }
       }
     }

@@ -216,6 +216,8 @@ export default function ThreeViewer({ graphics }) {
             mouse={mouse}
             graphics={graphics}
           />
+          <Sun position={positions.logo} mouse={mouse} />
+          <SunBloom mouse={mouse} />
           {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
             <TextGeometry
               text={'Alex Colbourn'}
@@ -223,8 +225,6 @@ export default function ThreeViewer({ graphics }) {
               fontSize={fontSizes.name}
             />            
           </group> */}
-          <Sun position={positions.logo} mouse={mouse} />
-          <SunBloom mouse={mouse} />
         </group>
         <Stars />
         <Stats showPanel={1} />

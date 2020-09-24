@@ -66,6 +66,7 @@ export default function LogoBoxes({
   });
 
   const ref = useRef(); // Mesh ref
+  const matRef = useRef(); // Material ref
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
   const isLoadingRef = useRef(true); // loading ref for opacity fade
   const initBoxPositionRef = useRef(3000); // inital box position ref
@@ -73,10 +74,10 @@ export default function LogoBoxes({
   // Init react-spring variables, used for smooth movement
   const springScaleRef = useRef(); // react-spring scale ref
   const massImplode = 1; // react-spring mass when imploding
-  const massExplode = 20; // react-spring mass when exploding
+  const massExplode = 2; // react-spring mass when exploding
   let massCurrent = massImplode; // current react-spring mass
   const frictionImplode = 30; // react-spring friction when imploding
-  const frictionExplode = 80; // react-spring friction when imploding
+  const frictionExplode = 50; // react-spring friction when exploding
   let frictionCurrent = frictionImplode; // current react-spring friction
   const [groupScaleSpring, set] = useSpring(() => ({
     scale: [meshScale[0], meshScale[0], meshScale[0]],
@@ -154,6 +155,8 @@ export default function LogoBoxes({
     .domain([windowHalf / 2, -windowHalf])
     .range([explodeSpeed, implodeSpeed])
     .clamp(true);
+  // Increase box shine closer to blackhole
+  let shineScale = scaleLinear().domain([0, 1]).range([100, 30]).clamp(true);
 
   useFrame((state) => {
     let { mouseX, mouseYScaled } = mouse.current;
@@ -291,6 +294,10 @@ export default function LogoBoxes({
       massCurrent = massExplode;
       frictionCurrent = frictionExplode;
     }
+
+    // Increase box shine closer to blackhole
+    matRef.current.shininess = shineScale(mouseXLeftLin);
+
     // Apply react-spring scaling
     set({
       scale: [groupScale, groupScale, groupScale],
@@ -310,7 +317,6 @@ export default function LogoBoxes({
       <instancedMesh
         ref={ref}
         args={[null, null, numOfInstances]}
-        // position={meshPosition}
         rotation={[0, 0, Math.PI]}
         scale={meshScale}
       >
@@ -321,8 +327,10 @@ export default function LogoBoxes({
           />
         </boxBufferGeometry>
         <meshPhongMaterial
+          ref={matRef}
           attach='material'
           vertexColors={THREE.VertexColors}
+          shininess={30}
         />
       </instancedMesh>
     </animated.mesh>

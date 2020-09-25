@@ -50,9 +50,11 @@ export default function LogoBoxes({
   let mouseVelY = 0; // Delayed mouse Y position for smoother animation
   let mouseVelExplode = 0; // Delayed explode for smoother animation
   let mouseVelImplode = 0; // Delayed implode for smoother animation
+  let shineVel = 30; // Delayed box shine for smoother animation
   const animateSpeedY = 0.02; // Mouse smoothing delay Y direction
   const explodeSpeed = 0.02; // Mouse smoothing delay explosion
   const implodeSpeed = 0.2; // Mouse smoothing delay implosion
+  const shineFadeSpeed = 0.01; // Speed that box shine fades out
   let animateVel = explodeSpeed; // Delayed smoothing animation speed
   let colorIndex = 0; // Current color index to select varying color when mouse at bottom of screen
   let offset; // Starting index of next color used in render loop
@@ -125,6 +127,24 @@ export default function LogoBoxes({
     };
   }, [fadeDelay]);
 
+  // // Force rerender on window resize
+  // const [dimensions, setDimensions] = React.useState({
+  //   height: window.innerHeight,
+  //   width: window.innerWidth,
+  // });
+  // React.useEffect(() => {
+  //   function handleResize() {
+  //     setDimensions({
+  //       height: window.innerHeight,
+  //       width: window.innerWidth,
+  //     });
+  //   }
+  //   window.addEventListener('resize', handleResize);
+  //   return (_) => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // });
+
   // Scaling functions
   // From left edge to mid left, collapse sphere to origin
   let sphereScale = scalePow()
@@ -195,6 +215,15 @@ export default function LogoBoxes({
     mouseVelY += (mouseYScaled - mouseVelY) * animateSpeedY;
     mouseVelExplode += (mouseExplode - mouseVelExplode) * animateVel;
     mouseVelImplode += (mouseImplode - mouseVelImplode) * animateVel;
+
+    // Delay box shine fade out but keep fade in instant
+    const targetShine = shineScale(mouseXLeftLin);
+    if (matRef.current.shininess > targetShine) {
+      shineVel += (targetShine - shineVel) * shineFadeSpeed;
+    } else {
+      shineVel = targetShine;
+    }
+    matRef.current.shininess = shineVel;
 
     // Rotate logo group
     // if mouse in deadzone to right edge, rotate standard speed
@@ -294,9 +323,6 @@ export default function LogoBoxes({
       massCurrent = massExplode;
       frictionCurrent = frictionExplode;
     }
-
-    // Increase box shine closer to blackhole
-    matRef.current.shininess = shineScale(mouseXLeftLin);
 
     // Apply react-spring scaling
     set({

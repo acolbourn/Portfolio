@@ -40,7 +40,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   const opacityFadeDelays = { group1: 0, group2: 0, group3: 0 }; // ms opacity fade delay for each word group
   // const opacityFadeDelays = { group1: 1000, group2: 2500, group3: 4000 }; // ms opacity fade delay for each word group
   const opacityFadeSpeed = 0.01; // Opacity fade in speed on load
-  const opacityFadeBlackholeSpeed = 0.06; // Opacity fade to 0 in blackhole speed
+  const opacityFadeBlackholeSpeed = 0.05; // Opacity fade to 0 in blackhole speed
   const isLoadingRef = useRef({ group1: true, group2: true, group3: true }); // loading ref for each groups' opacity fade
 
   // Scaling Functions
@@ -122,11 +122,15 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
             opacity[key] = 0;
           }
         } else {
-          // Fade opacity to 1 in active zone
-          if (opacity[key] < 1) {
-            opacity[key] = opacity[key] + opacityFadeBlackholeSpeed;
-          } else {
+          if (graphics === 'high') {
             opacity[key] = 1;
+          } else {
+            // Fade opacity to 1 in active zone
+            if (opacity[key] < 1) {
+              opacity[key] = opacity[key] + 0.01;
+            } else {
+              opacity[key] = 1;
+            }
           }
         }
       }

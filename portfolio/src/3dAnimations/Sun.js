@@ -71,17 +71,15 @@ export default function Sun({ maxIntensity, mouse, position }) {
     }
 
     // Update React-Spring
-    if (mouseXLeftLin <= 0.9) {
-      set({
-        scale: [scale, scale, scale],
-        config: {
-          mass: massCurrent,
-          tension: 150,
-          friction: frictionCurrent,
-          clamp: clamp,
-        },
-      });
-    }
+    set({
+      scale: [scale, scale, scale],
+      config: {
+        mass: massCurrent,
+        tension: 150,
+        friction: frictionCurrent,
+        clamp: clamp,
+      },
+    });
   });
 
   return (

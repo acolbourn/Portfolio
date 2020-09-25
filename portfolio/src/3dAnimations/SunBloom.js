@@ -15,6 +15,9 @@ export default function SunBloom({ mouse }) {
   const { scene, gl, size, camera } = useThree();
   const minStrength = 0; // min bloom strength
   const maxStrength = 1.5; // max bloom strength
+  let strengthVel = minStrength; // Delayed bloom for smooth fades
+  const animationSpeed = 0.005; // Animation fade speed
+
   let strengthScaleLog = scalePow()
     .exponent(0.7)
     .domain([0, 1])
@@ -39,7 +42,18 @@ export default function SunBloom({ mouse }) {
       // disableMouse,
     } = mouse.current;
 
-    bloomRef.current.strength = strengthScaleLog(mouseXLeftLin);
+    // Set target bloom strength based on mouse position
+    const targetStrength = strengthScaleLog(mouseXLeftLin);
+
+    // Delay bloom fade out but keep fade in instant
+    if (bloomRef.current.strength > targetStrength) {
+      strengthVel += (targetStrength - strengthVel) * animationSpeed;
+    } else {
+      strengthVel = targetStrength;
+    }
+
+    // Apply updates
+    bloomRef.current.strength = strengthVel;
     bloomRef.current.needsUpdate = true;
     composer.current.needsUpdate = true;
     composer.current.render();

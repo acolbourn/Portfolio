@@ -197,7 +197,8 @@ export default function ThreeViewer({ graphics }) {
         {/* <ambientLight intensity={1.1} /> */}
         <pointLight position={[0, 0, 200]} intensity={1.2} />
         {/* <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
-        <Light maxIntensity={2.5} mouse={mouse} />
+        {graphics !== 'low' ? <Light maxIntensity={2.5} mouse={mouse} /> : null}
+
         {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}
         <group scale={[scale, scale, scale]}>
           <Suspense fallback={null}>
@@ -216,8 +217,11 @@ export default function ThreeViewer({ graphics }) {
             mouse={mouse}
             graphics={graphics}
           />
-          <Sun position={positions.logo} mouse={mouse} />
-          <SunBloom mouse={mouse} />
+          {graphics !== 'low' ? (
+            <Sun position={positions.logo} mouse={mouse} />
+          ) : null}
+          {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null}
+
           {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
             <TextGeometry
               text={'Alex Colbourn'}

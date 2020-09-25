@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import HomeFallback from './HomeFallback';
 import WEBGL from './3dAnimations/webGLCheck';
 import GetFPS from './3dAnimations/GetFPS';
@@ -8,7 +8,7 @@ import useStyles from './styles/HomeStyles';
 export default function Home() {
   console.log('Home rendered');
   const classes = useStyles();
-  const [graphics, setGraphics] = React.useState('high');
+  const [graphics, setGraphics] = useState('high');
   const handleGraphicsChange = (event) => {
     setGraphics(event.target.value);
   };

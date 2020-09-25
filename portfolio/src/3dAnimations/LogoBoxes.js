@@ -12,13 +12,14 @@ export default function LogoBoxes({
   meshPosition,
   meshScale,
   fadeDelay,
+  graphics,
 }) {
   console.log('LogoBoxes rendered');
 
   const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
   const uniformColor = '#0047AB'; // Color when mouse at top of screen
   let defaultBoxColor = Color('#2a363b'); // Color at screen center
-  const depth = 5; // Layers of boxes in Z direction
+  const depth = graphics === 'low' ? 1 : 1; // Layers of boxes in Z direction
   const numOfInstances = logoPoints.length * depth; // Total # of boxes
   const boxSize = 1; // Physical box dimensions
   const maxBoxDistance = 6000; // Max distance boxes spread from each other

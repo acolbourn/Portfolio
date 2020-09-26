@@ -43,43 +43,46 @@ export default function Sun({ maxIntensity, mouse, position }) {
       // inDeadZone,
       inBlackHoleZone,
       // isLeftOrRight,
-      // disableMouse,
+      disableMouse,
     } = mouse.current;
 
     let scale;
 
-    // Visible from left edge to center left
-    if (mouseXLeftLin <= 0.5) {
-      sun.current.visible = true;
-      clamp = false;
-      scale = sunScaleLog(mouseXLeftLin);
-      if (inBlackHoleZone) {
+    // Disable mouse on load and use intro animation values
+    if (!disableMouse) {
+      // Visible from left edge to center left
+      if (mouseXLeftLin <= 0.5) {
+        sun.current.visible = true;
+        clamp = false;
+        scale = sunScaleLog(mouseXLeftLin);
+        if (inBlackHoleZone) {
+          scale = 0;
+          massCurrent = massImplode;
+          frictionCurrent = frictionImplode;
+        } else {
+          massCurrent = massExplode;
+          frictionCurrent = frictionExplode;
+        }
+      } else {
+        // scale quickly to 0 to hide
+        // sun.current.visible = false;
         scale = 0;
         massCurrent = massImplode;
-        frictionCurrent = frictionImplode;
-      } else {
-        massCurrent = massExplode;
-        frictionCurrent = frictionExplode;
+        frictionCurrent = 0.01;
+        clamp = true;
       }
-    } else {
-      // scale quickly to 0 to hide
-      // sun.current.visible = false;
-      scale = 0;
-      massCurrent = massImplode;
-      frictionCurrent = 0.01;
-      clamp = true;
-    }
 
-    // Update React-Spring
-    set({
-      scale: [scale, scale, scale],
-      config: {
-        mass: massCurrent,
-        tension: 150,
-        friction: frictionCurrent,
-        clamp: clamp,
-      },
-    });
+      // Update React-Spring
+      set({
+        scale: [scale, scale, scale],
+        config: {
+          mass: massCurrent,
+          tension: 150,
+          friction: frictionCurrent,
+          clamp: clamp,
+        },
+      });
+    }
   });
 
   return (

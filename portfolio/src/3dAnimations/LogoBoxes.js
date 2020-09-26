@@ -19,11 +19,11 @@ export default function LogoBoxes({
   const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
   const uniformColor = '#0047AB'; // Color when mouse at top of screen
   let defaultBoxColor = Color('#2a363b'); // Color at screen center
-  const depth = graphics === 'low' ? 1 : 1; // Layers of boxes in Z direction
+  const depth = graphics === 'low' ? 2 : 5; // Layers of boxes in Z direction
   const numOfInstances = logoPoints.length * depth; // Total # of boxes
   const boxSize = 1; // Physical box dimensions
   const maxBoxDistance = 6000; // Max distance boxes spread from each other
-  const meshOffset = -2; // offset so rotation is exactly centered
+  const meshOffset = graphics === 'low' ? -0.5 : -2; // offset so rotation is exactly centered
   const groupPosZ = meshOffset + (depth * boxSize) / 2 - boxSize / 2; // Z center of logo
   const groupPosXY = 0; // X and Y center of logo
   const tempObject = new THREE.Object3D(); // Init box object
@@ -82,9 +82,15 @@ export default function LogoBoxes({
   const frictionImplode = 30; // react-spring friction when imploding
   const frictionExplode = 50; // react-spring friction when exploding
   let frictionCurrent = frictionImplode; // current react-spring friction
+  let clamp = false; // when true, stops spring overshoot
   const [groupScaleSpring, set] = useSpring(() => ({
     scale: [meshScale[0], meshScale[0], meshScale[0]],
-    config: { mass: massCurrent, tension: 150, friction: frictionCurrent },
+    config: {
+      mass: massCurrent,
+      tension: 150,
+      friction: frictionCurrent,
+      clamp: clamp,
+    },
   }));
 
   // Initialize empty color array
@@ -180,18 +186,8 @@ export default function LogoBoxes({
   let shineScale = scaleLinear().domain([0, 1]).range([100, 30]).clamp(true);
 
   useFrame((state) => {
-    let { mouseX, mouseYScaled } = mouse.current;
-    const {
-      // mouseXScaled,
-      // mouseYScaled,
-      mouseXLeftLin,
-      // mouseXRightLin,
-      // mouseXLeftLog,
-      mouseXRightLog,
-      inDeadZone,
-      isLeftOrRight,
-      disableMouse,
-    } = mouse.current;
+    let { mouseX, mouseYScaled, mouseXLeftLin, mouseXRightLog } = mouse.current;
+    const { inDeadZone, isLeftOrRight, disableMouse } = mouse.current;
 
     let i = 0;
     const time = state.clock.getElapsedTime();
@@ -199,16 +195,18 @@ export default function LogoBoxes({
     // Turn on visibility after delay for fade in effect
     ref.current.visible = !isLoadingRef.current;
 
-    // Scale mouse positions and velocities for animations
+    // Disable mouse on load and use intro animation values
     if (disableMouse) {
-      // Disable mouse on load and use intro animation values
       mouseX = initBoxPositionRef.current;
+      mouseXRightLog = initBoxPositionRef.current;
+      mouseXLeftLin = 1;
       mouseYScaled = 0;
     }
+    // Assign mouse positions
     const mouseExplode = maxBoxDistance * mouseXRightLog;
     const mouseImplode = mouseXLeftLin;
 
-    // Create delayed mouse movement velocities
+    // Scale mouse positions and velocities for animations
     // "Velocity" in this case just means a slower/smoother animation.
     const scaledAnimationSpeed = animateScale(mouse.current.mouseX);
     animateVel += scaledAnimationSpeed - animateVel;
@@ -320,15 +318,22 @@ export default function LogoBoxes({
     if (mouseXLeftLin <= 0) {
       massCurrent = massImplode;
       frictionCurrent = frictionImplode;
+      clamp = true;
     } else {
       massCurrent = massExplode;
       frictionCurrent = frictionExplode;
+      clamp = false;
     }
 
     // Apply react-spring scaling
     set({
       scale: [groupScale, groupScale, groupScale],
-      config: { mass: massCurrent, tension: 150, friction: frictionCurrent },
+      config: {
+        mass: massCurrent,
+        tension: 150,
+        friction: frictionCurrent,
+        clamp: clamp,
+      },
     });
 
     ref.current.geometry.attributes.color.needsUpdate = true;

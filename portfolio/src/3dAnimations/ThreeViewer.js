@@ -101,8 +101,7 @@ export default function ThreeViewer({ graphics }) {
     .clamp(true);
 
   // Disable mouse in components initially for intro animation
-  const mouseDisableTime = 0;
-  // const mouseDisableTime = 11000;
+  const mouseDisableTime = 10000;
   useEffect(() => {
     let timer1 = setTimeout(() => {
       mouse.current.disableMouse = false;
@@ -202,7 +201,9 @@ export default function ThreeViewer({ graphics }) {
         {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}
         <group scale={[scale, scale, scale]}>
           <Suspense fallback={null}>
+            {/* key prop triggers unmount/mount to change box count */}
             <LogoBoxes
+              key={graphics}
               meshPosition={positions.logo}
               meshScale={[1, 1, 1]}
               deadZone={deadZone}

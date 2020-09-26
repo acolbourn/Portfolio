@@ -39,17 +39,20 @@ export default function SunBloom({ mouse }) {
       // mouseXRightLog,
       // inDeadZone,
       // isLeftOrRight,
-      // disableMouse,
+      disableMouse,
     } = mouse.current;
 
-    // Set target bloom strength based on mouse position
-    const targetStrength = strengthScaleLog(mouseXLeftLin);
+    // Disable mouse on load and use intro animation values
+    if (!disableMouse) {
+      // Set target bloom strength based on mouse position
+      const targetStrength = strengthScaleLog(mouseXLeftLin);
 
-    // Delay bloom fade out but keep fade in instant
-    if (bloomRef.current.strength > targetStrength) {
-      strengthVel += (targetStrength - strengthVel) * animationSpeed;
-    } else {
-      strengthVel = targetStrength;
+      // Delay bloom fade out but keep fade in instant
+      if (bloomRef.current.strength > targetStrength) {
+        strengthVel += (targetStrength - strengthVel) * animationSpeed;
+      } else {
+        strengthVel = targetStrength;
+      }
     }
 
     // Apply updates

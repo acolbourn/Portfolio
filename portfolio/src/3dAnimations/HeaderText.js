@@ -24,7 +24,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   // const instructionLineColor = '#DD0849';
   const instructionLineColor = '#EFEFEF';
   const constRotation = 0; // fixed slow rotation when mouse on right of screen
-  let rotationSpeed; // rotation speed scaled
+  let rotationSpeed = constRotation; // rotation speed scaled
   let letterScale = 1; // Scale of each letter
   let travelDist = 1; // Distance towards/away from blackhole per frame
   const maxOrbit = 6000; // Max distance of travel towards stars
@@ -37,8 +37,8 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   let frictionCurrent = frictionImplode; // current react-spring friction
   let opacity = { group1: 0, group2: 0, group3: 0 }; // Opacities of each word for fade effects
   let opacityLoaded = { group1: false, group2: false, group3: false }; // true when initial fade in complete
-  const opacityFadeDelays = { group1: 0, group2: 0, group3: 0 }; // ms opacity fade delay for each word group
-  // const opacityFadeDelays = { group1: 1000, group2: 2500, group3: 4000 }; // ms opacity fade delay for each word group
+  // const opacityFadeDelays = { group1: 0, group2: 0, group3: 0 }; // ms opacity fade delay for each word group
+  const opacityFadeDelays = { group1: 1000, group2: 2500, group3: 4000 }; // ms opacity fade delay for each word group
   const opacityFadeSpeed = 0.01; // Opacity fade in speed on load
   const opacityFadeBlackholeSpeed = 0.05; // Opacity fade to 0 in blackhole speed
   const isLoadingRef = useRef({ group1: true, group2: true, group3: true }); // loading ref for each groups' opacity fade
@@ -91,88 +91,99 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   }, [opacityFadeDelays]);
 
   useFrame(() => {
-    const {
-      // mouseX,
-      // mouseY,
-      // mouseXScaled,
-      // mouseYScaled,
-      mouseXLeftLin,
-      mouseXRightLin,
-      // mouseXLeftLog,
-      mouseXRightLog,
-      // inDeadZone,
-      inBlackHoleZone,
-      isLeftOrRight,
-    } = mouse.current;
+    // if graphics low, render static text, else animate
+    if (graphics !== 'low') {
+      const {
+        // mouseX,
+        // mouseY,
+        // mouseXScaled,
+        // mouseYScaled,
+        mouseXLeftLin,
+        mouseXRightLin,
+        // mouseXLeftLog,
+        mouseXRightLog,
+        // inDeadZone,
+        inBlackHoleZone,
+        isLeftOrRight,
+        disableMouse,
+      } = mouse.current;
 
-    // Fade in Text, multiple groups so words have different fade times
-    for (const [key] of Object.entries(opacity)) {
-      if (!isLoadingRef.current[key] && opacity[key] < 1) {
-        opacity[key] = opacity[key] + opacityFadeSpeed;
-      } else if (!isLoadingRef.current[key] && opacity[key] >= 1) {
-        opacityLoaded[key] = true;
-      }
-      // After fade in, set opacity to 0 in blackhole and 1 elsewhere
-      if (opacityLoaded[key] === true) {
-        if (inBlackHoleZone) {
-          // Fade opacity to 0 if in blackhole zone
-          if (opacity[key] > 0) {
-            opacity[key] = opacity[key] - opacityFadeBlackholeSpeed;
-          } else {
-            opacity[key] = 0;
-          }
-        } else {
-          if (graphics === 'high') {
-            opacity[key] = 1;
-          } else {
-            // Fade opacity to 1 in active zone
-            if (opacity[key] < 1) {
-              opacity[key] = opacity[key] + 0.01;
+      // Fade in Text, multiple groups so words have different fade times
+      for (const [key] of Object.entries(opacity)) {
+        if (!isLoadingRef.current[key] && opacity[key] < 1) {
+          opacity[key] = opacity[key] + opacityFadeSpeed;
+        } else if (!isLoadingRef.current[key] && opacity[key] >= 1) {
+          opacityLoaded[key] = true;
+        }
+        // After fade in, set opacity to 0 in blackhole and 1 elsewhere
+        if (opacityLoaded[key] === true) {
+          // Disable mouse on load and use intro animation values
+          if (!disableMouse) {
+            if (inBlackHoleZone) {
+              // Fade opacity to 0 if in blackhole zone
+              if (opacity[key] > 0) {
+                opacity[key] = opacity[key] - opacityFadeBlackholeSpeed;
+              } else {
+                opacity[key] = 0;
+              }
             } else {
-              opacity[key] = 1;
+              if (graphics === 'high') {
+                opacity[key] = 1;
+              } else {
+                // Fade opacity to 1 in active zone
+                if (opacity[key] < 1) {
+                  opacity[key] = opacity[key] + 0.01;
+                } else {
+                  opacity[key] = 1;
+                }
+              }
             }
           }
         }
       }
-    }
 
-    // Scale letter if on left of screen to shrink as it gets closer to blackhole, scale to 1 if in deadzone or on right
-    // Scale rotation speeds, faster close to hole, slower further
-    // Set travel distance towards/away from blackhole
-    // Reduce friction closer to right edge to speed up explosion
-    // reduce mass when near blackhole to avoid springing out of hole
-    if (isLeftOrRight) {
-      rotationSpeed = constRotation;
-      letterScale = 1;
-      travelDist = 1 + 10 * mouseXRightLog + 2 * mouseXRightLin;
-      explodeOrbit = maxOrbit * mouseXRightLog;
-      massCurrent = massExplode;
-      frictionCurrent = frictionImplode - frictionExplode * mouseXRightLog;
-    } else {
-      rotationSpeed = rotSpeedLeftScale(mouseXLeftLin);
-      letterScale = scaleScale(mouseXLeftLin);
-      // if in blackhole zone, speed up all parameters so letters vanish
-      if (inBlackHoleZone) {
-        travelDist = 10;
-        massCurrent = 1;
-        frictionCurrent = 10;
-      } else {
-        travelDist = 1;
-        massCurrent = mouseXLeftLin < 0.01 ? 1 : massImplode;
-        frictionCurrent = frictionImplode;
+      // Disable mouse on load and use intro animation values
+      if (!disableMouse) {
+        // Scale letter if on left of screen to shrink as it gets closer to blackhole, scale to 1 if in deadzone or on right
+        // Scale rotation speeds, faster close to hole, slower further
+        // Set travel distance towards/away from blackhole
+        // Reduce friction closer to right edge to speed up explosion
+        // reduce mass when near blackhole to avoid springing out of hole
+        if (isLeftOrRight) {
+          rotationSpeed = constRotation;
+          letterScale = 1;
+          travelDist = 1 + 10 * mouseXRightLog + 2 * mouseXRightLin;
+          explodeOrbit = maxOrbit * mouseXRightLog;
+          massCurrent = massExplode;
+          frictionCurrent = frictionImplode - frictionExplode * mouseXRightLog;
+        } else {
+          rotationSpeed = rotSpeedLeftScale(mouseXLeftLin);
+          letterScale = scaleScale(mouseXLeftLin);
+          // if in blackhole zone, speed up all parameters so letters vanish
+          if (inBlackHoleZone) {
+            travelDist = 10;
+            massCurrent = 1;
+            frictionCurrent = 10;
+          } else {
+            travelDist = 1;
+            massCurrent = mouseXLeftLin < 0.01 ? 1 : massImplode;
+            frictionCurrent = frictionImplode;
+          }
+        }
       }
-    }
+      // console.log('Opacity: ', opacity, '  Letter Scale: ', letterScale);
 
-    // update common ref with values
-    common.current = {
-      letterScale,
-      rotationSpeed,
-      travelDist,
-      explodeOrbit,
-      massCurrent,
-      frictionCurrent,
-      opacity,
-    };
+      // update common ref with values
+      common.current = {
+        letterScale,
+        rotationSpeed,
+        travelDist,
+        explodeOrbit,
+        massCurrent,
+        frictionCurrent,
+        opacity,
+      };
+    }
   });
 
   return (
@@ -225,23 +236,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         alignText={'center'}
         isLine={true}
       />
-      {/* Vertical line for alignment */}
-      {/* <Word
-        text={'_'}
-        position={[-2.4, 0, 0]}
-        fontSize={5}
-        letterSpacing={[100]}
-        color={instructionTextColor}
-        fadeGroup={'group3'}
-        mouse={mouse}
-        common={common}
-        blackholeCenter={positions.logo}
-        maxSpeeds={maxSpeeds}
-        graphics={graphics}
-        icon={false}
-        alignText={'center'}
-        isLine={true}
-      /> */}
       <Word
         text={'\uF337'}
         position={positions.arrowsX}
@@ -374,7 +368,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
           1.1,
         ]}
         color={mainTextColor}
-        fadeGroup={'group2'}
+        fadeGroup={'group1'}
         mouse={mouse}
         common={common}
         blackholeCenter={positions.logo}

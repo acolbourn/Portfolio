@@ -52,10 +52,11 @@ export default function LogoBoxes({
   let mouseVelExplode = 0; // Delayed explode for smoother animation
   let mouseVelImplode = 0; // Delayed implode for smoother animation
   let shineVel = 30; // Delayed box shine for smoother animation
-  const animateSpeedY = 0.02; // Mouse smoothing delay Y direction
+  const animateSpeedY = 0.04; // Mouse smoothing delay Y direction
   const explodeSpeed = 0.02; // Mouse smoothing delay explosion
   const implodeSpeed = 0.2; // Mouse smoothing delay implosion
-  const shineFadeSpeed = 0.01; // Speed that box shine fades out
+  const introAnimSpeed = 0.04; // Box assemble speed on startup
+  const shineFadeSpeed = 0.008; // Speed that box shine fades out
   let animateVel = explodeSpeed; // Delayed smoothing animation speed
   let colorIndex = 0; // Current color index to select varying color when mouse at bottom of screen
   let offset; // Starting index of next color used in render loop
@@ -122,17 +123,27 @@ export default function LogoBoxes({
   }, [boxColors, numOfColors]);
   offset = blendedColorArray.length / numOfColors; // Starting index of next color used in render loop
 
-  // Start boxes spread out and assemble after delay
+  // // Start boxes spread out and assemble after delay
+  // useEffect(() => {
+  //   let timer1 = setTimeout(() => {
+  //     initBoxPositionRef.current = 0;
+  //     isLoadingRef.current = false;
+  //   }, fadeDelay);
+  //   // Clear timeout on unmount
+  //   return () => {
+  //     clearTimeout(timer1);
+  //   };
+  // }, [fadeDelay]);
+
+  // Update intro animation state machine when boxes loaded
   useEffect(() => {
-    let timer1 = setTimeout(() => {
-      initBoxPositionRef.current = 0;
-      isLoadingRef.current = false;
-    }, fadeDelay);
-    // Clear timeout on unmount
-    return () => {
-      clearTimeout(timer1);
-    };
-  }, [fadeDelay]);
+    if (mouse.current.introState === 'Loading') {
+      mouse.current.introState = 'Boxes Loaded';
+    } else if (mouse.current.introState === 'Text Loaded') {
+      mouse.current.introState = 'Text and Boxes Loaded';
+    }
+    console.log('logoBoxes mounted');
+  }, []);
 
   // // Force rerender on window resize
   // const [dimensions, setDimensions] = React.useState({
@@ -186,21 +197,48 @@ export default function LogoBoxes({
   let shineScale = scaleLinear().domain([0, 1]).range([100, 30]).clamp(true);
 
   useFrame((state) => {
-    let { mouseX, mouseYScaled, mouseXLeftLin, mouseXRightLog } = mouse.current;
+    let {
+      mouseX,
+      mouseY,
+      mouseYScaled,
+      mouseXLeftLin,
+      mouseXRightLog,
+    } = mouse.current;
     const { inDeadZone, isLeftOrRight, disableMouse } = mouse.current;
 
     let i = 0;
     const time = state.clock.getElapsedTime();
 
+    // Intro Animation State Machine
+    if (mouse.current.introState !== 'Done') {
+      if (mouse.current.introState === 'Name Loaded' && isLoadingRef.current) {
+        // Once name is loaded, assemble boxes by setting mouse position to 0 which is in the deadzone
+        initBoxPositionRef.current = 0;
+        isLoadingRef.current = false;
+      }
+      // Check one of the boxes x position to determine if the logo group is fully assembled and update state if it is
+      if (
+        mouse.current.introState === 'Name Loaded' &&
+        tempObject.position.x > 0.99 &&
+        tempObject.position.x < 1.01
+      ) {
+        mouse.current.introState = 'Boxes Assembled';
+      }
+    }
+
     // Turn on visibility after delay for fade in effect
     ref.current.visible = !isLoadingRef.current;
 
     // Disable mouse on load and use intro animation values
+    let scaledAnimationSpeed = animateScale(mouseX);
     if (disableMouse) {
+      // Boxes set in distance initially and then mouse is set to deadzone to bring them into center
       mouseX = initBoxPositionRef.current;
+      mouseY = 0;
+      mouseYScaled = 0;
       mouseXRightLog = initBoxPositionRef.current;
       mouseXLeftLin = 1;
-      mouseYScaled = 0;
+      scaledAnimationSpeed = introAnimSpeed;
     }
     // Assign mouse positions
     const mouseExplode = maxBoxDistance * mouseXRightLog;
@@ -208,7 +246,6 @@ export default function LogoBoxes({
 
     // Scale mouse positions and velocities for animations
     // "Velocity" in this case just means a slower/smoother animation.
-    const scaledAnimationSpeed = animateScale(mouse.current.mouseX);
     animateVel += scaledAnimationSpeed - animateVel;
     mouseVelX += (mouseX - mouseVelX) * animateVel;
     mouseVelY += (mouseYScaled - mouseVelY) * animateSpeedY;

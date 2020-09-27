@@ -30,8 +30,8 @@ export default function GraphicsMenu({
   const classes = useStyles();
   // Create alerts for low fps so graphics menu blinks and user can select a more appropriate setting
   let graphicsAlert = classes.normal;
-  const warningLevel = 38;
-  const alertLevel = 20;
+  const warningLevel = 40;
+  const alertLevel = 25;
   if (!disableWarnings.current) {
     if (currentFPS < warningLevel && currentFPS > alertLevel) {
       graphicsAlert = classes.warning;
@@ -44,11 +44,13 @@ export default function GraphicsMenu({
     <div className={classes.root}>
       <Accordion className={graphicsAlert}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMoreIcon className={graphicsAlert} />}
           aria-controls='panel1a-content'
           id='panel1a-header'
         >
-          <Typography className={classes.heading}>Graphics</Typography>
+          <Typography className={`${classes.heading} ${graphicsAlert}`}>
+            Graphics
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FormControl component='fieldset'>

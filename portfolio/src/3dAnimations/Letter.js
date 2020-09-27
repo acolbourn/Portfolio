@@ -1,4 +1,4 @@
-import React, { useRef, Suspense } from 'react';
+import React, { useRef, Suspense, useEffect } from 'react';
 import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
 import { Text, Line } from 'drei';
@@ -57,6 +57,7 @@ export default function Letter({
   let orbit; // Orbit to maintain
   const holeOffset = 0.01; // Offset so letters never reach singularity
   let distFiltered = 1; // Filtered distance so letters don't enter blackhole
+  let resetCount = 0; // reset count for graphics change
 
   // Font options
   const opts = {
@@ -75,6 +76,11 @@ export default function Letter({
   let xSpeed; // Current X rotation speed
   let ySpeed; // Current Y rotation speed
   let zSpeed; // Current Z rotation speed
+
+  // Update intro animation state machine when text is loaded
+  useEffect(() => {
+    console.log('letter mounted');
+  }, []);
 
   useFrame(() => {
     // import mouse data
@@ -105,6 +111,10 @@ export default function Letter({
 
     // Set opacity
     meshRef.current.material.opacity = opacity[fadeGroup];
+    // if icon limit opacity to reduce bright bloom
+    if (icon && opacity[fadeGroup] >= 0.85) {
+      meshRef.current.material.opacity = 0.85;
+    }
 
     // Only animate letter movements if user selects high graphics and mouse isn't disabled for intro animations
     if (graphics === 'high') {
@@ -112,6 +122,8 @@ export default function Letter({
       if (prevGraphicsRef.current !== 'high') {
         prevGraphicsRef.current = graphics;
       }
+      resetCount = 0;
+      // mouse disabled during intro fade in
       if (!disableMouse) {
         // If mouse on left/right of screen, animate letter being sucked into or out of blackhole. Else if mouse in center deadzone, reset text
         if (!inDeadZone) {
@@ -218,8 +230,8 @@ export default function Letter({
       }
     } else {
       // else if graphics aren't high reset letters and turn off animations
-      // only run once if transitiong graphics from high to med/low
-      if (prevGraphicsRef.current !== graphics) {
+      // run 10 frames to ensure letters reset if transitiong graphics from high to med/low and then bypass for cpu
+      if (prevGraphicsRef.current !== graphics || resetCount < 10) {
         set({
           position: [x, y, z],
           quaternion: [0, 0, 0, 1],
@@ -231,6 +243,9 @@ export default function Letter({
         yQuat.set(0, 0, 0, 1);
         zQuat.set(0, 0, 0, 1);
         prevGraphicsRef.current = graphics;
+      }
+      if (resetCount < 10) {
+        resetCount += 1;
       }
     }
   });

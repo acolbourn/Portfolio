@@ -64,27 +64,38 @@ const useStyles = makeStyles((theme) => ({
   },
   normal: {
     borderColor: theme.colors.secondary,
+    color: theme.colors.primary,
   },
   warning: {
     animationName: '$blinkWarning',
     animationDuration: '1.5s',
-    animationTimingFunction: 'linear',
+    animationTimingFunction: 'ease-in-out',
     animationIterationCount: 'infinite',
   },
   '@keyframes blinkWarning': {
+    '0%': {
+      borderColor: theme.colors.secondary,
+      color: theme.colors.secondary,
+    },
     '50%': {
       borderColor: theme.colors.primary,
+      color: theme.colors.primary,
+    },
+    '100%': {
+      borderColor: theme.colors.secondary,
+      color: theme.colors.secondary,
     },
   },
   alert: {
     animationName: '$blinkAlert',
     animationDuration: '1.5s',
-    animationTimingFunction: 'linear',
+    animationTimingFunction: 'ease-in-out',
     animationIterationCount: 'infinite',
   },
   '@keyframes blinkAlert': {
     '50%': {
       borderColor: 'red',
+      color: 'red',
     },
   },
 }));

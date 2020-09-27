@@ -70,6 +70,7 @@ export default function ThreeViewer({ graphics }) {
     inBlackHoleZone: false, // true = mouse on left edge, else false
     isLeftOrRight: true, // false = mouse on left, true = right
     disableMouse: true, // disable mouse initially for fade in
+    introState: 'Loading', // State machine for intro animations
   });
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
   const windowHalfX = window.innerWidth / 2;
@@ -100,17 +101,17 @@ export default function ThreeViewer({ graphics }) {
     .range([0, 1])
     .clamp(true);
 
-  // Disable mouse in components initially for intro animation
-  const mouseDisableTime = 10000;
-  useEffect(() => {
-    let timer1 = setTimeout(() => {
-      mouse.current.disableMouse = false;
-    }, mouseDisableTime);
-    // Clear timeout on unmount
-    return () => {
-      clearTimeout(timer1);
-    };
-  });
+  // // Disable mouse in components initially for intro animation
+  // const mouseDisableTime = 12000;
+  // useEffect(() => {
+  //   let timer1 = setTimeout(() => {
+  //     mouse.current.disableMouse = false;
+  //   }, mouseDisableTime);
+  //   // Clear timeout on unmount
+  //   return () => {
+  //     clearTimeout(timer1);
+  //   };
+  // });
 
   // Process mouse and touchscreen movements
   const handleMouseAndTouch = useCallback(
@@ -149,6 +150,12 @@ export default function ThreeViewer({ graphics }) {
       let isLeftOrRight = false; // false if mouse on left, true if right
       isLeftOrRight = mouseX < 0 ? false : true;
 
+      console.log(mouse.current.introState);
+      // Unlock mouse when intro animations are complete
+      if (mouse.current.introState === 'Done') {
+        mouse.current.disableMouse = false;
+      }
+
       // Update mouse ref
       mouse.current = {
         mouseX: mouseX,
@@ -163,6 +170,7 @@ export default function ThreeViewer({ graphics }) {
         inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
         disableMouse: mouse.current.disableMouse,
+        introState: mouse.current.introState,
       };
     },
     [

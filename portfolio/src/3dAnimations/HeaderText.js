@@ -71,24 +71,34 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
     maxSpeeds.push({ x: xSpeedMax, y: ySpeedMax, z: zSpeedMax });
   }
 
-  // Fade in text opacities after delay for each word group
+  // // Fade in text opacities after delay for each word group
+  // useEffect(() => {
+  //   let timer1 = setTimeout(() => {
+  //     isLoadingRef.current.group1 = false;
+  //   }, opacityFadeDelays.group1);
+  //   let timer2 = setTimeout(() => {
+  //     isLoadingRef.current.group2 = false;
+  //   }, opacityFadeDelays.group2);
+  //   let timer3 = setTimeout(() => {
+  //     isLoadingRef.current.group3 = false;
+  //   }, opacityFadeDelays.group3);
+  //   // Clear timeouts on unmount
+  //   return () => {
+  //     clearTimeout(timer1);
+  //     clearTimeout(timer2);
+  //     clearTimeout(timer3);
+  //   };
+  // }, [opacityFadeDelays]);
+
+  // Update intro animation state machine when text is loaded
   useEffect(() => {
-    let timer1 = setTimeout(() => {
-      isLoadingRef.current.group1 = false;
-    }, opacityFadeDelays.group1);
-    let timer2 = setTimeout(() => {
-      isLoadingRef.current.group2 = false;
-    }, opacityFadeDelays.group2);
-    let timer3 = setTimeout(() => {
-      isLoadingRef.current.group3 = false;
-    }, opacityFadeDelays.group3);
-    // Clear timeouts on unmount
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, [opacityFadeDelays]);
+    if (mouse.current.introState === 'Loading') {
+      mouse.current.introState = 'Text Loaded';
+    } else if (mouse.current.introState === 'Boxes Loaded') {
+      mouse.current.introState = 'Text and Boxes Loaded';
+    }
+    console.log('headerText mounted');
+  }, []);
 
   useFrame(() => {
     // if graphics low, render static text, else animate
@@ -107,6 +117,32 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         isLeftOrRight,
         disableMouse,
       } = mouse.current;
+
+      // Intro Animation State Machine
+      if (mouse.current.introState !== 'Done') {
+        // Once text and boxes are loaded, fade in name/title
+        if (mouse.current.introState === 'Text and Boxes Loaded') {
+          isLoadingRef.current.group1 = false;
+        }
+        // Once name is faded in, update state so boxes will assemble
+        if (
+          opacityLoaded.group1 === true &&
+          mouse.current.introState === 'Text and Boxes Loaded'
+        ) {
+          mouse.current.introState = 'Name Loaded';
+        }
+        // Once boxes assembled, fade in instructions
+        if (mouse.current.introState === 'Boxes Assembled') {
+          isLoadingRef.current.group2 = false;
+        }
+        // Once instructions faded in, mark as done
+        if (
+          opacityLoaded.group2 === true &&
+          mouse.current.introState === 'Boxes Assembled'
+        ) {
+          mouse.current.introState = 'Done';
+        }
+      }
 
       // Fade in Text, multiple groups so words have different fade times
       for (const [key] of Object.entries(opacity)) {
@@ -194,7 +230,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         fontSize={2.4}
         letterSpacing={[1.2]}
         color={instructionTextColor}
-        fadeGroup={'group3'}
+        fadeGroup={'group2'}
         mouse={mouse}
         common={common}
         blackholeCenter={positions.logo}
@@ -210,7 +246,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         fontSize={fontSizes.instructionsTitle}
         letterSpacing={[1.65, 1.7, 1.5, 1.2, 1.4, 1.55, 1.35]}
         color={mainTextColor}
-        fadeGroup={'group3'}
+        fadeGroup={'group2'}
         mouse={mouse}
         common={common}
         blackholeCenter={positions.logo}
@@ -226,13 +262,13 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         fontSize={5}
         letterSpacing={[2.35]}
         color={instructionLineColor}
-        fadeGroup={'group3'}
+        fadeGroup={'group2'}
         mouse={mouse}
         common={common}
         blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
-        icon={false}
+        icon={true}
         alignText={'center'}
         isLine={true}
       />
@@ -242,7 +278,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         fontSize={fontSizes.arrows}
         letterSpacing={[1.2]}
         color={instructionTextColor}
-        fadeGroup={'group3'}
+        fadeGroup={'group2'}
         mouse={mouse}
         common={common}
         blackholeCenter={positions.logo}
@@ -258,7 +294,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         fontSize={fontSizes.titles}
         letterSpacing={[1.35, 1.225, 1.225, 1.1525, 1.025]}
         color={instructionTextColor}
-        fadeGroup={'group3'}
+        fadeGroup={'group2'}
         mouse={mouse}
         common={common}
         blackholeCenter={positions.logo}
@@ -274,7 +310,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         fontSize={fontSizes.arrows}
         letterSpacing={[1.2]}
         color={instructionTextColor}
-        fadeGroup={'group3'}
+        fadeGroup={'group2'}
         mouse={mouse}
         common={common}
         blackholeCenter={positions.logo}
@@ -290,7 +326,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
         fontSize={fontSizes.titles}
         letterSpacing={[0.825, 0.875, 0, 1.8, 1.25, 1.325, 1.325]}
         color={instructionTextColor}
-        fadeGroup={'group3'}
+        fadeGroup={'group2'}
         mouse={mouse}
         common={common}
         blackholeCenter={positions.logo}

@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, Suspense } from 'react';
 import * as THREE from 'three';
 import { useFrame } from 'react-three-fiber';
 import Color from 'color';
@@ -378,30 +378,35 @@ export default function LogoBoxes({
   });
 
   return (
-    <animated.mesh
-      ref={springScaleRef}
-      {...groupScaleSpring}
-      position={meshPosition}
-    >
-      <instancedMesh
-        ref={ref}
-        args={[null, null, numOfInstances]}
-        rotation={[0, 0, Math.PI]}
-        scale={meshScale}
+    <Suspense fallback={null}>
+      <animated.mesh
+        ref={springScaleRef}
+        {...groupScaleSpring}
+        position={meshPosition}
       >
-        <boxBufferGeometry attach='geometry' args={[boxSize, boxSize, boxSize]}>
-          <instancedBufferAttribute
-            attachObject={['attributes', 'color']}
-            args={[colorArray, 3]}
+        <instancedMesh
+          ref={ref}
+          args={[null, null, numOfInstances]}
+          rotation={[0, 0, Math.PI]}
+          scale={meshScale}
+        >
+          <boxBufferGeometry
+            attach='geometry'
+            args={[boxSize, boxSize, boxSize]}
+          >
+            <instancedBufferAttribute
+              attachObject={['attributes', 'color']}
+              args={[colorArray, 3]}
+            />
+          </boxBufferGeometry>
+          <meshPhongMaterial
+            ref={matRef}
+            attach='material'
+            vertexColors={THREE.VertexColors}
+            shininess={30}
           />
-        </boxBufferGeometry>
-        <meshPhongMaterial
-          ref={matRef}
-          attach='material'
-          vertexColors={THREE.VertexColors}
-          shininess={30}
-        />
-      </instancedMesh>
-    </animated.mesh>
+        </instancedMesh>
+      </animated.mesh>
+    </Suspense>
   );
 }

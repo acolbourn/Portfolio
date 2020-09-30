@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { useFrame } from 'react-three-fiber';
 import { scalePow } from 'd3-scale';
 import { useSpring, animated } from 'react-spring/three';
+import { Plane, Sphere, MeshDistortMaterial } from 'drei';
 
 export default function Sun({ maxIntensity, mouse, position }) {
   const sun = useRef();
@@ -87,8 +88,25 @@ export default function Sun({ maxIntensity, mouse, position }) {
 
   return (
     <animated.mesh ref={sun} {...sunSpring} position={position}>
-      <sphereBufferGeometry attach='geometry' args={[4.2, 32, 32]} />
-      <meshBasicMaterial attach='material' color='#FFFF99' fog={false} />
+      {/* <sphereBufferGeometry attach='geometry' args={[4.2, 32, 32]} />
+      <meshBasicMaterial attach='material' color='#FFFF99' /> */}
+      <Sphere args={[4.2, 32, 32]}>
+        {/* <MeshDistortMaterial
+          attach='material'
+          distort={0.1} // Strength, 0 disables the effect (default=1)
+          speed={1} // Speed (default=1)
+          color='#FFFF99'
+        /> */}
+        <meshBasicMaterial attach='material' color='#FFFF99' /> */}
+      </Sphere>
+      <Sphere args={[4.1, 32, 32]}>
+        <MeshDistortMaterial
+          attach='material'
+          distort={0.3} // Strength, 0 disables the effect (default=1)
+          speed={5} // Speed (default=1)
+          color='red'
+        />
+      </Sphere>
     </animated.mesh>
   );
 }

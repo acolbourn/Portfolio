@@ -4,6 +4,7 @@ import WEBGL from './3dAnimations/webGLCheck';
 import GetFPS from './3dAnimations/GetFPS';
 import ThreeViewer from './3dAnimations/ThreeViewer';
 import useStyles from './styles/HomeStyles';
+// import LoadingSpinner from './3dAnimations/LoadingSpinner';
 
 export default function Home() {
   console.log('Home rendered');
@@ -19,6 +20,7 @@ export default function Home() {
     content = (
       <div className={classes.threeViewport}>
         <ThreeViewer graphics={graphics} />
+        {/* <LoadingSpinner /> */}
       </div>
     );
   } else {

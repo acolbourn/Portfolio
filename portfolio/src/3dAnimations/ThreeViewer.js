@@ -16,6 +16,10 @@ import HeaderText from './HeaderText.js';
 // import TextGeometry from './TextGeometry';
 import Sun from './Sun';
 import SunBloom from './SunBloom';
+import LoadingSpinner from './LoadingSpinner';
+import BackgroundPlane from './BackgroundPlane';
+import WobbleSphere from './WobbleSphere';
+import StarsAnimated from './StarsAnimated';
 
 export default function ThreeViewer({ graphics }) {
   console.log('ThreeViewer rendered');
@@ -150,7 +154,6 @@ export default function ThreeViewer({ graphics }) {
       let isLeftOrRight = false; // false if mouse on left, true if right
       isLeftOrRight = mouseX < 0 ? false : true;
 
-      console.log(mouse.current.introState);
       // Unlock mouse when intro animations are complete
       if (mouse.current.introState === 'Done') {
         mouse.current.disableMouse = false;
@@ -169,7 +172,8 @@ export default function ThreeViewer({ graphics }) {
         inDeadZone: inDeadZone,
         inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
-        disableMouse: mouse.current.disableMouse,
+        disableMouse: false,
+        // disableMouse: mouse.current.disableMouse,
         introState: mouse.current.introState,
       };
     },
@@ -187,28 +191,32 @@ export default function ThreeViewer({ graphics }) {
 
   return (
     <>
-      <Canvas
-        // colorManagement
-        gl={{ antialias: false, alpha: false }}
-        camera={{ position: [0, 0, 40] }}
-        onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
-        onMouseMove={handleMouseAndTouch}
-        onTouchMove={handleMouseAndTouch}
-        onTouchStart={(e) => e.preventDefault()}
-        onTouchEnd={(e) => e.preventDefault()}
-        onTouchCancel={(e) => e.preventDefault()}
-        pixelRatio={window.devicePixelRatio * 1.5}
-      >
-        <ambientLight intensity={1} />
-        {/* <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
-        {/* <ambientLight intensity={1.1} /> */}
-        <pointLight position={[0, 0, 200]} intensity={1.2} />
-        {/* <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
-        {graphics !== 'low' ? <Light maxIntensity={2.5} mouse={mouse} /> : null}
+      <Suspense fallback={<LoadingSpinner />}>
+        <Canvas
+          // colorManagement
+          gl={{ antialias: false, alpha: false }}
+          camera={{ position: [0, 0, 40] }}
+          onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
+          onMouseMove={handleMouseAndTouch}
+          onTouchMove={handleMouseAndTouch}
+          onTouchStart={(e) => e.preventDefault()}
+          onTouchEnd={(e) => e.preventDefault()}
+          onTouchCancel={(e) => e.preventDefault()}
+          pixelRatio={window.devicePixelRatio * 1.5}
+        >
+          <ambientLight intensity={1} />
+          <pointLight position={[0, 0, 200]} intensity={1.2} />
 
-        {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}
-        <group scale={[scale, scale, scale]}>
-          <Suspense fallback={null}>
+          {graphics !== 'low' ? (
+            <Light maxIntensity={2.5} mouse={mouse} />
+          ) : null}
+
+          {/* <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
+          {/* <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
+          {/* <ambientLight intensity={1.1} /> */}
+          {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}
+
+          <group scale={[scale, scale, scale]}>
             {/* key prop triggers unmount/mount to change box count */}
             <LogoBoxes
               key={graphics}
@@ -219,30 +227,36 @@ export default function ThreeViewer({ graphics }) {
               fadeDelay={3000}
               graphics={graphics}
             />
-          </Suspense>
-          <HeaderText
-            positions={positions}
-            fontSizes={fontSizes}
-            mouse={mouse}
-            graphics={graphics}
-          />
-          {graphics !== 'low' ? (
-            <Sun position={positions.logo} mouse={mouse} />
-          ) : null}
-          {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null}
+            <HeaderText
+              positions={positions}
+              fontSizes={fontSizes}
+              mouse={mouse}
+              graphics={graphics}
+            />
+            {graphics !== 'low' ? (
+              <Sun position={positions.logo} mouse={mouse} />
+            ) : null}
+            {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null}
 
-          {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
+            {/* <BackgroundPlane position={positions.logo} /> */}
+            <WobbleSphere position={positions.logo} mouse={mouse} />
+            <StarsAnimated mouse={mouse} position={positions.logo} />
+
+            {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
             <TextGeometry
               text={'Alex Colbourn'}
               position={[-13, 20, 0]}
               fontSize={fontSizes.name}
             />            
           </group> */}
-        </group>
-        <Stars />
-        <Stats showPanel={1} />
-      </Canvas>
-      <FPSStats style={{ visibility: 'hidden' }} left={'100px'} />
+          </group>
+
+          {/* <Stars depth={150} /> */}
+
+          <Stats showPanel={1} />
+        </Canvas>
+        <FPSStats style={{ visibility: 'hidden' }} left={'100px'} />
+      </Suspense>
     </>
   );
 }

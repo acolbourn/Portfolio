@@ -16,8 +16,39 @@ import {
   MeshDistortMaterial,
 } from 'drei';
 
-function MainSphere() {
+export default function WobbleSphere({ position, mouse }) {
   const main = useRef();
+  // const bumpMap = useTextureLoader('3dResources/bump.jpg');
+  // var myImage = new Image(100, 200);
+  // myImage.src = '3dResources/bump.jpg';
+  // document.body.appendChild(myImage);
+  // const envMap = useCubeTextureLoader(
+  //   ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'],
+  //   { path: './3dResources/cube/' }
+  // );
+
+  const bumpTextureLoader = new THREE.TextureLoader();
+  const bumpMap = bumpTextureLoader.load('3dResources/bump.jpg');
+
+  const cubeTextureLoader = new THREE.CubeTextureLoader();
+  // const envMap = cubeTextureLoader.load([
+  //   '3dResources/cube/px.png',
+  //   '3dResources/cube/nx.png',
+  //   '3dResources/cube/py.png',
+  //   '3dResources/cube/ny.png',
+  //   '3dResources/cube/pz.png',
+  //   '3dResources/cube/nz.png',
+  // ]);
+  const envMap = cubeTextureLoader.load([
+    '3dResources/spaceMap/right.png',
+    '3dResources/spaceMap/left.png',
+    '3dResources/spaceMap/top.png',
+    '3dResources/spaceMap/bot.png',
+    '3dResources/spaceMap/front.png',
+    '3dResources/spaceMap/back.png',
+  ]);
+
+  // We use `useResource` to be able to delay rendering the spheres until the material is ready
   const [matRef, material] = useResource();
 
   // main sphere rotates following the mouse position
@@ -33,12 +64,30 @@ function MainSphere() {
       mouse.y * Math.PI,
       0.1
     );
+
+    main.current.visible = false;
   });
   return (
-    <>
+    <Suspense fallback={null}>
       <MeshDistortMaterial
         ref={matRef}
+        envMap={envMap}
+        bumpMap={bumpMap}
         color={'#010101'}
+        // color={'black'}
+        roughness={0.1}
+        metalness={0}
+        bumpScale={0.005}
+        clearcoat={1}
+        clearcoatRoughness={1}
+        radius={1}
+        distort={0.4}
+        reflectivity={1}
+      />
+      {/* <MeshDistortMaterial
+        ref={matRef}
+        color={'black'}
+        // color={'#010101'}
         roughness={0.1}
         metalness={1}
         bumpScale={0.005}
@@ -46,27 +95,40 @@ function MainSphere() {
         clearcoatRoughness={1}
         radius={1}
         distort={0.4}
-      />
+      /> */}
+      {/* <MeshDistortMaterial
+        ref={matRef}
+        attach='material'
+        distort={0.4} // Strength, 0 to 1
+        color='black'
+        emissive='black'
+        reflectivity={1}
+        roughness={0.1}
+        metalness={1}
+        bumpScale={0.005}
+        clearcoat={1}
+        clearcoatRoughness={1}
+      /> */}
       {material && (
         <Icosahedron
           args={[1, 4]}
           ref={main}
           material={material}
-          position={[0, 0, 0]}
+          position={position}
           scale={[8, 8, 8]}
         />
       )}
-    </>
-  );
-}
-
-export default function WobbleSphere() {
-  return (
-    <Suspense fallback={<Html center>Loading.</Html>}>
-      <MainSphere />
     </Suspense>
   );
 }
+
+// export default function WobbleSphere() {
+//   return (
+
+//       <MainSphere />
+
+//   );
+// }
 
 // <Canvas
 //   colorManagement

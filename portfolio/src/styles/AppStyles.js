@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100vh',
-    backgroundColor: '#1d1d1d',
+    backgroundColor: '#1D1D1D',
   },
   nav: {
     height: '64px',

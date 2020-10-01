@@ -11,7 +11,7 @@ import { Stars, Stats } from 'drei';
 import FPSStats from './FPSStats';
 import LogoBoxes from './LogoBoxes.js';
 import useWidth from '../hooks/useWidth';
-import Light from './Light';
+import Lights from './Lights';
 import HeaderText from './HeaderText.js';
 // import TextGeometry from './TextGeometry';
 import Sun from './Sun';
@@ -75,6 +75,7 @@ export default function ThreeViewer({ graphics }) {
     isLeftOrRight: true, // false = mouse on left, true = right
     disableMouse: true, // disable mouse initially for fade in
     introState: 'Loading', // State machine for intro animations
+    blackHoleState: 'Stars Out', // State machine for blackhole
   });
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
   const windowHalfX = window.innerWidth / 2;
@@ -175,6 +176,7 @@ export default function ThreeViewer({ graphics }) {
         disableMouse: false,
         // disableMouse: mouse.current.disableMouse,
         introState: mouse.current.introState,
+        blackHoleState: mouse.current.blackHoleState,
       };
     },
     [
@@ -204,12 +206,7 @@ export default function ThreeViewer({ graphics }) {
           onTouchCancel={(e) => e.preventDefault()}
           pixelRatio={window.devicePixelRatio * 1.5}
         >
-          <ambientLight intensity={1} />
-          <pointLight position={[0, 0, 200]} intensity={1.2} />
-
-          {graphics !== 'low' ? (
-            <Light maxIntensity={2.5} mouse={mouse} />
-          ) : null}
+          <Lights mouse={mouse} graphics={graphics} />
 
           {/* <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
           {/* <pointLight position={[150, 150, 150]} intensity={0.55} /> */}

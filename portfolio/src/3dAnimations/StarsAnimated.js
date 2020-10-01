@@ -53,14 +53,18 @@ export default function StarsAnimated({ mouse, position }) {
     set({
       scale: [scale, scale, scale],
     });
-    // groupRef. = mouseXLeftLin;
-    // console.log(groupRef);
+
+    // Check scale and update blackhole animation state machine so blackhole will emerge once stars are fully sucked into hole
+    if (groupRef.current.scale.x === 0) {
+      mouse.current.blackHoleState = 'Stars In';
+    } else {
+      mouse.current.blackHoleState = 'Stars Out';
+    }
+    // console.log(groupRef.current.scale.x);
   });
   return (
     <animated.mesh ref={groupRef} {...spring} position={position}>
-      {/* <group ref={groupRef} scale={[scale, scale, scale]}> */}
       <Stars depth={150} />
-      {/* </group> */}
     </animated.mesh>
   );
 }

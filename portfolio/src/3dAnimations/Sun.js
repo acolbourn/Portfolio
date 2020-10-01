@@ -6,10 +6,12 @@ import { Plane, Sphere, MeshDistortMaterial } from 'drei';
 
 export default function Sun({ maxIntensity, mouse, position }) {
   const sun = useRef();
-  const massImplode = 1; // react-spring mass when imploding
+  const massImplode = 20; // react-spring mass when imploding
+  // const massImplode = 1; // react-spring mass when imploding
   const massExplode = 2; // react-spring mass when exploding
   let massCurrent = massImplode; // current react-spring mass
-  const frictionImplode = 40; // react-spring friction when imploding
+  const frictionImplode = 50; // react-spring friction when imploding
+  // const frictionImplode = 40; // react-spring friction when imploding
   const frictionExplode = 50; // react-spring friction when imploding
   let frictionCurrent = frictionImplode; // current react-spring friction
   let clamp = false; // when true, stops spring overshoot
@@ -58,6 +60,7 @@ export default function Sun({ maxIntensity, mouse, position }) {
         scale = sunScaleLog(mouseXLeftLin);
         if (inBlackHoleZone) {
           scale = 0;
+          clamp = true;
           massCurrent = massImplode;
           frictionCurrent = frictionImplode;
         } else {
@@ -66,9 +69,9 @@ export default function Sun({ maxIntensity, mouse, position }) {
         }
       } else {
         // scale quickly to 0 to hide
-        // sun.current.visible = false;
+        sun.current.visible = false;
         scale = 0;
-        massCurrent = massImplode;
+        massCurrent = 1;
         frictionCurrent = 0.01;
         clamp = true;
       }
@@ -99,14 +102,14 @@ export default function Sun({ maxIntensity, mouse, position }) {
         /> */}
         <meshBasicMaterial attach='material' color='#FFFF99' /> */}
       </Sphere>
-      <Sphere args={[4.1, 32, 32]}>
+      {/* <Sphere args={[4.1, 32, 32]}>
         <MeshDistortMaterial
           attach='material'
           distort={0.3} // Strength, 0 disables the effect (default=1)
           speed={5} // Speed (default=1)
-          color='red'
+          color='black'
         />
-      </Sphere>
+      </Sphere> */}
     </animated.mesh>
   );
 }

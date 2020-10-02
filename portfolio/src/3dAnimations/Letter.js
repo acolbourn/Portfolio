@@ -1,4 +1,4 @@
-import React, { useRef, Suspense, useEffect } from 'react';
+import React, { useRef, Suspense } from 'react';
 import * as THREE from 'three';
 import { extend, useFrame } from 'react-three-fiber';
 import { Text, Line } from 'drei';
@@ -76,11 +76,6 @@ export default function Letter({
   let xSpeed; // Current X rotation speed
   let ySpeed; // Current Y rotation speed
   let zSpeed; // Current Z rotation speed
-
-  // Update intro animation state machine when text is loaded
-  useEffect(() => {
-    console.log('letter mounted');
-  }, []);
 
   useFrame(() => {
     // import mouse data

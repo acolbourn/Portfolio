@@ -1,8 +1,7 @@
 import * as THREE from 'three';
-import React, { Suspense, useRef, useState } from 'react';
-import { Canvas, useFrame, useResource } from 'react-three-fiber';
-import { useSpring, animated, config } from 'react-spring/three';
-import { scalePow } from 'd3-scale';
+import React, { Suspense, useRef } from 'react';
+import { useFrame, useResource } from 'react-three-fiber';
+import { useSpring, animated } from 'react-spring/three';
 import { Icosahedron, MeshDistortMaterial } from 'drei';
 
 export default function WobbleSphere({ position, mouse }) {
@@ -66,39 +65,22 @@ export default function WobbleSphere({ position, mouse }) {
       friction: frictionCurrent,
       clamp: clamp,
     },
-    // config: config.molasses,
   }));
 
   // main sphere rotates following the mouse position
   useFrame(({ clock }) => {
-    const {
-      // mouseX,
-      // mouseY,
-      mouseXScaled,
-      mouseYScaled,
-      mouseXLeftLin,
-      mouseXRightLin,
-      // mouseXLeftLog,
-      mouseXRightLog,
-      inDeadZone,
-      inBlackHoleZone,
-      isLeftOrRight,
-      disableMouse,
-      blackHoleState,
-    } = mouse.current;
+    const { inBlackHoleZone, blackHoleState } = mouse.current;
 
     // Show blackhole when mouse in blackhole zone, else hide
     if (inBlackHoleZone) {
       // Wait for stars to update state machine that they have fully sucked into blackhole before triggering blackhole
       if (blackHoleState === 'Stars In') {
-        {
-          // Set react-spring variables
-          main.current.visible = true;
-          scale = 1;
-          massCurrent = massExplode;
-          frictionCurrent = frictionExplode;
-          clamp = false;
-        }
+        // Set react-spring variables
+        main.current.visible = true;
+        scale = 1;
+        massCurrent = massExplode;
+        frictionCurrent = frictionExplode;
+        clamp = false;
       }
 
       // Set blob movement variables

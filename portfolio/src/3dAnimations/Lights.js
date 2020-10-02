@@ -4,11 +4,32 @@ import RedLight from './RedLight';
 
 export default function Lights({ mouse, graphics }) {
   const centerLight = useRef();
-  const centerIntensity = 1.2;
-  // Disable spotlight in blackhole zone to avoid reflection
+  const intensityRef = useRef(1);
+  const centerIntensityMax = 1.2;
+  let intensity = 1; // 1 = full intensity, 0 = none;
+  const intensityFadeSpeed = 0.02; // Fade to 0 in blackhole
+
   useFrame(() => {
-    const { inBlackHoleZone } = mouse.current;
-    centerLight.current.intensity = inBlackHoleZone ? 0 : centerIntensity;
+    const { inBlackHoleZone, disableMouse } = mouse.current;
+
+    // Disable mouse for intro animations
+    if (!disableMouse) {
+      // Fade out spotlights in blackhole zone to avoid reflection
+      if (inBlackHoleZone) {
+        if (intensity > 0) {
+          intensity -= intensityFadeSpeed;
+        } else {
+          intensity = 0;
+        }
+      } else {
+        intensity = 1;
+      }
+    }
+
+    // Update center light
+    centerLight.current.intensity = intensity * centerIntensityMax;
+    // Update ref for red light to use
+    intensityRef.current = intensity;
   });
   return (
     <>
@@ -16,11 +37,15 @@ export default function Lights({ mouse, graphics }) {
       <pointLight
         ref={centerLight}
         position={[0, 0, 200]}
-        intensity={centerIntensity}
+        intensity={centerIntensityMax}
       />
 
       {graphics !== 'low' ? (
-        <RedLight maxIntensity={2.5} mouse={mouse} />
+        <RedLight
+          maxIntensity={2.5}
+          mouse={mouse}
+          intensityRef={intensityRef}
+        />
       ) : null}
     </>
   );

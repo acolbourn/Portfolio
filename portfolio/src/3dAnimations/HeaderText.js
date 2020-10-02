@@ -37,8 +37,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   let frictionCurrent = frictionImplode; // current react-spring friction
   let opacity = { group1: 0, group2: 0, group3: 0 }; // Opacities of each word for fade effects
   let opacityLoaded = { group1: false, group2: false, group3: false }; // true when initial fade in complete
-  // const opacityFadeDelays = { group1: 0, group2: 0, group3: 0 }; // ms opacity fade delay for each word group
-  const opacityFadeDelays = { group1: 1000, group2: 2500, group3: 4000 }; // ms opacity fade delay for each word group
   const opacityFadeSpeed = 0.01; // Opacity fade in speed on load
   const opacityFadeBlackholeSpeed = 0.05; // Opacity fade to 0 in blackhole speed
   const isLoadingRef = useRef({ group1: true, group2: true, group3: true }); // loading ref for each groups' opacity fade
@@ -71,25 +69,6 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
     maxSpeeds.push({ x: xSpeedMax, y: ySpeedMax, z: zSpeedMax });
   }
 
-  // // Fade in text opacities after delay for each word group
-  // useEffect(() => {
-  //   let timer1 = setTimeout(() => {
-  //     isLoadingRef.current.group1 = false;
-  //   }, opacityFadeDelays.group1);
-  //   let timer2 = setTimeout(() => {
-  //     isLoadingRef.current.group2 = false;
-  //   }, opacityFadeDelays.group2);
-  //   let timer3 = setTimeout(() => {
-  //     isLoadingRef.current.group3 = false;
-  //   }, opacityFadeDelays.group3);
-  //   // Clear timeouts on unmount
-  //   return () => {
-  //     clearTimeout(timer1);
-  //     clearTimeout(timer2);
-  //     clearTimeout(timer3);
-  //   };
-  // }, [opacityFadeDelays]);
-
   // Update intro animation state machine when text is loaded
   useEffect(() => {
     if (mouse.current.introState === 'Loading') {
@@ -98,86 +77,86 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
       mouse.current.introState = 'Text and Boxes Loaded';
     }
     console.log('headerText mounted');
-  }, []);
+  }, [mouse]);
 
   useFrame(() => {
-    // if graphics low, render static text, else animate
-    if (graphics !== 'low') {
-      const {
-        // mouseX,
-        // mouseY,
-        // mouseXScaled,
-        // mouseYScaled,
-        mouseXLeftLin,
-        mouseXRightLin,
-        // mouseXLeftLog,
-        mouseXRightLog,
-        // inDeadZone,
-        inBlackHoleZone,
-        isLeftOrRight,
-        disableMouse,
-      } = mouse.current;
+    const {
+      // mouseX,
+      // mouseY,
+      // mouseXScaled,
+      // mouseYScaled,
+      mouseXLeftLin,
+      mouseXRightLin,
+      // mouseXLeftLog,
+      mouseXRightLog,
+      // inDeadZone,
+      inBlackHoleZone,
+      isLeftOrRight,
+      disableMouse,
+    } = mouse.current;
 
-      // Intro Animation State Machine
-      if (mouse.current.introState !== 'Done') {
-        // Once text and boxes are loaded, fade in name/title
-        if (mouse.current.introState === 'Text and Boxes Loaded') {
-          isLoadingRef.current.group1 = false;
-        }
-        // Once name is faded in, update state so boxes will assemble
-        if (
-          opacityLoaded.group1 === true &&
-          mouse.current.introState === 'Text and Boxes Loaded'
-        ) {
-          mouse.current.introState = 'Name Loaded';
-        }
-        // Once boxes assembled, fade in instructions
-        if (mouse.current.introState === 'Boxes Assembled') {
-          isLoadingRef.current.group2 = false;
-        }
-        // Once instructions faded in, mark as done
-        if (
-          opacityLoaded.group2 === true &&
-          mouse.current.introState === 'Boxes Assembled'
-        ) {
-          mouse.current.introState = 'Done';
-        }
+    // Fade in Text, multiple groups so words have different fade times
+    for (const [key] of Object.entries(opacity)) {
+      if (!isLoadingRef.current[key] && opacity[key] < 1) {
+        opacity[key] = opacity[key] + opacityFadeSpeed;
+      } else if (!isLoadingRef.current[key] && opacity[key] >= 1) {
+        opacityLoaded[key] = true;
       }
-
-      // Fade in Text, multiple groups so words have different fade times
-      for (const [key] of Object.entries(opacity)) {
-        if (!isLoadingRef.current[key] && opacity[key] < 1) {
-          opacity[key] = opacity[key] + opacityFadeSpeed;
-        } else if (!isLoadingRef.current[key] && opacity[key] >= 1) {
-          opacityLoaded[key] = true;
-        }
-        // After fade in, set opacity to 0 in blackhole and 1 elsewhere
-        if (opacityLoaded[key] === true) {
-          // Disable mouse on load and use intro animation values
-          if (!disableMouse) {
-            if (inBlackHoleZone) {
-              // Fade opacity to 0 if in blackhole zone
-              if (opacity[key] > 0) {
-                opacity[key] = opacity[key] - opacityFadeBlackholeSpeed;
-              } else {
-                opacity[key] = 0;
-              }
+      // After fade in, set opacity to 0 in blackhole and 1 elsewhere
+      if (opacityLoaded[key] === true) {
+        // Disable mouse on load and use intro animation values
+        if (!disableMouse) {
+          if (inBlackHoleZone) {
+            // Fade opacity to 0 if in blackhole zone
+            if (opacity[key] > 0) {
+              opacity[key] = opacity[key] - opacityFadeBlackholeSpeed;
             } else {
-              if (graphics === 'high') {
-                opacity[key] = 1;
+              opacity[key] = 0;
+            }
+          } else {
+            if (graphics === 'high') {
+              opacity[key] = 1;
+            } else {
+              // Fade opacity to 1 in active zone
+              if (opacity[key] < 1) {
+                opacity[key] = opacity[key] + 0.01;
               } else {
-                // Fade opacity to 1 in active zone
-                if (opacity[key] < 1) {
-                  opacity[key] = opacity[key] + 0.01;
-                } else {
-                  opacity[key] = 1;
-                }
+                opacity[key] = 1;
               }
             }
           }
         }
       }
+    }
 
+    // Intro Animation State Machine
+    if (mouse.current.introState !== 'Done') {
+      // Once text and boxes are loaded, fade in name/title
+      if (mouse.current.introState === 'Text and Boxes Loaded') {
+        isLoadingRef.current.group1 = false;
+      }
+      // Once name is faded in, update state so boxes will assemble
+      if (
+        opacityLoaded.group1 === true &&
+        mouse.current.introState === 'Text and Boxes Loaded'
+      ) {
+        mouse.current.introState = 'Name Loaded';
+      }
+      // Once boxes assembled, fade in instructions
+      if (mouse.current.introState === 'Boxes Assembled') {
+        isLoadingRef.current.group2 = false;
+      }
+      // Once instructions faded in, mark as done
+      if (
+        opacityLoaded.group2 === true &&
+        mouse.current.introState === 'Boxes Assembled'
+      ) {
+        mouse.current.introState = 'Done';
+      }
+    }
+
+    // if graphics low, render static text, else animate
+    if (graphics !== 'low') {
       // Disable mouse on load and use intro animation values
       if (!disableMouse) {
         // Scale letter if on left of screen to shrink as it gets closer to blackhole, scale to 1 if in deadzone or on right
@@ -207,19 +186,18 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
           }
         }
       }
-      // console.log('Opacity: ', opacity, '  Letter Scale: ', letterScale);
-
-      // update common ref with values
-      common.current = {
-        letterScale,
-        rotationSpeed,
-        travelDist,
-        explodeOrbit,
-        massCurrent,
-        frictionCurrent,
-        opacity,
-      };
     }
+
+    // update common ref with values
+    common.current = {
+      letterScale,
+      rotationSpeed,
+      travelDist,
+      explodeOrbit,
+      massCurrent,
+      frictionCurrent,
+      opacity,
+    };
   });
 
   return (

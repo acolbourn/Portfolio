@@ -2,19 +2,19 @@ import React, { useRef } from 'react';
 import { useFrame } from 'react-three-fiber';
 import { scalePow } from 'd3-scale';
 import { useSpring, animated } from 'react-spring/three';
-import { Plane, Sphere, MeshDistortMaterial } from 'drei';
+import { Sphere } from 'drei';
 
-export default function Sun({ maxIntensity, mouse, position }) {
+export default function Sun({ mouse, position }) {
   const sun = useRef();
-  const massImplode = 20; // react-spring mass when imploding
-  // const massImplode = 1; // react-spring mass when imploding
-  const massExplode = 2; // react-spring mass when exploding
-  let massCurrent = massImplode; // current react-spring mass
-  const frictionImplode = 50; // react-spring friction when imploding
-  // const frictionImplode = 40; // react-spring friction when imploding
-  const frictionExplode = 50; // react-spring friction when imploding
-  let frictionCurrent = frictionImplode; // current react-spring friction
+  const massImplode = 20; // mass when imploding
+  // const massImplode = 1; // mass when imploding
+  const massExplode = 2; // mass when exploding
+  let massCurrent = massImplode; // current mass
+  const frictionImplode = 50; // friction when imploding
+  const frictionExplode = 50; // friction when imploding
+  let frictionCurrent = frictionImplode; // current friction
   let clamp = false; // when true, stops spring overshoot
+  let scale; // Sun scale
 
   // Sun scaling function
   let sunScaleLog = scalePow()
@@ -48,8 +48,6 @@ export default function Sun({ maxIntensity, mouse, position }) {
       // isLeftOrRight,
       disableMouse,
     } = mouse.current;
-
-    let scale;
 
     // Disable mouse on load and use intro animation values
     if (!disableMouse) {

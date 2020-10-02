@@ -22,7 +22,10 @@ export default function LogoBoxes({
   const depth = graphics === 'low' ? 2 : 5; // Layers of boxes in Z direction
   const numOfInstances = logoPoints.length * depth; // Total # of boxes
   const boxSize = 1; // Physical box dimensions
+  const initBoxDistance = 80; // Initial distance for load animation
   const maxBoxDistance = 6000; // Max distance boxes spread from each other
+  let boxDistance = initBoxDistance; // Current box distance
+  // const maxBoxDistance = 6000; // Max distance boxes spread from each other
   const meshOffset = graphics === 'low' ? -0.5 : -2; // offset so rotation is exactly centered
   const groupPosZ = meshOffset + (depth * boxSize) / 2 - boxSize / 2; // Z center of logo
   const groupPosXY = 0; // X and Y center of logo
@@ -143,7 +146,7 @@ export default function LogoBoxes({
       mouse.current.introState = 'Text and Boxes Loaded';
     }
     console.log('logoBoxes mounted');
-  }, []);
+  }, [mouse]);
 
   // // Force rerender on window resize
   // const [dimensions, setDimensions] = React.useState({
@@ -197,13 +200,7 @@ export default function LogoBoxes({
   let shineScale = scaleLinear().domain([0, 1]).range([100, 30]).clamp(true);
 
   useFrame((state) => {
-    let {
-      mouseX,
-      mouseY,
-      mouseYScaled,
-      mouseXLeftLin,
-      mouseXRightLog,
-    } = mouse.current;
+    let { mouseX, mouseYScaled, mouseXLeftLin, mouseXRightLog } = mouse.current;
     const { inDeadZone, isLeftOrRight, disableMouse } = mouse.current;
 
     let i = 0;
@@ -224,6 +221,9 @@ export default function LogoBoxes({
       ) {
         mouse.current.introState = 'Boxes Assembled';
       }
+    } else {
+      // If intro animation done, mark loading complete so boxes display properly after a graphics setting change
+      isLoadingRef.current = false;
     }
 
     // Turn on visibility after delay for fade in effect
@@ -234,14 +234,15 @@ export default function LogoBoxes({
     if (disableMouse) {
       // Boxes set in distance initially and then mouse is set to deadzone to bring them into center
       mouseX = initBoxPositionRef.current;
-      mouseY = 0;
       mouseYScaled = 0;
       mouseXRightLog = initBoxPositionRef.current;
       mouseXLeftLin = 1;
       scaledAnimationSpeed = introAnimSpeed;
+    } else {
+      boxDistance = maxBoxDistance;
     }
     // Assign mouse positions
-    const mouseExplode = maxBoxDistance * mouseXRightLog;
+    const mouseExplode = boxDistance * mouseXRightLog;
     const mouseImplode = mouseXLeftLin;
 
     // Scale mouse positions and velocities for animations

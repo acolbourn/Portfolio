@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { scaleLinear, scalePow } from 'd3-scale';
 import { Canvas } from 'react-three-fiber';
-import { Stars, Stats } from 'drei';
+import { Stats } from 'drei';
 import FPSStats from './FPSStats';
 import LogoBoxes from './LogoBoxes.js';
 import useWidth from '../hooks/useWidth';
@@ -17,7 +17,6 @@ import HeaderText from './HeaderText.js';
 import Sun from './Sun';
 import SunBloom from './SunBloom';
 import LoadingSpinner from './LoadingSpinner';
-import BackgroundPlane from './BackgroundPlane';
 import WobbleSphere from './WobbleSphere';
 import StarsAnimated from './StarsAnimated';
 
@@ -80,7 +79,7 @@ export default function ThreeViewer({ graphics }) {
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
   const windowHalfX = window.innerWidth / 2;
   const windowHalfY = window.innerHeight / 2;
-  const blackHoleZone = (windowHalfX - deadZone) * 0.1; // 10% mouse zone on left side of screen where scaling is 0 so everything is sucked into blackhole
+  const blackHoleZone = (windowHalfX - deadZone) * 0.2; // 20% mouse zone on left side of screen where scaling is 0 so everything is sucked into blackhole
   const blackHoleZoneShifted = -windowHalfX + blackHoleZone;
 
   // Scaling functions
@@ -173,8 +172,7 @@ export default function ThreeViewer({ graphics }) {
         inDeadZone: inDeadZone,
         inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
-        disableMouse: false,
-        // disableMouse: mouse.current.disableMouse,
+        disableMouse: mouse.current.disableMouse,
         introState: mouse.current.introState,
         blackHoleState: mouse.current.blackHoleState,
       };

@@ -87,6 +87,7 @@ export default function LogoBoxes({
   const frictionExplode = 50; // react-spring friction when exploding
   let frictionCurrent = frictionImplode; // current react-spring friction
   let clamp = false; // when true, stops spring overshoot
+  let groupScale = 1;
   const [groupScaleSpring, set] = useSpring(() => ({
     scale: [meshScale[0], meshScale[0], meshScale[0]],
     config: {
@@ -201,7 +202,13 @@ export default function LogoBoxes({
 
   useFrame((state) => {
     let { mouseX, mouseYScaled, mouseXLeftLin, mouseXRightLog } = mouse.current;
-    const { inDeadZone, isLeftOrRight, disableMouse } = mouse.current;
+    const {
+      inDeadZone,
+      isLeftOrRight,
+      disableMouse,
+      inBlackHoleZone,
+      blackHoleState,
+    } = mouse.current;
 
     let i = 0;
     const time = state.clock.getElapsedTime();
@@ -241,119 +248,125 @@ export default function LogoBoxes({
     } else {
       boxDistance = maxBoxDistance;
     }
-    // Assign mouse positions
-    const mouseExplode = boxDistance * mouseXRightLog;
-    const mouseImplode = mouseXLeftLin;
 
-    // Scale mouse positions and velocities for animations
-    // "Velocity" in this case just means a slower/smoother animation.
-    animateVel += scaledAnimationSpeed - animateVel;
-    mouseVelX += (mouseX - mouseVelX) * animateVel;
-    mouseVelY += (mouseYScaled - mouseVelY) * animateSpeedY;
-    mouseVelExplode += (mouseExplode - mouseVelExplode) * animateVel;
-    mouseVelImplode += (mouseImplode - mouseVelImplode) * animateVel;
+    // Bypass if in blackhole to save cpu
+    if (blackHoleState !== 'Stars In') {
+      // Assign mouse positions
+      const mouseExplode = boxDistance * mouseXRightLog;
+      const mouseImplode = mouseXLeftLin;
 
-    // Delay box shine fade out but keep fade in instant
-    const targetShine = shineScale(mouseXLeftLin);
-    if (matRef.current.shininess > targetShine) {
-      shineVel += (targetShine - shineVel) * shineFadeSpeed;
-    } else {
-      shineVel = targetShine;
-    }
-    matRef.current.shininess = shineVel;
+      // Scale mouse positions and velocities for animations
+      // "Velocity" in this case just means a slower/smoother animation.
+      animateVel += scaledAnimationSpeed - animateVel;
+      mouseVelX += (mouseX - mouseVelX) * animateVel;
+      mouseVelY += (mouseYScaled - mouseVelY) * animateSpeedY;
+      mouseVelExplode += (mouseExplode - mouseVelExplode) * animateVel;
+      mouseVelImplode += (mouseImplode - mouseVelImplode) * animateVel;
 
-    // Rotate logo group
-    // if mouse in deadzone to right edge, rotate standard speed
-    // else if mouse on left rotate faster from deadzone to left edge
-    if (inDeadZone || isLeftOrRight) {
-      ref.current.rotation.y += standardRotationSpeed;
-    } else {
-      ref.current.rotation.y += rotSpeedScale(mouseVelImplode);
-    }
-
-    // Calculate box colors based on mouse position
-    if (mouseVelY < 0) {
-      // if mouse above center, mix center default color with uniform color
-      uniformBoxColorHex = defaultBoxColor
-        .mix(Color(uniformColor), Math.abs(mouseVelY))
-        .hex();
-      boxColorsHex = boxColorsHex.map(() => uniformBoxColorHex);
-    } else {
-      // else mouse is below center so mix multi-color array with default
-      // Reset color looping index each time it reaches end of array
-      colorIndex >= blendedColorArray.length - 1
-        ? (colorIndex = 0)
-        : (colorIndex += 1);
-      // Mix each variable color with default color based on mouse position.  Since multiple colors are in precomputed color array, offset applies different colors to each box group.  Remove offset to make all boxes cycle through the same colors simultaneously.
-      const absMouseVelY = Math.abs(mouseVelY);
-      for (let r = 0; r < numOfColors; r++) {
-        boxColorsHex[r] = defaultBoxColor
-          .mix(
-            blendedColorArray[
-              (colorIndex + r * offset) % blendedColorArray.length
-            ],
-            absMouseVelY
-          )
-          .hex();
+      // Delay box shine fade out but keep fade in instant
+      const targetShine = shineScale(mouseXLeftLin);
+      if (matRef.current.shininess > targetShine) {
+        shineVel += (targetShine - shineVel) * shineFadeSpeed;
+      } else {
+        shineVel = targetShine;
       }
+      matRef.current.shininess = shineVel;
+
+      // Rotate logo group
+      // if mouse in deadzone to right edge, rotate standard speed
+      // else if mouse on left rotate faster from deadzone to left edge
+      if (inDeadZone || isLeftOrRight) {
+        ref.current.rotation.y += standardRotationSpeed;
+      } else {
+        ref.current.rotation.y += rotSpeedScale(mouseVelImplode);
+      }
+
+      // Calculate box colors based on mouse position
+      if (mouseVelY < 0) {
+        // if mouse above center, mix center default color with uniform color
+        uniformBoxColorHex = defaultBoxColor
+          .mix(Color(uniformColor), Math.abs(mouseVelY))
+          .hex();
+        boxColorsHex = boxColorsHex.map(() => uniformBoxColorHex);
+      } else {
+        // else mouse is below center so mix multi-color array with default
+        // Reset color looping index each time it reaches end of array
+        colorIndex >= blendedColorArray.length - 1
+          ? (colorIndex = 0)
+          : (colorIndex += 1);
+        // Mix each variable color with default color based on mouse position.  Since multiple colors are in precomputed color array, offset applies different colors to each box group.  Remove offset to make all boxes cycle through the same colors simultaneously.
+        const absMouseVelY = Math.abs(mouseVelY);
+        for (let r = 0; r < numOfColors; r++) {
+          boxColorsHex[r] = defaultBoxColor
+            .mix(
+              blendedColorArray[
+                (colorIndex + r * offset) % blendedColorArray.length
+              ],
+              absMouseVelY
+            )
+            .hex();
+        }
+      }
+
+      // Set mouse to 0 on left side of screen to bypass explosion effect
+      const sphereDist = mouseVelExplode >= 0 ? mouseVelExplode : 0;
+
+      // Apply common scales
+      const mouseShiftedX = -1 * mouseVelImplode;
+      const sphereRadius = sphereScale(mouseShiftedX);
+      groupScale = meshGroupScale(mouseXLeftLin);
+      let logo2Sphere = logo2SphereScale(mouseShiftedX);
+
+      // Update box positions and rotations.
+      logoPoints3d.forEach((position, idx) => {
+        const id = i++; // Box id
+        // Box position within logo group
+        const x = position[0];
+        const y = position[1];
+        const z = position[2];
+
+        // Explosion Animation
+        // Calculate point on sphere based on user mouse movement
+        // Generate explode functions
+        const explodeX = spherePoints[idx].x * sphereDist;
+        const explodeY = spherePoints[idx].y * sphereDist;
+        const explodeZ = spherePoints[idx].z * sphereDist;
+
+        // Generate implode functions
+        const implodeX =
+          (-x - groupPosXY) * logo2Sphere -
+          spherePoints[idx].x * sphereRadius * (1 + logo2Sphere);
+        const implodeY =
+          (-y - groupPosXY) * logo2Sphere -
+          spherePoints[idx].y * sphereRadius * (1 + logo2Sphere);
+        const implodeZ =
+          (-z - groupPosZ) * logo2Sphere -
+          spherePoints[idx].z * sphereRadius * (1 + logo2Sphere);
+
+        // Set box position
+        tempObject.position.set(
+          groupPosXY - implodeX - explodeX,
+          groupPosXY - implodeY - explodeY,
+          groupPosZ - implodeZ - explodeZ
+        );
+
+        // Rotate individual boxes using current time.  This gives a wave like effect bc time will be slightly different as each box is set in the loop.
+        tempObject.rotation.y =
+          Math.sin(x / 4 + time) +
+          Math.sin(y / 4 + time) +
+          Math.sin(z / 4 + time);
+        tempObject.rotation.z = tempObject.rotation.y * 2;
+        // Apply new values to matrix
+        tempColor.set(boxColorsHex[colorIds[idx]]).toArray(colorArray, id * 3);
+        tempObject.updateMatrix();
+        ref.current.setMatrixAt(id, tempObject.matrix);
+      });
+      ref.current.geometry.attributes.color.needsUpdate = true;
+      ref.current.instanceMatrix.needsUpdate = true;
     }
-
-    // Set mouse to 0 on left side of screen to bypass explosion effect
-    const sphereDist = mouseVelExplode >= 0 ? mouseVelExplode : 0;
-
-    // Apply common scales
-    const mouseShiftedX = -1 * mouseVelImplode;
-    const sphereRadius = sphereScale(mouseShiftedX);
-    const groupScale = meshGroupScale(mouseXLeftLin);
-    let logo2Sphere = logo2SphereScale(mouseShiftedX);
-
-    // Update box positions and rotations.
-    logoPoints3d.forEach((position, idx) => {
-      const id = i++; // Box id
-      // Box position within logo group
-      const x = position[0];
-      const y = position[1];
-      const z = position[2];
-
-      // Explosion Animation
-      // Calculate point on sphere based on user mouse movement
-      // Generate explode functions
-      const explodeX = spherePoints[idx].x * sphereDist;
-      const explodeY = spherePoints[idx].y * sphereDist;
-      const explodeZ = spherePoints[idx].z * sphereDist;
-
-      // Generate implode functions
-      const implodeX =
-        (-x - groupPosXY) * logo2Sphere -
-        spherePoints[idx].x * sphereRadius * (1 + logo2Sphere);
-      const implodeY =
-        (-y - groupPosXY) * logo2Sphere -
-        spherePoints[idx].y * sphereRadius * (1 + logo2Sphere);
-      const implodeZ =
-        (-z - groupPosZ) * logo2Sphere -
-        spherePoints[idx].z * sphereRadius * (1 + logo2Sphere);
-
-      // Set box position
-      tempObject.position.set(
-        groupPosXY - implodeX - explodeX,
-        groupPosXY - implodeY - explodeY,
-        groupPosZ - implodeZ - explodeZ
-      );
-
-      // Rotate individual boxes using current time.  This gives a wave like effect bc time will be slightly different as each box is set in the loop.
-      tempObject.rotation.y =
-        Math.sin(x / 4 + time) +
-        Math.sin(y / 4 + time) +
-        Math.sin(z / 4 + time);
-      tempObject.rotation.z = tempObject.rotation.y * 2;
-      // Apply new values to matrix
-      tempColor.set(boxColorsHex[colorIds[idx]]).toArray(colorArray, id * 3);
-      tempObject.updateMatrix();
-      ref.current.setMatrixAt(id, tempObject.matrix);
-    });
 
     // if mouse in blackhole zone, shrink scale fast, else expand slow
-    if (mouseXLeftLin <= 0) {
+    if (inBlackHoleZone <= 0) {
       massCurrent = massImplode;
       frictionCurrent = frictionImplode;
       clamp = true;
@@ -364,18 +377,18 @@ export default function LogoBoxes({
     }
 
     // Apply react-spring scaling
-    set({
-      scale: [groupScale, groupScale, groupScale],
-      config: {
-        mass: massCurrent,
-        tension: 150,
-        friction: frictionCurrent,
-        clamp: clamp,
-      },
-    });
-
-    ref.current.geometry.attributes.color.needsUpdate = true;
-    ref.current.instanceMatrix.needsUpdate = true;
+    // Only send update if not at setpoint to save cpu
+    if (springScaleRef.current.scale.x !== groupScale) {
+      set({
+        scale: [groupScale, groupScale, groupScale],
+        config: {
+          mass: massCurrent,
+          tension: 150,
+          friction: frictionCurrent,
+          clamp: clamp,
+        },
+      });
+    }
   });
 
   return (

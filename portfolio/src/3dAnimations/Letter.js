@@ -22,10 +22,10 @@ export default function Letter({
   isLine,
   letterSpacing,
 }) {
-  const meshRef = useRef();
-  const [x, y, z] = position;
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
-  const prevGraphicsRef = useRef(graphics); // previous graphics setting
+  const meshRef = useRef();
+  const springRef = useRef();
+  const [x, y, z] = position;
 
   // Init react-spring variables, used for smooth movement
   const [letterSpring, set] = useSpring(() => ({
@@ -57,7 +57,6 @@ export default function Letter({
   let orbit; // Orbit to maintain
   const holeOffset = 0.01; // Offset so letters never reach singularity
   let distFiltered = 1; // Filtered distance so letters don't enter blackhole
-  let resetCount = 0; // reset count for graphics change
 
   // Font options
   const opts = {
@@ -77,6 +76,29 @@ export default function Letter({
   let ySpeed; // Current Y rotation speed
   let zSpeed; // Current Z rotation speed
 
+  function resetLetter() {
+    // Reset calculations so animations start from initial positions instead of jumping to previous calculated positions
+    // Only run if letters out of position to save cpu
+    if (
+      springRef.current.position.x !== x ||
+      springRef.current.position.y !== y ||
+      springRef.current.position.z !== z
+    ) {
+      set({
+        position: [x, y, z],
+        quaternion: [0, 0, 0, 1],
+        scale: [1, 1, 1],
+      });
+      tempObject.position.set(x, y, z);
+      tempObject.quaternion.set(0, 0, 0, 1);
+      xQuat.set(0, 0, 0, 1);
+      yQuat.set(0, 0, 0, 1);
+      zQuat.set(0, 0, 0, 1);
+      // Get new random orbit speeds from precomputed array
+      // maxSpeed = maxSpeeds[Math.floor(Math.random() * (maxSpeeds.length - 1))];
+    }
+  }
+
   useFrame(() => {
     // import mouse data
     const {
@@ -89,8 +111,10 @@ export default function Letter({
       // mouseXLeftLog,
       // mouseXRightLog,
       inDeadZone,
+      // inBlackHoleZone,
       isLeftOrRight,
       disableMouse,
+      blackHoleState,
     } = mouse.current;
 
     // import common calculations
@@ -113,141 +137,111 @@ export default function Letter({
 
     // Only animate letter movements if user selects high graphics and mouse isn't disabled for intro animations
     if (graphics === 'high') {
-      // Update previous graphics setting
-      if (prevGraphicsRef.current !== 'high') {
-        prevGraphicsRef.current = graphics;
-      }
-      resetCount = 0;
       // mouse disabled during intro fade in
       if (!disableMouse) {
         // If mouse on left/right of screen, animate letter being sucked into or out of blackhole. Else if mouse in center deadzone, reset text
         if (!inDeadZone) {
-          // Only calculate rotations on left of screen for implosion effect
-          if (!isLeftOrRight) {
-            // Calculate 3d rotation speeds
-            xSpeed = maxSpeed.x * rotationSpeed;
-            ySpeed = maxSpeed.y * rotationSpeed;
-            zSpeed = maxSpeed.z * rotationSpeed;
+          // Bypass if in blackhole to save cpu
+          if (blackHoleState !== 'Stars In') {
+            // Only calculate rotations on left of screen for implosion effect
+            if (!isLeftOrRight) {
+              // Calculate 3d rotation speeds
+              xSpeed = maxSpeed.x * rotationSpeed;
+              ySpeed = maxSpeed.y * rotationSpeed;
+              zSpeed = maxSpeed.z * rotationSpeed;
 
-            // Calculate and multiply rotation quaternion's
-            xQuat.setFromAxisAngle(xAxis, xSpeed);
-            yQuat.setFromAxisAngle(yAxis, ySpeed);
-            zQuat.setFromAxisAngle(zAxis, zSpeed);
+              // Calculate and multiply rotation quaternion's
+              xQuat.setFromAxisAngle(xAxis, xSpeed);
+              yQuat.setFromAxisAngle(yAxis, ySpeed);
+              zQuat.setFromAxisAngle(zAxis, zSpeed);
 
-            tempObject.quaternion.multiplyQuaternions(
-              xQuat,
-              tempObject.quaternion
-            );
-            tempObject.quaternion.multiplyQuaternions(
-              yQuat,
-              tempObject.quaternion
-            );
-            tempObject.quaternion.multiplyQuaternions(
-              zQuat,
-              tempObject.quaternion
-            );
+              tempObject.quaternion.multiplyQuaternions(
+                xQuat,
+                tempObject.quaternion
+              );
+              tempObject.quaternion.multiplyQuaternions(
+                yQuat,
+                tempObject.quaternion
+              );
+              tempObject.quaternion.multiplyQuaternions(
+                zQuat,
+                tempObject.quaternion
+              );
 
-            // Apply rotation
-            tempObject.position.sub(blackHolePos);
-            tempObject.position.applyQuaternion(xQuat);
-            tempObject.position.applyQuaternion(yQuat);
-            tempObject.position.applyQuaternion(zQuat);
-            tempObject.position.add(blackHolePos);
-          }
-
-          // Calculate current distance to blackhole center
-          const currentDistToHole = Math.hypot(
-            tempObject.position.x,
-            tempObject.position.y,
-            tempObject.position.z
-          );
-
-          // Set orbit distance based on mouse
-          // if on left of screen, shrink orbit to hole, on right expand
-          if (isLeftOrRight) {
-            orbit = initDistToHole + explodeOrbit;
-          } else {
-            orbit = initDistToHole * mouseXLeftLin;
-          }
-
-          // Ensure travel doesn't move past blackhole center
-          distFiltered = travelDist;
-          if (travelDist >= currentDistToHole - holeOffset) {
-            // limit distance when mouse on far left of screen
-            if (mouseXLeftLin < 0.1) {
-              distFiltered = currentDistToHole - holeOffset;
+              // Apply rotation
+              tempObject.position.sub(blackHolePos);
+              tempObject.position.applyQuaternion(xQuat);
+              tempObject.position.applyQuaternion(yQuat);
+              tempObject.position.applyQuaternion(zQuat);
+              tempObject.position.add(blackHolePos);
             }
-          }
 
-          // Maintain orbit set by mouse position
-          if (currentDistToHole < orbit) {
-            tempObject.translateOnAxis(vectorToHole, distFiltered);
-          } else if (currentDistToHole > orbit) {
-            tempObject.translateOnAxis(vectorToHole, -1 * distFiltered);
-          }
-
-          // Send calculations to react-spring to apply update
-          set({
-            position: [
+            // Calculate current distance to blackhole center
+            const currentDistToHole = Math.hypot(
               tempObject.position.x,
               tempObject.position.y,
-              tempObject.position.z,
-            ],
-            quaternion: [
-              tempObject.quaternion.x,
-              tempObject.quaternion.y,
-              tempObject.quaternion.z,
-              tempObject.quaternion.w,
-            ],
-            scale: [letterScale, letterScale, letterScale],
-            config: {
-              mass: massCurrent,
-              tension: 150,
-              friction: frictionCurrent,
-            },
-          });
+              tempObject.position.z
+            );
+
+            // Set orbit distance based on mouse
+            // if on left of screen, shrink orbit to hole, on right expand
+            if (isLeftOrRight) {
+              orbit = initDistToHole + explodeOrbit;
+            } else {
+              orbit = initDistToHole * mouseXLeftLin;
+            }
+
+            // Ensure travel doesn't move past blackhole center
+            distFiltered = travelDist;
+            if (travelDist >= currentDistToHole - holeOffset) {
+              // limit distance when mouse on far left of screen
+              if (mouseXLeftLin < 0.1) {
+                distFiltered = currentDistToHole - holeOffset;
+              }
+            }
+
+            // Maintain orbit set by mouse position
+            if (currentDistToHole < orbit) {
+              tempObject.translateOnAxis(vectorToHole, distFiltered);
+            } else if (currentDistToHole > orbit) {
+              tempObject.translateOnAxis(vectorToHole, -1 * distFiltered);
+            }
+
+            // Send calculations to react-spring to apply update
+            set({
+              position: [
+                tempObject.position.x,
+                tempObject.position.y,
+                tempObject.position.z,
+              ],
+              quaternion: [
+                tempObject.quaternion.x,
+                tempObject.quaternion.y,
+                tempObject.quaternion.z,
+                tempObject.quaternion.w,
+              ],
+              scale: [letterScale, letterScale, letterScale],
+              config: {
+                mass: massCurrent,
+                tension: 150,
+                friction: frictionCurrent,
+              },
+            });
+          }
         } else if (inDeadZone || disableMouse) {
-          // Reset calculations so animations start from initial positions instead of jumping to previous calculated positions
-          set({
-            position: [x, y, z],
-            quaternion: [0, 0, 0, 1],
-            scale: [1, 1, 1],
-          });
-          tempObject.position.set(x, y, z);
-          tempObject.quaternion.set(0, 0, 0, 1);
-          xQuat.set(0, 0, 0, 1);
-          yQuat.set(0, 0, 0, 1);
-          zQuat.set(0, 0, 0, 1);
-          // Get new random orbit speeds from precomputed array
-          maxSpeed =
-            maxSpeeds[Math.floor(Math.random() * (maxSpeeds.length - 1))];
+          // Reset letters in deadzone and during intro animation
+          resetLetter();
         }
       }
     } else {
       // else if graphics aren't high reset letters and turn off animations
-      // run 10 frames to ensure letters reset if transitiong graphics from high to med/low and then bypass for cpu
-      if (prevGraphicsRef.current !== graphics || resetCount < 10) {
-        set({
-          position: [x, y, z],
-          quaternion: [0, 0, 0, 1],
-          scale: [1, 1, 1],
-        });
-        tempObject.position.set(x, y, z);
-        tempObject.quaternion.set(0, 0, 0, 1);
-        xQuat.set(0, 0, 0, 1);
-        yQuat.set(0, 0, 0, 1);
-        zQuat.set(0, 0, 0, 1);
-        prevGraphicsRef.current = graphics;
-      }
-      if (resetCount < 10) {
-        resetCount += 1;
-      }
+      resetLetter();
     }
   });
 
   return (
     <Suspense fallback={null}>
-      <animated.mesh {...letterSpring}>
+      <animated.mesh ref={springRef} {...letterSpring}>
         {isLine ? (
           <Line
             ref={meshRef}

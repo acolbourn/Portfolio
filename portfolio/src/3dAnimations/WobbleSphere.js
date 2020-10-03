@@ -56,7 +56,8 @@ export default function WobbleSphere({ position, mouse }) {
   const frictionExplode = 12; // friction when exploding
   let frictionCurrent = frictionImplode; // current friction
   let clamp = false; // when true, stops spring overshoot
-  let scale = 0; // 1 in blackhole, 0 outside
+  const minScale = 0.2; // Smallest blackhole gets
+  let scale = minScale; // 1 in blackhole, minScale outside
   const [spring, set] = useSpring(() => ({
     scale: [scale, scale, scale],
     config: {
@@ -101,25 +102,25 @@ export default function WobbleSphere({ position, mouse }) {
     } else {
       // Set react-spring variables
       main.current.visible = false;
-      scale = 0.2;
+      scale = minScale;
       massCurrent = massImplode;
       frictionCurrent = frictionImplode;
       clamp = true;
     }
 
-    // console.log(matRef.current);
-    // matRef.current._distort.value = 1;
-
-    // Update React-Spring
-    set({
-      scale: [scale, scale, scale],
-      config: {
-        mass: massCurrent,
-        tension: 180,
-        friction: frictionCurrent,
-        clamp: clamp,
-      },
-    });
+    // If scale at setpoint, bypass to save cpu
+    if (main.current.scale.x !== minScale || scale !== minScale) {
+      // Update React-Spring
+      set({
+        scale: [scale, scale, scale],
+        config: {
+          mass: massCurrent,
+          tension: 180,
+          friction: frictionCurrent,
+          clamp: clamp,
+        },
+      });
+    }
   });
   return (
     <Suspense fallback={null}>

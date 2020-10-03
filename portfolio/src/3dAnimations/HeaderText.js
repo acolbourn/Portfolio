@@ -155,8 +155,8 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
       }
     }
 
-    // if graphics low, render static text, else animate
-    if (graphics !== 'low') {
+    // Only animate on high graphics, else render static text
+    if (graphics === 'high') {
       // Disable mouse on load and use intro animation values
       if (!disableMouse) {
         // Scale letter if on left of screen to shrink as it gets closer to blackhole, scale to 1 if in deadzone or on right

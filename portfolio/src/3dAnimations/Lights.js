@@ -7,7 +7,7 @@ export default function Lights({ mouse, graphics }) {
   const intensityRef = useRef(1);
   const centerIntensityMax = 1.2;
   let intensity = 1; // 1 = full intensity, 0 = none;
-  const intensityFadeSpeed = 0.02; // Fade to 0 in blackhole
+  const intensityFadeSpeed = 0.04; // Fade to 0 in blackhole
 
   useFrame(() => {
     const { inBlackHoleZone, disableMouse } = mouse.current;

@@ -62,9 +62,12 @@ export default function StarsAnimated({ mouse, position }) {
     }
 
     // Update React-Spring
-    set({
-      scale: [scale, scale, scale],
-    });
+    // Only send update if not at setpoint to save cpu
+    if (starRef.current.scale.x !== scale) {
+      set({
+        scale: [scale, scale, scale],
+      });
+    }
 
     // Check scale and update blackhole animation state machine so blackhole will emerge once stars are fully sucked into hole
     if (starRef.current.scale.x === 0) {

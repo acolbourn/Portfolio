@@ -75,15 +75,18 @@ export default function Sun({ mouse, position }) {
       }
 
       // Update React-Spring
-      set({
-        scale: [scale, scale, scale],
-        config: {
-          mass: massCurrent,
-          tension: 150,
-          friction: frictionCurrent,
-          clamp: clamp,
-        },
-      });
+      // Only send update if not at setpoint to save cpu
+      if (sun.current.scale.x !== scale) {
+        set({
+          scale: [scale, scale, scale],
+          config: {
+            mass: massCurrent,
+            tension: 150,
+            friction: frictionCurrent,
+            clamp: clamp,
+          },
+        });
+      }
     }
   });
 

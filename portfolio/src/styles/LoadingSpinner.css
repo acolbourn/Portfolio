@@ -1,7 +1,11 @@
 .LoadingSpinner-root {
+  position: absolute;
+  left: calc(50% - 75px);
+  top: calc(50% - 75px);
+  z-index: 1000;
+  background-color: '#1D1D1D';
   display: flex;
-  height: 100%;
-  width: 100%;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }

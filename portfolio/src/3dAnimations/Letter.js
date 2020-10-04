@@ -129,10 +129,11 @@ export default function Letter({
     } = common.current;
 
     // Set opacity
-    meshRef.current.material.opacity = opacity[fadeGroup];
-    // if icon limit opacity to reduce bright bloom
     if (icon && opacity[fadeGroup] >= 0.85) {
       meshRef.current.material.opacity = 0.85;
+    } else {
+      // if icon limit opacity to reduce bright bloom
+      meshRef.current.material.opacity = opacity[fadeGroup];
     }
 
     // Only animate letter movements if user selects high graphics and mouse isn't disabled for intro animations

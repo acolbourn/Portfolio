@@ -24,6 +24,8 @@ export default function ThreeViewer({ graphics }) {
   console.log('ThreeViewer rendered');
   // Layout variables
   const [scale, setScale] = useState(0.75); // Overall scale of text/logo
+  const [isLoading, setIsLoading] = useState(true);
+
   const positions = {
     mouseIcon: [-5.1, 35.15, 0],
     instructionsTitle: [-2.4, 34.8, 0],
@@ -191,6 +193,7 @@ export default function ThreeViewer({ graphics }) {
 
   return (
     <>
+      {isLoading ? <LoadingSpinner /> : null}
       <Suspense fallback={<LoadingSpinner />}>
         <Canvas
           // colorManagement
@@ -227,6 +230,7 @@ export default function ThreeViewer({ graphics }) {
               fontSizes={fontSizes}
               mouse={mouse}
               graphics={graphics}
+              setIsLoading={setIsLoading}
             />
             {graphics !== 'low' ? (
               <Sun position={positions.logo} mouse={mouse} />

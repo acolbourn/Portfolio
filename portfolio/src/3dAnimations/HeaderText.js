@@ -5,7 +5,13 @@ import { scalePow } from 'd3-scale';
 import { getRndInteger } from './LogoBoxesHelpers';
 import Word from './Word';
 
-export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
+export default function HeaderText({
+  positions,
+  fontSizes,
+  mouse,
+  graphics,
+  setIsLoading,
+}) {
   console.log('HeaderText rendered');
   // Process common letter attributes in this component and pass in values with a ref to save as much processing power as possible
   const common = useRef({
@@ -35,7 +41,7 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
   const frictionImplode = 50; // react-spring friction when imploding
   const frictionExplode = 40; // react-spring friction when imploding
   let frictionCurrent = frictionImplode; // current react-spring friction
-  let opacity = { group1: 0, group2: 0, group3: 0 }; // Opacities of each word for fade effects
+  let opacity = { group1: -0.3, group2: 0, group3: 0 }; // Opacities of each word for fade effects.  Note, group 1 starts slightly below 0 to give loading spinner a little time to fade out
   let opacityLoaded = { group1: false, group2: false, group3: false }; // true when initial fade in complete
   const opacityFadeSpeed = 0.01; // Opacity fade in speed on load
   const opacityFadeBlackholeSpeed = 0.05; // Opacity fade to 0 in blackhole speed
@@ -134,6 +140,8 @@ export default function HeaderText({ positions, fontSizes, mouse, graphics }) {
       // Once text and boxes are loaded, fade in name/title
       if (mouse.current.introState === 'Text and Boxes Loaded') {
         isLoadingRef.current.group1 = false;
+        // Update parent component to stop showing loading spinner
+        setIsLoading(false);
       }
       // Once name is faded in, update state so boxes will assemble
       if (

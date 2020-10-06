@@ -86,7 +86,7 @@ export default function StarsAnimated({ mouse, position }) {
         <Stars depth={150} />
       </animated.mesh>
       {/* Plane z position must be slightly behind text and slightly in front of stars for opacity fade animation to work */}
-      <Plane ref={planeRef} args={[150, 150]} position={[0, 0, -0.01]}>
+      <Plane ref={planeRef} args={[2000, 2000]} position={[0, 0, -0.01]}>
         <meshBasicMaterial
           opacity={1}
           transparent={true}

@@ -5,10 +5,13 @@ import GetFPS from './3dAnimations/GetFPS';
 import ThreeViewer from './3dAnimations/ThreeViewer';
 import useStyles from './styles/HomeStyles';
 // import LoadingSpinner from './3dAnimations/LoadingSpinner';
+import SpinnerFade from './3dAnimations/SpinnerFade';
 
 export default function Home() {
   console.log('Home rendered');
   const classes = useStyles();
+  // Loading Spinner state
+  const [isLoading, setIsLoading] = useState(true);
   const [graphics, setGraphics] = useState('high');
   const handleGraphicsChange = (event) => {
     setGraphics(event.target.value);
@@ -19,8 +22,8 @@ export default function Home() {
   if (WEBGL.isWebGLAvailable() && graphics !== 'bad') {
     content = (
       <div className={classes.threeViewport}>
-        <ThreeViewer graphics={graphics} />
-        {/* <LoadingSpinner /> */}
+        <ThreeViewer graphics={graphics} setIsLoading={setIsLoading} />
+        <SpinnerFade isLoading={isLoading} />
       </div>
     );
   } else {

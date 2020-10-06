@@ -70,42 +70,49 @@ export default function WobbleSphere({ position, mouse }) {
 
   // main sphere rotates following the mouse position
   useFrame(({ clock }) => {
-    const { inBlackHoleZone, blackHoleState } = mouse.current;
+    const { inBlackHoleZone, blackHoleState, disableMouse } = mouse.current;
 
-    // Show blackhole when mouse in blackhole zone, else hide
-    if (inBlackHoleZone) {
-      // Wait for stars to update state machine that they have fully sucked into blackhole before triggering blackhole
-      if (blackHoleState === 'Stars In') {
+    // Disable mouse on load and use intro animation values
+    if (!disableMouse) {
+      // Show blackhole when mouse in blackhole zone, else hide
+      if (inBlackHoleZone) {
+        // Wait for stars to update state machine that they have fully sucked into blackhole before triggering blackhole
+        if (blackHoleState === 'Stars In') {
+          // Set react-spring variables
+          main.current.visible = true;
+          scale = 1;
+          massCurrent = massExplode;
+          frictionCurrent = frictionExplode;
+          clamp = false;
+        }
+
+        // Set blob movement variables
+        const time = clock.getElapsedTime();
+        const xRand = Math.sin(time);
+        const yRand = Math.sin(time);
+        main.current.rotation.z = time;
+        main.current.rotation.y = THREE.MathUtils.lerp(
+          main.current.rotation.y,
+          xRand * Math.PI,
+          0.1
+        );
+        main.current.rotation.x = THREE.MathUtils.lerp(
+          main.current.rotation.x,
+          yRand * Math.PI,
+          0.1
+        );
+      } else {
         // Set react-spring variables
-        main.current.visible = true;
-        scale = 1;
-        massCurrent = massExplode;
-        frictionCurrent = frictionExplode;
-        clamp = false;
+        main.current.visible = false;
+        scale = minScale;
+        massCurrent = massImplode;
+        frictionCurrent = frictionImplode;
+        clamp = true;
       }
-
-      // Set blob movement variables
-      const time = clock.getElapsedTime();
-      const xRand = Math.sin(time);
-      const yRand = Math.sin(time);
-      main.current.rotation.z = time;
-      main.current.rotation.y = THREE.MathUtils.lerp(
-        main.current.rotation.y,
-        xRand * Math.PI,
-        0.1
-      );
-      main.current.rotation.x = THREE.MathUtils.lerp(
-        main.current.rotation.x,
-        yRand * Math.PI,
-        0.1
-      );
     } else {
-      // Set react-spring variables
+      // hide during intro animation
       main.current.visible = false;
       scale = minScale;
-      massCurrent = massImplode;
-      frictionCurrent = frictionImplode;
-      clamp = true;
     }
 
     // If scale at setpoint, bypass to save cpu

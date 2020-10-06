@@ -15,16 +15,15 @@ import Lights from './Lights';
 import HeaderText from './HeaderText.js';
 // import TextGeometry from './TextGeometry';
 import Sun from './Sun';
-import SunBloom from './SunBloom';
-import LoadingSpinner from './LoadingSpinner';
-import WobbleSphere from './WobbleSphere';
-import StarsAnimated from './StarsAnimated';
+// import SunBloom from './SunBloom';
+// import LoadingSpinner from './LoadingSpinner';
+// import WobbleSphere from './WobbleSphere';
+// import StarsAnimated from './StarsAnimated';
 
-export default function ThreeViewer({ graphics }) {
+export default function ThreeViewer({ graphics, setIsLoading }) {
   console.log('ThreeViewer rendered');
   // Layout variables
   const [scale, setScale] = useState(0.75); // Overall scale of text/logo
-  const [isLoading, setIsLoading] = useState(true);
 
   const positions = {
     mouseIcon: [-5.1, 35.15, 0],
@@ -174,7 +173,8 @@ export default function ThreeViewer({ graphics }) {
         inDeadZone: inDeadZone,
         inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
-        disableMouse: mouse.current.disableMouse,
+        disableMouse: false,
+        // disableMouse: mouse.current.disableMouse,
         introState: mouse.current.introState,
         blackHoleState: mouse.current.blackHoleState,
       };
@@ -193,8 +193,7 @@ export default function ThreeViewer({ graphics }) {
 
   return (
     <>
-      {isLoading ? <LoadingSpinner /> : null}
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={null}>
         <Canvas
           // colorManagement
           gl={{ antialias: false, alpha: false }}
@@ -207,11 +206,11 @@ export default function ThreeViewer({ graphics }) {
           onTouchCancel={(e) => e.preventDefault()}
           pixelRatio={window.devicePixelRatio * 1.5}
         >
-          <Lights mouse={mouse} graphics={graphics} />
+          {/* <Lights mouse={mouse} graphics={graphics} /> */}
 
-          {/* <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
+          <pointLight position={[100, 100, 100]} intensity={2.2} />
           {/* <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
-          {/* <ambientLight intensity={1.1} /> */}
+          <ambientLight intensity={1.1} />
           {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}
 
           <group scale={[scale, scale, scale]}>
@@ -235,11 +234,10 @@ export default function ThreeViewer({ graphics }) {
             {graphics !== 'low' ? (
               <Sun position={positions.logo} mouse={mouse} />
             ) : null}
-            {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null}
+            {/* {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null} */}
 
-            {/* <BackgroundPlane position={positions.logo} /> */}
-            <WobbleSphere position={positions.logo} mouse={mouse} />
-            <StarsAnimated mouse={mouse} position={positions.logo} />
+            {/* <WobbleSphere position={positions.logo} mouse={mouse} />
+            <StarsAnimated mouse={mouse} position={positions.logo} /> */}
 
             {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
             <TextGeometry

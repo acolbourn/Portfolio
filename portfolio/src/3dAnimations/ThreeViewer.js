@@ -1,65 +1,14 @@
-import React, {
-  Suspense,
-  useRef,
-  useCallback,
-  useState,
-  useEffect,
-} from 'react';
-import { scaleLinear, scalePow } from 'd3-scale';
+import React, { Suspense, useRef, useCallback } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { Stats } from 'drei';
 import FPSStats from './FPSStats';
-import LogoBoxes from './LogoBoxes.js';
-import useWidth from '../hooks/useWidth';
 import Lights from './Lights';
-import HeaderText from './HeaderText.js';
-// import TextGeometry from './TextGeometry';
-import Sun from './Sun';
-// import SunBloom from './SunBloom';
 // import LoadingSpinner from './LoadingSpinner';
-// import WobbleSphere from './WobbleSphere';
-// import StarsAnimated from './StarsAnimated';
 
-export default function ThreeViewer({ graphics, setIsLoading }) {
+import ThreeScale from './ThreeScale';
+
+export default function ThreeViewer({ graphics, isLoading }) {
   console.log('ThreeViewer rendered');
-  // Layout variables
-  const [scale, setScale] = useState(0.75); // Overall scale of text/logo
-
-  const positions = {
-    mouseIcon: [-5.1, 35.15, 0],
-    instructionsTitle: [-2.4, 34.8, 0],
-    instructionsUnderline: [0, 32.6, 0],
-    instructionsY: [-0.9, 30, 0],
-    arrowsY: [-4.1, 30.15, 0],
-    instructionsX: [-0.975, 26.5, 0],
-    arrowsX: [-4.1, 26.65, 0],
-    name: [0, 21, 0],
-    jobTitles: [0, 17, 0],
-    logo: [0, -6, 0],
-  };
-  const fontSizes = {
-    name: 3.8,
-    titles: 1.45,
-    arrows: 2.8,
-    instructionsTitle: 1.8,
-  };
-  const screenWidth = useWidth();
-
-  // Scale based on screen size
-  useEffect(() => {
-    const aspect = window.innerWidth / window.innerHeight;
-    switch (screenWidth) {
-      case 'xs':
-        aspect < 0.52 ? setScale(0.55) : setScale(0.65);
-        break;
-      case 'sm':
-        setScale(0.75);
-        break;
-      default:
-        setScale(0.75);
-    }
-  }, [screenWidth]);
-
   // Process mouse/touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
   const mouse = useRef({
     mouseX: 0, // Raw X
@@ -77,89 +26,76 @@ export default function ThreeViewer({ graphics, setIsLoading }) {
     introState: 'Loading', // State machine for intro animations
     blackHoleState: 'Stars Out', // State machine for blackhole
   });
+
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
-  const windowHalfX = window.innerWidth / 2;
-  const windowHalfY = window.innerHeight / 2;
-  const blackHoleZone = (windowHalfX - deadZone) * 0.2; // 20% mouse zone on left side of screen where scaling is 0 so everything is sucked into blackhole
-  const blackHoleZoneShifted = -windowHalfX + blackHoleZone;
 
-  // Scaling functions
-  let mouseXScale = scaleLinear()
-    .domain([-windowHalfX, windowHalfX])
-    .range([-1, 1])
-    .clamp(true);
-  let mouseYScale = scaleLinear()
-    .domain([-windowHalfY, windowHalfY])
-    .range([-1, 1])
-    .clamp(true);
-  let mouseXLeftLinScale = scaleLinear()
-    .domain([-windowHalfX + blackHoleZone, -deadZone])
-    .range([0, 1])
-    .clamp(true);
-  let mouseXRightLinScale = scaleLinear()
-    .domain([deadZone, windowHalfX])
-    .range([0, 1])
-    .clamp(true);
-  let mouseXRightLogScale = scalePow()
-    .exponent(10)
-    .domain([deadZone, windowHalfX])
-    .range([0, 1])
-    .clamp(true);
-
-  // // Disable mouse in components initially for intro animation
-  // const mouseDisableTime = 12000;
-  // useEffect(() => {
-  //   let timer1 = setTimeout(() => {
-  //     mouse.current.disableMouse = false;
-  //   }, mouseDisableTime);
-  //   // Clear timeout on unmount
-  //   return () => {
-  //     clearTimeout(timer1);
-  //   };
-  // });
+  // Scaling must be processed within canvas by passing to ThreeScale component, then passed back using this ref for mouse processing, otherwise canvas is rerendered
+  const scaleRef = useRef({
+    windowHalfX: 0, // Screen width / 2
+    windowHalfY: 0, // Screen height / 2
+    blackHoleZoneShifted: 0, // Blackhole Zone
+    mouseXScale: 0,
+    mouseYScale: 0,
+    mouseXLeftLinScale: 0,
+    mouseXRightLinScale: 0,
+    mouseXRightLogScale: 0,
+  });
 
   // Process mouse and touchscreen movements
-  const handleMouseAndTouch = useCallback(
-    (event) => {
-      let mouseX, mouseY;
+  const handleMouseAndTouch = useCallback((event) => {
+    let mouseX, mouseY;
 
-      // Detect if mouse event or touchscreen event
-      const eventType = event.nativeEvent.type;
-      if (eventType === 'mousemove') {
-        mouseX = event.clientX - windowHalfX;
-        mouseY = event.clientY - windowHalfY;
-      } else if (eventType === 'touchmove') {
-        event.preventDefault();
-        const touch = event.touches[0];
-        mouseX = touch.clientX - windowHalfX;
-        mouseY = touch.clientY - windowHalfY;
-      }
+    // Import scaling functions from ThreeScale component
+    const {
+      windowHalfX,
+      windowHalfY,
+      blackHoleZoneShifted,
+      mouseXScale,
+      mouseYScale,
+      mouseXLeftLinScale,
+      mouseXRightLinScale,
+      mouseXRightLogScale,
+    } = scaleRef.current;
 
-      // Determine if mouse x position is in deadzone
-      let inDeadZone = true; // true if mouse x in center of screen
-      if (mouseX <= deadZone && mouseX >= -1 * deadZone) {
-        inDeadZone = true;
-      } else {
-        inDeadZone = false;
-      }
+    // Detect if mouse event or touchscreen event
+    const eventType = event.nativeEvent.type;
+    if (eventType === 'mousemove') {
+      mouseX = event.clientX - windowHalfX;
+      mouseY = event.clientY - windowHalfY;
+    } else if (eventType === 'touchmove') {
+      event.preventDefault();
+      const touch = event.touches[0];
+      mouseX = touch.clientX - windowHalfX;
+      mouseY = touch.clientY - windowHalfY;
+    }
 
-      // Determine if mouse x position is in blackhole zone
-      let inBlackHoleZone; // true if mouse x on left edge of screen
-      if (mouseX <= blackHoleZoneShifted) {
-        inBlackHoleZone = true;
-      } else {
-        inBlackHoleZone = false;
-      }
+    // Determine if mouse x position is in deadzone
+    let inDeadZone = true; // true if mouse x in center of screen
+    if (mouseX <= deadZone && mouseX >= -1 * deadZone) {
+      inDeadZone = true;
+    } else {
+      inDeadZone = false;
+    }
 
-      // Determine which side of screen mouse is on
-      let isLeftOrRight = false; // false if mouse on left, true if right
-      isLeftOrRight = mouseX < 0 ? false : true;
+    // Determine if mouse x position is in blackhole zone
+    let inBlackHoleZone; // true if mouse x on left edge of screen
+    if (mouseX <= blackHoleZoneShifted) {
+      inBlackHoleZone = true;
+    } else {
+      inBlackHoleZone = false;
+    }
 
-      // Unlock mouse when intro animations are complete
-      if (mouse.current.introState === 'Done') {
-        mouse.current.disableMouse = false;
-      }
+    // Determine which side of screen mouse is on
+    let isLeftOrRight = false; // false if mouse on left, true if right
+    isLeftOrRight = mouseX < 0 ? false : true;
 
+    // Unlock mouse when intro animations are complete
+    if (mouse.current.introState === 'Done') {
+      mouse.current.disableMouse = false;
+    }
+
+    // Update mouse ref, use try/catch in case ThreeScale component hasn't created scaling functions yet.  This has no impact as mouse is disabled during intro animations anyway.
+    try {
       // Update mouse ref
       mouse.current = {
         mouseX: mouseX,
@@ -173,23 +109,15 @@ export default function ThreeViewer({ graphics, setIsLoading }) {
         inDeadZone: inDeadZone,
         inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
-        disableMouse: false,
-        // disableMouse: mouse.current.disableMouse,
+        // disableMouse: false,
+        disableMouse: mouse.current.disableMouse,
         introState: mouse.current.introState,
         blackHoleState: mouse.current.blackHoleState,
       };
-    },
-    [
-      mouseXScale,
-      mouseYScale,
-      mouseXLeftLinScale,
-      mouseXRightLinScale,
-      mouseXRightLogScale,
-      windowHalfX,
-      windowHalfY,
-      blackHoleZoneShifted,
-    ]
-  );
+    } catch (err) {
+      console.log('ThreeScale Component loading');
+    }
+  }, []);
 
   return (
     <>
@@ -206,50 +134,21 @@ export default function ThreeViewer({ graphics, setIsLoading }) {
           onTouchCancel={(e) => e.preventDefault()}
           pixelRatio={window.devicePixelRatio * 1.5}
         >
-          {/* <Lights mouse={mouse} graphics={graphics} /> */}
+          <Lights mouse={mouse} graphics={graphics} />
 
-          <pointLight position={[100, 100, 100]} intensity={2.2} />
+          {/* <ambientLight intensity={1.1} />
+          <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
+
           {/* <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
-          <ambientLight intensity={1.1} />
           {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}
 
-          <group scale={[scale, scale, scale]}>
-            {/* key prop triggers unmount/mount to change box count */}
-            <LogoBoxes
-              key={graphics}
-              meshPosition={positions.logo}
-              meshScale={[1, 1, 1]}
-              deadZone={deadZone}
-              mouse={mouse}
-              fadeDelay={3000}
-              graphics={graphics}
-            />
-            <HeaderText
-              positions={positions}
-              fontSizes={fontSizes}
-              mouse={mouse}
-              graphics={graphics}
-              setIsLoading={setIsLoading}
-            />
-            {graphics !== 'low' ? (
-              <Sun position={positions.logo} mouse={mouse} />
-            ) : null}
-            {/* {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null} */}
-
-            {/* <WobbleSphere position={positions.logo} mouse={mouse} />
-            <StarsAnimated mouse={mouse} position={positions.logo} /> */}
-
-            {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
-            <TextGeometry
-              text={'Alex Colbourn'}
-              position={[-13, 20, 0]}
-              fontSize={fontSizes.name}
-            />            
-          </group> */}
-          </group>
-
-          {/* <Stars depth={150} /> */}
-
+          <ThreeScale
+            scaleRef={scaleRef}
+            deadZone={deadZone}
+            mouse={mouse}
+            graphics={graphics}
+            isLoading={isLoading}
+          />
           <Stats showPanel={1} />
         </Canvas>
         <FPSStats style={{ visibility: 'hidden' }} left={'100px'} />

@@ -4,14 +4,9 @@ import { useFrame } from 'react-three-fiber';
 import { scalePow } from 'd3-scale';
 import { getRndInteger } from './LogoBoxesHelpers';
 import Word from './Word';
+import { positions, fontSizes } from './3dConstants';
 
-export default function HeaderText({
-  positions,
-  fontSizes,
-  mouse,
-  graphics,
-  setIsLoading,
-}) {
+export default function HeaderText({ mouse, graphics, isLoading }) {
   console.log('HeaderText rendered');
   // Process common letter attributes in this component and pass in values with a ref to save as much processing power as possible
   const common = useRef({
@@ -140,8 +135,8 @@ export default function HeaderText({
       // Once text and boxes are loaded, fade in name/title
       if (mouse.current.introState === 'Text and Boxes Loaded') {
         isLoadingRef.current.group1 = false;
-        // Update parent component to stop showing loading spinner
-        setIsLoading(false);
+        // Update loading ref so SpinnerFade component fades out
+        isLoading.current = false;
       }
       // Once name is faded in, update state so boxes will assemble
       if (

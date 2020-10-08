@@ -30,7 +30,7 @@ export default function GraphicsMenu({
   const classes = useStyles();
   // Create alerts for low fps so graphics menu blinks and user can select a more appropriate setting
   let graphicsAlert = classes.normal;
-  const warningLevel = 40;
+  const warningLevel = 30;
   const alertLevel = 20;
   if (!disableWarnings.current) {
     if (currentFPS < warningLevel && currentFPS > alertLevel) {

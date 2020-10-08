@@ -109,8 +109,8 @@ export default function ThreeViewer({ graphics, isLoading }) {
         inDeadZone: inDeadZone,
         inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
-        // disableMouse: false,
-        disableMouse: mouse.current.disableMouse,
+        disableMouse: false,
+        // disableMouse: mouse.current.disableMouse,
         introState: mouse.current.introState,
         blackHoleState: mouse.current.blackHoleState,
       };

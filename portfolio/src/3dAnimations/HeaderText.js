@@ -4,7 +4,7 @@ import { useFrame } from 'react-three-fiber';
 import { scalePow } from 'd3-scale';
 import { getRndInteger } from './LogoBoxesHelpers';
 import Word from './Word';
-import { positions, fontSizes } from './3dConstants';
+import { positions, fontSizes, spacing } from './3dConstants';
 
 export default function HeaderText({ mouse, graphics, isLoading }) {
   console.log('HeaderText rendered');
@@ -36,11 +36,11 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
   const frictionImplode = 50; // react-spring friction when imploding
   const frictionExplode = 40; // react-spring friction when imploding
   let frictionCurrent = frictionImplode; // current react-spring friction
-  let opacity = { group1: -0.3, group2: 0, group3: 0 }; // Opacities of each word for fade effects.  Note, group 1 starts slightly below 0 to give loading spinner a little time to fade out
-  let opacityLoaded = { group1: false, group2: false, group3: false }; // true when initial fade in complete
+  let opacity = { group1: -0.3, group2: 0 }; // Opacities of each word for fade effects.  Note, group 1 starts slightly below 0 to give loading spinner a little time to fade out
+  let opacityLoaded = { group1: false, group2: false }; // true when initial fade in complete
+  const isLoadingRef = useRef({ group1: true, group2: true }); // loading ref for each groups' opacity fade
   const opacityFadeSpeed = 0.01; // Opacity fade in speed on load
   const opacityFadeBlackholeSpeed = 0.05; // Opacity fade to 0 in blackhole speed
-  const isLoadingRef = useRef({ group1: true, group2: true, group3: true }); // loading ref for each groups' opacity fade
 
   // Scaling Functions
   const scaleScale = scalePow() // Scale function of letter scale
@@ -225,7 +225,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         text={'Controls'}
         position={positions.instructionsTitle}
         fontSize={fontSizes.instructionsTitle}
-        letterSpacing={[1.65, 1.7, 1.5, 1.2, 1.4, 1.55, 1.35]}
+        letterSpacing={spacing.controls}
         color={mainTextColor}
         fadeGroup={'group2'}
         mouse={mouse}
@@ -273,7 +273,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         text={'Colors'}
         position={positions.instructionsY}
         fontSize={fontSizes.titles}
-        letterSpacing={[1.35, 1.225, 1.225, 1.1525, 1.025]}
+        letterSpacing={spacing.colors}
         color={instructionTextColor}
         fadeGroup={'group2'}
         mouse={mouse}
@@ -305,7 +305,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         text={'Big Bang'}
         position={positions.instructionsX}
         fontSize={fontSizes.titles}
-        letterSpacing={[0.825, 0.875, 0, 1.8, 1.25, 1.325, 1.325]}
+        letterSpacing={spacing.bigBang}
         color={instructionTextColor}
         fadeGroup={'group2'}
         mouse={mouse}
@@ -321,20 +321,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         text={'Alex Colbourn'}
         position={positions.name}
         fontSize={fontSizes.name}
-        letterSpacing={[
-          2.9,
-          3.05,
-          3.2,
-          1.2,
-          3.5,
-          3.5,
-          3.2,
-          3,
-          3.5,
-          3.5,
-          3.1,
-          2.9,
-        ]}
+        letterSpacing={spacing.name}
         color={mainTextColor}
         fadeGroup={'group1'}
         mouse={mouse}
@@ -350,40 +337,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         text={'Web Developer / Robotics Engineer'}
         position={positions.jobTitles}
         fontSize={fontSizes.titles}
-        letterSpacing={[
-          1.6,
-          1.25,
-          0,
-          1.85,
-          1.3,
-          1.25,
-          1.25,
-          1.2,
-          1.2,
-          1.3,
-          1.25,
-          1.1,
-          0,
-          1.4,
-          0,
-          1.5,
-          1.3,
-          1.3,
-          1.35,
-          1.2,
-          0.75,
-          0.85,
-          1.2,
-          0,
-          1.65,
-          1.2,
-          1.35,
-          0.85,
-          0.9,
-          1.35,
-          1.3,
-          1.1,
-        ]}
+        letterSpacing={spacing.titles}
         color={mainTextColor}
         fadeGroup={'group1'}
         mouse={mouse}

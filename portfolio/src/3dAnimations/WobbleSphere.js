@@ -115,6 +115,11 @@ export default function WobbleSphere({ position, mouse }) {
       scale = minScale;
     }
 
+    matRef.current.envMap.flipY = true;
+    // console.log(matRef.current.envMap);
+    main.current.visible = true;
+    scale = 1;
+
     // If scale at setpoint, bypass to save cpu
     if (main.current.scale.x !== minScale || scale !== minScale) {
       // Update React-Spring
@@ -139,15 +144,15 @@ export default function WobbleSphere({ position, mouse }) {
           color={'#010101'}
           // color={'black'}
           // roughness={0.1}
-          roughness={0.3}
-          metalness={0.5}
+          roughness={0.05}
+          metalness={0.999}
           bumpScale={0.005}
-          clearcoat={0}
-          clearcoatRoughness={0}
+          clearcoat={1}
+          clearcoatRoughness={1}
           radius={1}
           distort={0.4}
           // speed={10}
-          reflectivity={1}
+          reflectivity={15}
         />
         {material && (
           <Icosahedron

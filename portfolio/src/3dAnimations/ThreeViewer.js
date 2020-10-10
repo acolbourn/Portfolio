@@ -23,9 +23,17 @@ export default function ThreeViewer({ graphics, isLoading }) {
     inBlackHoleZone: false, // true = mouse on left edge, else false
     isLeftOrRight: true, // false = mouse on left, true = right
     disableMouse: true, // disable mouse initially for fade in
-    introState: 'Loading', // State machine for intro animations
+    introState: 'Loading', // State machine for intro animations -see description below
     blackHoleState: 'Stars Out', // State machine for blackhole
   });
+
+  // The intro animation uses a state machine passed inside the mouse.introState ref above.  It executes the following sequence:
+  // 1. Loading - SpinnerFade Component visible.
+  // 2. Text Loaded / Boxes Loaded - These states wait in parallel.  useEffects inside of both LogoBoxes and HeaderText components wait until they are both mounted and then update state.
+  // 3. Text and Boxes Loaded - At this point the resources are loaded so the animations begin.  HeaderText updates the isLoading ref which is consumed by SpinnerFade and fades/unmounts the loading spinner.  At the same time, it triggers the names/titles to fade in.
+  // 4. Name Loaded - HeaderText checks the opacity fade in of the name and once it's fully faded in updates the state.  This triggers LogoBoxes to begin the box assemble animation.  It also triggers StarsAnimated to fade the stars in.
+  // 5. Boxes Assembled - LogoBoxes checks the positions of the boxes and updates to this state when boxes are fully assembled.  This triggers HeaderText to fade in the instructions.
+  // 6. Done - HeaderText checks that the instructions are fully faded in and then updates the state as done.  This triggers this component (ThreeViewer) to unlock the mouse.
 
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
 
@@ -109,8 +117,8 @@ export default function ThreeViewer({ graphics, isLoading }) {
         inDeadZone: inDeadZone,
         inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
-        disableMouse: false,
-        // disableMouse: mouse.current.disableMouse,
+        // disableMouse: false,
+        disableMouse: mouse.current.disableMouse,
         introState: mouse.current.introState,
         blackHoleState: mouse.current.blackHoleState,
       };
@@ -136,8 +144,8 @@ export default function ThreeViewer({ graphics, isLoading }) {
         >
           <Lights mouse={mouse} graphics={graphics} />
 
-          {/* <ambientLight intensity={1.1} />
-          <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
+          {/* <ambientLight intensity={8.1} /> */}
+          {/* <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
 
           {/* <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
           {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}

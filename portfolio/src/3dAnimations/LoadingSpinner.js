@@ -22,7 +22,7 @@ class LoadingSpinner extends Component {
       <div className='LoadingSpinner-root'>
         <PuffLoader
           css={override}
-          size={150}
+          size={120}
           color={this.props.theme.colors.primary}
           loading={this.state.loading}
         />

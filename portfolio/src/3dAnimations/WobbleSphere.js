@@ -13,12 +13,12 @@ export default function WobbleSphere({ position, mouse }) {
 
   const cubeTextureLoader = new THREE.CubeTextureLoader();
   const envMap = cubeTextureLoader.load([
-    '3dResources/cubeMap2/px.png',
-    '3dResources/cubeMap2/nx.png',
-    '3dResources/cubeMap2/py.png',
-    '3dResources/cubeMap2/ny.png',
-    '3dResources/cubeMap2/pz.png',
-    '3dResources/cubeMap2/nz.png',
+    '3dResources/cubeMap2/128Optimized/px.png',
+    '3dResources/cubeMap2/128Optimized/nx.png',
+    '3dResources/cubeMap2/128Optimized/py.png',
+    '3dResources/cubeMap2/128Optimized/ny.png',
+    '3dResources/cubeMap2/128Optimized/pz.png',
+    '3dResources/cubeMap2/128Optimized/nz.png',
   ]);
   // const envMap = cubeTextureLoader.load([
   //   '3dResources/cube/px.png',
@@ -57,6 +57,7 @@ export default function WobbleSphere({ position, mouse }) {
   let frictionCurrent = frictionImplode; // current friction
   let clamp = false; // when true, stops spring overshoot
   const minScale = 0.2; // Smallest blackhole gets
+  const maxScale = 1 // Largest blackhole gets
   let scale = minScale; // 1 in blackhole, minScale outside
   const [spring, set] = useSpring(() => ({
     scale: [scale, scale, scale],
@@ -80,7 +81,7 @@ export default function WobbleSphere({ position, mouse }) {
         if (blackHoleState === 'Stars In') {
           // Set react-spring variables
           main.current.visible = true;
-          scale = 1;
+          scale = maxScale;
           massCurrent = massExplode;
           frictionCurrent = frictionExplode;
           clamp = false;
@@ -112,13 +113,13 @@ export default function WobbleSphere({ position, mouse }) {
     } else {
       // hide during intro animation
       main.current.visible = false;
-      scale = minScale;
+      scale = minScale;            
     }
 
     matRef.current.envMap.flipY = true;
     // console.log(matRef.current.envMap);
-    main.current.visible = true;
-    scale = 1;
+    // main.current.visible = true;
+    // scale = 1.25;
 
     // If scale at setpoint, bypass to save cpu
     if (main.current.scale.x !== minScale || scale !== minScale) {
@@ -140,19 +141,26 @@ export default function WobbleSphere({ position, mouse }) {
         <MeshDistortMaterial
           ref={matRef}
           envMap={envMap}
-          bumpMap={bumpMap}
-          color={'#010101'}
-          // color={'black'}
-          // roughness={0.1}
-          roughness={0.05}
+          bumpMap={bumpMap}                   
+          color={'white'}
+          // color={'#c4c4c4'}
+          // color={'#a1a1a1'}
+          // color={'#808080'}
+          // color={'#303030'} 
+          // color={'#1f1f1f'} 
+          // color={'#141414'} 
+          // color={'#0d0d0d'} 
+          // color={'#0a0a0a'} 
+          // color={'#010101'}   
+          roughness={0}
           metalness={0.999}
           bumpScale={0.005}
           clearcoat={1}
-          clearcoatRoughness={1}
+          clearcoatRoughness={0}
           radius={1}
           distort={0.4}
           // speed={10}
-          reflectivity={15}
+          reflectivity={20}          
         />
         {material && (
           <Icosahedron

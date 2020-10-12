@@ -89,19 +89,18 @@ export default function WobbleSphere({ position, mouse }) {
 
         // Set blob movement variables
         const time = clock.getElapsedTime();
-        const xRand = Math.sin(time);
-        const yRand = Math.sin(time);
+        const rand = Math.sin(time);
         main.current.rotation.z = time;
         main.current.rotation.y = THREE.MathUtils.lerp(
           main.current.rotation.y,
-          xRand * Math.PI,
+          rand * Math.PI,
           0.1
         );
         main.current.rotation.x = THREE.MathUtils.lerp(
           main.current.rotation.x,
-          yRand * Math.PI,
+          rand * Math.PI,
           0.1
-        );
+        );        
       } else {
         // Set react-spring variables
         main.current.visible = false;
@@ -113,13 +112,9 @@ export default function WobbleSphere({ position, mouse }) {
     } else {
       // hide during intro animation
       main.current.visible = false;
-      scale = minScale;            
+      scale = minScale;   
+      matRef.current.envMap.flipY = true; // flip envMap vertically
     }
-
-    matRef.current.envMap.flipY = true;
-    // console.log(matRef.current.envMap);
-    // main.current.visible = true;
-    // scale = 1.25;
 
     // If scale at setpoint, bypass to save cpu
     if (main.current.scale.x !== minScale || scale !== minScale) {

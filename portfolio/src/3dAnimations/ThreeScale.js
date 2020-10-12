@@ -74,8 +74,7 @@ export default function ThreeScale({
         meshPosition={positions.logo}
         meshScale={[1, 1, 1]}
         deadZone={deadZone}
-        mouse={mouse}
-        fadeDelay={3000}
+        mouse={mouse}        
         graphics={graphics}
       />
       <HeaderText mouse={mouse} graphics={graphics} isLoading={isLoading} />
@@ -85,7 +84,7 @@ export default function ThreeScale({
       {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null}
 
       <WobbleSphere position={positions.logo} mouse={mouse} />
-      <StarsAnimated mouse={mouse} position={positions.logo} />
+      <StarsAnimated mouse={mouse} position={positions.logo} graphics={graphics}/>
 
       {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
             <TextGeometry

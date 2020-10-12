@@ -37,6 +37,8 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
   const frictionExplode = 40; // react-spring friction when imploding
   let frictionCurrent = frictionImplode; // current react-spring friction
   let opacity = { group1: -0.3, group2: 0 }; // Opacities of each word for fade effects.  Note, group 1 starts slightly below 0 to give loading spinner a little time to fade out
+  // Skip intro animations if use selects different graphics
+  if (graphics !== 'high') {opacity = { group1: 1, group2: 1 };}
   let opacityLoaded = { group1: false, group2: false }; // true when initial fade in complete
   const isLoadingRef = useRef({ group1: true, group2: true }); // loading ref for each groups' opacity fade
   const opacityFadeSpeed = 0.01; // Opacity fade in speed on load
@@ -155,6 +157,14 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         mouse.current.introState === 'Boxes Assembled'
       ) {
         mouse.current.introState = 'Done';
+      }
+      // If graphics aren't high, mark as done and bypass all intro animations to prioritize performance
+      if (graphics !== 'high'){
+        mouse.current.introState = 'Done';
+        // Update loading ref so SpinnerFade component fades out
+        isLoading.current = false;
+        isLoadingRef.current.group1 = false;
+        isLoadingRef.current.group2 = false;
       }
     }
 

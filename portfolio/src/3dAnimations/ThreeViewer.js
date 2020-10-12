@@ -123,15 +123,14 @@ export default function ThreeViewer({ graphics, isLoading }) {
         blackHoleState: mouse.current.blackHoleState,
       };
     } catch (err) {
-      console.log('ThreeScale Component loading');
+      // Error ok as intro animation state machine handles race conditions
     }
   }, []);
 
   return (
     <>
       <Suspense fallback={null}>
-        <Canvas
-          // colorManagement
+        <Canvas         
           gl={{ antialias: false, alpha: false }}
           camera={{ position: [0, 0, 40] }}
           onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
@@ -142,14 +141,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
           onTouchCancel={(e) => e.preventDefault()}
           pixelRatio={window.devicePixelRatio * 1.5}
         >
-          <Lights mouse={mouse} graphics={graphics} />
-
-          {/* <ambientLight intensity={8.1} /> */}
-          {/* <pointLight position={[100, 100, 100]} intensity={2.2} /> */}
-
-          {/* <pointLight position={[150, 150, 150]} intensity={0.55} /> */}
-          {/* <spotLight position={[0, 0, 0]} intensity={10} /> */}
-
+          <Lights mouse={mouse} graphics={graphics} />         
           <ThreeScale
             scaleRef={scaleRef}
             deadZone={deadZone}

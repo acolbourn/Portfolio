@@ -10,8 +10,7 @@ import { getRandomSpherePoints } from './LogoBoxesHelpers';
 export default function LogoBoxes({
   mouse,
   meshPosition,
-  meshScale,
-  fadeDelay,
+  meshScale,  
   graphics,
 }) {
   console.log('LogoBoxes rendered');
@@ -22,7 +21,7 @@ export default function LogoBoxes({
   const depth = graphics === 'low' ? 2 : 5; // Layers of boxes in Z direction
   const numOfInstances = logoPoints.length * depth; // Total # of boxes
   const boxSize = 1; // Physical box dimensions
-  const initBoxDistance = 80; // Initial distance for load animation
+  const initBoxDistance = 60; // Initial distance for load animation
   const maxBoxDistance = 6000; // Max distance boxes spread from each other
   let boxDistance = initBoxDistance; // Current box distance
   // const maxBoxDistance = 6000; // Max distance boxes spread from each other
@@ -218,7 +217,7 @@ export default function LogoBoxes({
       if (mouse.current.introState === 'Name Loaded' && isLoadingRef.current) {
         // Once name is loaded, assemble boxes by setting mouse position to 0 which is in the deadzone
         initBoxPositionRef.current = 0;
-        isLoadingRef.current = false;
+        isLoadingRef.current = false;       
       }
       // Check one of the boxes x position to determine if the logo group is fully assembled and update state if it is
       if (
@@ -230,6 +229,7 @@ export default function LogoBoxes({
       }
     } else {
       // If intro animation done, mark loading complete so boxes display properly after a graphics setting change
+      initBoxPositionRef.current = 0;
       isLoadingRef.current = false;
     }
 

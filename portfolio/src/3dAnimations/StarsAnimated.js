@@ -4,7 +4,7 @@ import { useFrame } from 'react-three-fiber';
 import { useSpring, animated } from 'react-spring/three';
 import { scalePow } from 'd3-scale';
 
-export default function StarsAnimated({ mouse, position }) {
+export default function StarsAnimated({ mouse, position, graphics }) {
   const starRef = useRef();
   const planeRef = useRef();
   let scale = 1; // 1 = normal stars, 0 = blackhole
@@ -49,10 +49,12 @@ export default function StarsAnimated({ mouse, position }) {
       }
     }
 
-    // Once name is loaded, fade in stars and boxes by reducing the opacity of the background plane hiding them
+    // If user selects graphics other than high, skip intro animations and remove plane to prioritize performance
+    if (graphics === 'high') {
+      // Once name is loaded, fade in stars and boxes by reducing the opacity of the background plane hiding them
     if (fadeIn) {
       if (opacity > 0) {
-        opacity -= 0.003;
+        opacity -= 0.005;
       } else {
         opacity = 0;
         fadeIn = false;
@@ -60,7 +62,10 @@ export default function StarsAnimated({ mouse, position }) {
       }
       planeRef.current.material.opacity = opacity;
     }
-
+    } else {
+    planeRef.current.visible = false;
+    }
+    
     // Update React-Spring
     // Only send update if not at setpoint to save cpu
     if (starRef.current.scale.x !== scale) {

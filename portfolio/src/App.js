@@ -22,7 +22,8 @@ let theme = createMuiTheme({
   colors: {
     background: '#1D1D1D',
     // primary: '#91C3DC', // light blue from retirement site
-    primary: '#4086AA', // dark blue from retirement site
+    // primary: '#4086AA', // dark blue from retirement site
+    primary: '#29BFF7', 
     // primary: '#08fdd8', // green from jj site
     // primary: "#FD1056", // red from jj site
     secondary: '#444',

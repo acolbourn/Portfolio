@@ -1,17 +1,5 @@
-/* .App {
-  height: 100vh;
-  background-color: #1d1d1d;
-}
-
-.App-nav {
-  height: 10vh;
-}
-
-.App-body {
-  height: 90vh;
-} */
-
-html {
+html,
+body {
   background-color: #1d1d1d;
 }
 

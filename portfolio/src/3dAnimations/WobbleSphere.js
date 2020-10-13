@@ -1,52 +1,27 @@
 import * as THREE from 'three';
-import React, { Suspense, useRef } from 'react';
-import { useFrame, useResource } from 'react-three-fiber';
+import React, { Suspense, useRef, useMemo } from 'react';
+import { useFrame } from 'react-three-fiber';
 import { useSpring, animated } from 'react-spring/three';
 import { Icosahedron, MeshDistortMaterial } from 'drei';
 
 export default function WobbleSphere({ position, mouse }) {
+  console.log('WobbleSphere rendered');
   const main = useRef();
+  const matRef = useRef();
 
-  const bumpTextureLoader = new THREE.TextureLoader();
-  const bumpMap = bumpTextureLoader.load('3dResources/bumpMapOptimized.jpg');
-  // const bumpMap = bumpTextureLoader.load('3dResources/bump.jpg');
-
-  const cubeTextureLoader = new THREE.CubeTextureLoader();
-  const envMap = cubeTextureLoader.load([
-    '3dResources/cubeMap2/128Optimized/px.png',
-    '3dResources/cubeMap2/128Optimized/nx.png',
-    '3dResources/cubeMap2/128Optimized/py.png',
-    '3dResources/cubeMap2/128Optimized/ny.png',
-    '3dResources/cubeMap2/128Optimized/pz.png',
-    '3dResources/cubeMap2/128Optimized/nz.png',
-  ]);
-  // const envMap = cubeTextureLoader.load([
-  //   '3dResources/cube/px.png',
-  //   '3dResources/cube/nx.png',
-  //   '3dResources/cube/py.png',
-  //   '3dResources/cube/ny.png',
-  //   '3dResources/cube/pz.png',
-  //   '3dResources/cube/nz.png',
-  // ]);
-  // const envMap = cubeTextureLoader.load([
-  //   '3dResources/spaceMapOptimized2/right.jpg',
-  //   '3dResources/spaceMapOptimized2/left.jpg',
-  //   '3dResources/spaceMapOptimized2/top.jpg',
-  //   '3dResources/spaceMapOptimized2/bot.jpg',
-  //   '3dResources/spaceMapOptimized2/front.jpg',
-  //   '3dResources/spaceMapOptimized2/back.jpg',
-  // ]);
-  // const envMap = cubeTextureLoader.load([
-  //   '3dResources/spaceMap/right.png',
-  //   '3dResources/spaceMap/left.png',
-  //   '3dResources/spaceMap/top.png',
-  //   '3dResources/spaceMap/bot.png',
-  //   '3dResources/spaceMap/front.png',
-  //   '3dResources/spaceMap/back.png',
-  // ]);
-
-  // useResource to delay rendering until the material is ready
-  const [matRef, material] = useResource();
+  // Only load cube map once and memoize for graphics updates
+  const envMap = useMemo(() => {
+    const cubeTextureLoader = new THREE.CubeTextureLoader();
+    return cubeTextureLoader.load([
+      '3dResources/cubeMap/px.png',
+      '3dResources/cubeMap/nx.png',
+      '3dResources/cubeMap/py.png',
+      '3dResources/cubeMap/ny.png',
+      '3dResources/cubeMap/pz.png',
+      '3dResources/cubeMap/nz.png',
+    ]);  
+  }, [])
+  
 
   // Init react-spring variables, used for smooth movement
   const massImplode = 1; // mass when imploding
@@ -133,39 +108,24 @@ export default function WobbleSphere({ position, mouse }) {
   return (
     <Suspense fallback={null}>
       <animated.mesh ref={main} {...spring} position={position}>
-        <MeshDistortMaterial
+          <Icosahedron
+            args={[1, 4]}                      
+            scale={[8, 8, 8]}
+          >
+            <MeshDistortMaterial
           ref={matRef}
-          envMap={envMap}
-          bumpMap={bumpMap}                   
-          color={'white'}
-          // color={'#c4c4c4'}
-          // color={'#a1a1a1'}
-          // color={'#808080'}
-          // color={'#303030'} 
-          // color={'#1f1f1f'} 
-          // color={'#141414'} 
-          // color={'#0d0d0d'} 
-          // color={'#0a0a0a'} 
-          // color={'#010101'}   
+          envMap={envMap}                           
+          color={'white'}          
           roughness={0}
           metalness={0.999}
           bumpScale={0.005}
           clearcoat={1}
           clearcoatRoughness={0}
           radius={1}
-          distort={0.4}
-          // speed={10}
-          reflectivity={20}          
+          distort={0.4}     
+          reflectivity={20}         
         />
-        {material && (
-          <Icosahedron
-            args={[1, 4]}
-            // ref={main}
-            material={material}
-            // position={position}
-            scale={[8, 8, 8]}
-          />
-        )}
+            </Icosahedron>        
       </animated.mesh>
     </Suspense>
   );

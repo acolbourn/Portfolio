@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -15,12 +15,14 @@ export default function GraphicsMenu({
   graphics,
   currentFPS,
 }) {
-  // Disable warnings until page fully running
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  // Disable warnings for first 5 seconds
   let disableWarnings = useRef(true);
   useEffect(() => {
     let timer1 = setTimeout(() => {
       disableWarnings.current = false;
-    }, 12000);
+    }, 5000);
     // Clear timeout on unmount
     return () => {
       clearTimeout(timer1);
@@ -40,13 +42,21 @@ export default function GraphicsMenu({
     }
   }
 
+  const handleChange = (event) => {
+    handleGraphicsChange(event.target.value) // Handle graphics change in parent
+    setIsExpanded(false) // Auto close menu after user selection
+  }
+  const handleExpand = (event, expanded) => {
+    setIsExpanded(!isExpanded)
+  }
+
   return (
     <div className={classes.root}>
-      <Accordion className={graphicsAlert}>
+      <Accordion className={graphicsAlert} onChange={handleExpand} expanded={isExpanded}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon className={graphicsAlert} />}
           aria-controls='panel1a-content'
-          id='panel1a-header'
+          id='panel1a-header'          
         >
           <Typography className={`${classes.heading} ${graphicsAlert}`}>
             Graphics
@@ -58,7 +68,7 @@ export default function GraphicsMenu({
               aria-label='quality'
               name='quality'
               value={graphics}
-              onChange={handleGraphicsChange}
+              onChange={handleChange}
             >
               <FormControlLabel value='high' control={<Radio />} label='High' />
               <FormControlLabel value='med' control={<Radio />} label='Med' />

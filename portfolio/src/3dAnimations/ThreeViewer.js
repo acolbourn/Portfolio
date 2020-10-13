@@ -4,6 +4,7 @@ import { Stats } from 'drei';
 import FPSStats from './FPSStats';
 import Lights from './Lights';
 // import LoadingSpinner from './LoadingSpinner';
+import HomeFallback from '../HomeFallback';
 
 import ThreeScale from './ThreeScale';
 
@@ -129,7 +130,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
 
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense fallback={<HomeFallback />}>
         <Canvas         
           gl={{ antialias: false, alpha: false }}
           camera={{ position: [0, 0, 40] }}
@@ -139,7 +140,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
           onTouchStart={(e) => e.preventDefault()}
           onTouchEnd={(e) => e.preventDefault()}
           onTouchCancel={(e) => e.preventDefault()}
-          pixelRatio={window.devicePixelRatio * 1.5}
+          pixelRatio={window.devicePixelRatio * 1.5}          
         >
           <Lights mouse={mouse} graphics={graphics} />         
           <ThreeScale

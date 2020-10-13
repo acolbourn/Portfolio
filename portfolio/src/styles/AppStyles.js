@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   body: {
+    backgroundColor: '#1D1D1D',
     flex: 1,
   },
 }));

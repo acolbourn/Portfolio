@@ -11,8 +11,8 @@ export default function Home() {
   console.log('Home rendered');
   const classes = useStyles();
   const [graphics, setGraphics] = useState('high');
-  const handleGraphicsChange = (event) => {
-    setGraphics(event.target.value);
+  const handleGraphicsChange = (value) => {
+    setGraphics(value);
   };
   // Loading Spinner ref - useRef instead of useState to allow a deep check that all resources are loaded without canvas rerender
   const isLoading = useRef(true);

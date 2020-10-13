@@ -132,7 +132,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
     <>
       <Suspense fallback={<HomeFallback />}>
         <Canvas         
-          gl={{ antialias: false, alpha: false }}
+          gl={{ antialias: false, alpha: true }}
           camera={{ position: [0, 0, 40] }}
           onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
           onMouseMove={handleMouseAndTouch}

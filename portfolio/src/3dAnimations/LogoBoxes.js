@@ -4,8 +4,8 @@ import { useFrame } from 'react-three-fiber';
 import Color from 'color';
 import { scaleLinear, scalePow } from 'd3-scale';
 import { useSpring, animated } from 'react-spring/three';
-import logoPoints from './logoPoints.js';
-import { getRandomSpherePoints } from './LogoBoxesHelpers';
+import {logoPoints} from './3dConstants';
+import { getRandomSpherePoints } from './3dConstants';
 
 export default function LogoBoxes({
   mouse,
@@ -13,8 +13,6 @@ export default function LogoBoxes({
   meshScale,  
   graphics,
 }) {
-  console.log('LogoBoxes rendered');
-
   const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
   const uniformColor = '#0047AB'; // Color when mouse at top of screen
   let defaultBoxColor = Color('#2a363b'); // Color at screen center
@@ -24,7 +22,6 @@ export default function LogoBoxes({
   const initBoxDistance = 60; // Initial distance for load animation
   const maxBoxDistance = 6000; // Max distance boxes spread from each other
   let boxDistance = initBoxDistance; // Current box distance
-  // const maxBoxDistance = 6000; // Max distance boxes spread from each other
   const meshOffset = graphics === 'low' ? -0.5 : -2; // offset so rotation is exactly centered
   const groupPosZ = meshOffset + (depth * boxSize) / 2 - boxSize / 2; // Z center of logo
   const groupPosXY = 0; // X and Y center of logo
@@ -57,9 +54,9 @@ export default function LogoBoxes({
   const animateSpeedY = 0.04; // Mouse smoothing delay Y direction
   const explodeSpeed = 0.02; // Mouse smoothing delay explosion
   const implodeSpeed = 0.2; // Mouse smoothing delay implosion
+  let animateVel = explodeSpeed; // Delayed smoothing animation speed
   const introAnimSpeed = 0.04; // Box assemble speed on startup
   const shineFadeSpeed = 0.008; // Speed that box shine fades out
-  let animateVel = explodeSpeed; // Delayed smoothing animation speed
   let colorIndex = 0; // Current color index to select varying color when mouse at bottom of screen
   let offset; // Starting index of next color used in render loop
 
@@ -71,20 +68,20 @@ export default function LogoBoxes({
     }
   });
 
-  const ref = useRef(); // Mesh ref
-  const matRef = useRef(); // Material ref
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
+  const ref = useRef(); // Mesh ref
+  const matRef = useRef(); // Material ref  
   const isLoadingRef = useRef(true); // loading ref for opacity fade
   const initBoxPositionRef = useRef(3000); // inital box position ref
 
   // Init react-spring variables, used for smooth movement
-  const springScaleRef = useRef(); // react-spring scale ref
-  const massImplode = 1; // react-spring mass when imploding
-  const massExplode = 2; // react-spring mass when exploding
-  let massCurrent = massImplode; // current react-spring mass
-  const frictionImplode = 30; // react-spring friction when imploding
-  const frictionExplode = 50; // react-spring friction when exploding
-  let frictionCurrent = frictionImplode; // current react-spring friction
+  const springScaleRef = useRef(); // scale ref
+  const massImplode = 1; // mass when imploding
+  const massExplode = 2; // mass when exploding
+  let massCurrent = massImplode; // current mass
+  const frictionImplode = 30; // friction when imploding
+  const frictionExplode = 50; // friction when exploding
+  let frictionCurrent = frictionImplode; // current friction
   let clamp = false; // when true, stops spring overshoot
   let groupScale = 1;
   const [groupScaleSpring, set] = useSpring(() => ({
@@ -108,7 +105,7 @@ export default function LogoBoxes({
     [colors, numOfInstances, tempColor]
   );
 
-  // Memoize blended colors to save processing each loop
+  // Memoize blended colors
   const blendedColorArray = useMemo(() => {
     let tempColors = [];
     const resolution = 0.01;
@@ -126,18 +123,6 @@ export default function LogoBoxes({
   }, [boxColors, numOfColors]);
   offset = blendedColorArray.length / numOfColors; // Starting index of next color used in render loop
 
-  // // Start boxes spread out and assemble after delay
-  // useEffect(() => {
-  //   let timer1 = setTimeout(() => {
-  //     initBoxPositionRef.current = 0;
-  //     isLoadingRef.current = false;
-  //   }, fadeDelay);
-  //   // Clear timeout on unmount
-  //   return () => {
-  //     clearTimeout(timer1);
-  //   };
-  // }, [fadeDelay]);
-
   // Update intro animation state machine when boxes loaded
   useEffect(() => {
     if (mouse.current.introState === 'Loading') {
@@ -145,26 +130,7 @@ export default function LogoBoxes({
     } else if (mouse.current.introState === 'Text Loaded') {
       mouse.current.introState = 'Text and Boxes Loaded';
     }
-    console.log('logoBoxes mounted');
   }, [mouse]);
-
-  // // Force rerender on window resize
-  // const [dimensions, setDimensions] = React.useState({
-  //   height: window.innerHeight,
-  //   width: window.innerWidth,
-  // });
-  // React.useEffect(() => {
-  //   function handleResize() {
-  //     setDimensions({
-  //       height: window.innerHeight,
-  //       width: window.innerWidth,
-  //     });
-  //   }
-  //   window.addEventListener('resize', handleResize);
-  //   return (_) => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // });
 
   // Scaling functions
   // From left edge to mid left, collapse sphere to origin
@@ -173,7 +139,7 @@ export default function LogoBoxes({
     .domain([0, -0.5])
     .range([1, 5])
     .clamp(true);
-  // From left edge to mid left, scale logo group from 0 to origina scale
+  // From left edge to mid left, scale logo group from 0 to original scale
   let meshGroupScale = scaleLinear()
     .domain([0, 0.1])
     .range([0, meshScale[0]])
@@ -200,6 +166,7 @@ export default function LogoBoxes({
   let shineScale = scaleLinear().domain([0, 1]).range([100, 30]).clamp(true);
 
   useFrame((state) => {
+    // import mouse data. Some imported as variables to allow temporary overrides during intro animations
     let { mouseX, mouseYScaled, mouseXLeftLin, mouseXRightLog } = mouse.current;
     const {
       inDeadZone,
@@ -208,18 +175,15 @@ export default function LogoBoxes({
       inBlackHoleZone,
       blackHoleState,
     } = mouse.current;
-
-    let i = 0;
-    const time = state.clock.getElapsedTime();
-
+   
     // Intro Animation State Machine
     if (mouse.current.introState !== 'Done') {
       if (mouse.current.introState === 'Name Loaded' && isLoadingRef.current) {
-        // Once name is loaded, assemble boxes by setting mouse position to 0 which is in the deadzone
+        // Once name is loaded, assemble boxes by setting mouse position to 0
         initBoxPositionRef.current = 0;
         isLoadingRef.current = false;       
       }
-      // Check one of the boxes x position to determine if the logo group is fully assembled and update state if it is
+      // Check one of the boxes x position to determine if the boxes are assembled and update state
       if (
         mouse.current.introState === 'Name Loaded' &&
         tempObject.position.x > 0.99 &&
@@ -228,7 +192,7 @@ export default function LogoBoxes({
         mouse.current.introState = 'Boxes Assembled';
       }
     } else {
-      // If intro animation done, mark loading complete so boxes display properly after a graphics setting change
+      // If intro animation done, mark loading complete so boxes display after a graphics setting change
       initBoxPositionRef.current = 0;
       isLoadingRef.current = false;
     }
@@ -236,10 +200,10 @@ export default function LogoBoxes({
     // Turn on visibility after delay for fade in effect
     ref.current.visible = !isLoadingRef.current;
 
-    // Disable mouse on load and use intro animation values
+    // Disable mouse on load and override mouse variables with intro animation values
     let scaledAnimationSpeed = animateScale(mouseX);
     if (disableMouse) {
-      // Boxes set in distance initially and then mouse is set to deadzone to bring them into center
+      // Boxes set in distance initially and then mouse is set to 0 to bring them into center
       mouseX = initBoxPositionRef.current;
       mouseYScaled = 0;
       mouseXRightLog = initBoxPositionRef.current;
@@ -256,7 +220,7 @@ export default function LogoBoxes({
       const mouseImplode = mouseXLeftLin;
 
       // Scale mouse positions and velocities for animations
-      // "Velocity" in this case just means a slower/smoother animation.
+      // "Velocity" in this case just means a delayed/smoother animation
       animateVel += scaledAnimationSpeed - animateVel;
       mouseVelX += (mouseX - mouseVelX) * animateVel;
       mouseVelY += (mouseYScaled - mouseVelY) * animateSpeedY;
@@ -311,11 +275,13 @@ export default function LogoBoxes({
       // Set mouse to 0 on left side of screen to bypass explosion effect
       const sphereDist = mouseVelExplode >= 0 ? mouseVelExplode : 0;
 
-      // Apply common scales
+      // Apply common scales/variables
       const mouseShiftedX = -1 * mouseVelImplode;
       const sphereRadius = sphereScale(mouseShiftedX);
       groupScale = meshGroupScale(mouseXLeftLin);
       let logo2Sphere = logo2SphereScale(mouseShiftedX);
+      const time = state.clock.getElapsedTime();
+      let i = 0; // Box instance loop count
 
       // Update box positions and rotations.
       logoPoints3d.forEach((position, idx) => {
@@ -325,9 +291,8 @@ export default function LogoBoxes({
         const y = position[1];
         const z = position[2];
 
-        // Explosion Animation
-        // Calculate point on sphere based on user mouse movement
         // Generate explode functions
+        // Calculate point on sphere based on user mouse movement
         const explodeX = spherePoints[idx].x * sphereDist;
         const explodeY = spherePoints[idx].y * sphereDist;
         const explodeZ = spherePoints[idx].z * sphereDist;

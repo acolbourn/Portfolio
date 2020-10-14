@@ -49,9 +49,9 @@ export default function StarsAnimated({ mouse, position, graphics }) {
       }
     }
 
-    // If user selects graphics other than high, skip intro animations and remove plane to prioritize performance
+    // If user selects graphics other than high, skip intro animations and remove plane
     if (graphics === 'high') {
-      // Once name is loaded, fade in stars and boxes by reducing the opacity of the background plane hiding them
+      // Once name loaded, fade in stars and boxes by reducing the opacity of the background plane hiding them
     if (fadeIn) {
       if (opacity > 0) {
         opacity -= 0.005;

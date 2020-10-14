@@ -1,7 +1,6 @@
 import React, { Suspense, useRef, useCallback } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { Stats } from 'drei';
-import FPSStats from './FPSStats';
 import Lights from './Lights';
 // import LoadingSpinner from './LoadingSpinner';
 import HomeFallback from '../HomeFallback';
@@ -151,8 +150,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
             isLoading={isLoading}
           />
           <Stats showPanel={1} />
-        </Canvas>
-        <FPSStats style={{ visibility: 'hidden' }} left={'100px'} />
+        </Canvas>        
       </Suspense>
     </>
   );

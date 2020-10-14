@@ -2,13 +2,11 @@ import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame } from 'react-three-fiber';
 import { scalePow } from 'd3-scale';
-import { getRndInteger } from './LogoBoxesHelpers';
+import { positions, fontSizes, spacing, getRndInteger } from './3dConstants';
 import Word from './Word';
-import { positions, fontSizes, spacing } from './3dConstants';
 
 export default function HeaderText({ mouse, graphics, isLoading }) {
-  console.log('HeaderText rendered');
-  // Process common letter attributes in this component and pass in values with a ref to save as much processing power as possible
+  // Process common letter attributes in this component to save CPU
   const common = useRef({
     letterScale: 1,
     rotationSpeed: 0.1,
@@ -16,16 +14,14 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
     explodeOrbit: 1,
     massCurrent: 20,
     frictionCurrent: 50,
-    opacity: { group1: 0, group2: 0, group3: 0 },
+    opacity: { group1: 0, group2: 0 },
   });
 
   // Variables
   const mainTextColor = '#0047AB';
-  const instructionTextColor = '#EFEFEF';
-  // const instructionLineColor = '#DD0849';
-  const instructionLineColor = '#EFEFEF';
+  const instructionTextColor = '#EFEFEF'; 
   const constRotation = 0; // fixed slow rotation when mouse on right of screen
-  let rotationSpeed = constRotation; // rotation speed scaled
+  let rotationSpeed = constRotation; // current rotation speed scaled
   let letterScale = 1; // Scale of each letter
   let travelDist = 1; // Distance towards/away from blackhole per frame
   const maxOrbit = 6000; // Max distance of travel towards stars
@@ -58,7 +54,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
 
   // Generate random speed percentages so each letter travels in a different orbit.  Precompute large array that each letter can pull from at random each time mouse is in deadzone so orbits constantly change.
   let maxSpeeds = [];
-  const speedFactor = 30;
+  const speedFactor = 30;  // Lower range of orbit speeds, between 0 and 100
   const minSpeed = speedFactor / 100;
   for (let i = 0; i < 200; i++) {
     // Random max rotation speeds
@@ -79,20 +75,13 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
     } else if (mouse.current.introState === 'Boxes Loaded') {
       mouse.current.introState = 'Text and Boxes Loaded';
     }
-    console.log('headerText mounted');
   }, [mouse]);
 
   useFrame(() => {
-    const {
-      // mouseX,
-      // mouseY,
-      // mouseXScaled,
-      // mouseYScaled,
+    const {      
       mouseXLeftLin,
-      mouseXRightLin,
-      // mouseXLeftLog,
-      mouseXRightLog,
-      // inDeadZone,
+      mouseXRightLin,      
+      mouseXRightLog,     
       inBlackHoleZone,
       isLeftOrRight,
       disableMouse,
@@ -120,7 +109,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
             if (graphics === 'high') {
               opacity[key] = 1;
             } else {
-              // Fade opacity to 1 in active zone
+              // Fade opacity to 1 outside of blackhole
               if (opacity[key] < 1) {
                 opacity[key] = opacity[key] + 0.01;
               } else {
@@ -163,6 +152,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         mouse.current.introState = 'Done';
         // Update loading ref so SpinnerFade component fades out
         isLoading.current = false;
+        // Fade in text
         isLoadingRef.current.group1 = false;
         isLoadingRef.current.group2 = false;
       }
@@ -224,7 +214,6 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         fadeGroup={'group2'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={true}
@@ -240,7 +229,6 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         fadeGroup={'group2'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}
@@ -252,11 +240,10 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         position={positions.instructionsUnderline}
         fontSize={5}
         letterSpacing={[2.35]}
-        color={instructionLineColor}
+        color={instructionTextColor}
         fadeGroup={'group2'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={true}
@@ -272,7 +259,6 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         fadeGroup={'group2'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={true}
@@ -288,7 +274,6 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         fadeGroup={'group2'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}
@@ -304,7 +289,6 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         fadeGroup={'group2'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={true}
@@ -320,7 +304,6 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         fadeGroup={'group2'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}
@@ -336,7 +319,6 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         fadeGroup={'group1'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}
@@ -352,7 +334,6 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         fadeGroup={'group1'}
         mouse={mouse}
         common={common}
-        blackholeCenter={positions.logo}
         maxSpeeds={maxSpeeds}
         graphics={graphics}
         icon={false}

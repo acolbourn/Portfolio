@@ -15,11 +15,6 @@ export default function Light({ maxIntensity, mouse, intensityRef }) {
       light.current.intensity =
         maxIntensity * Math.abs(mouseYScaled) * intensityRef.current;
     }
-
-    // light.current.intensity =
-    //   disableMouse || inBlackHoleZone
-    //     ? 0
-    //     : maxIntensity * Math.abs(mouseYScaled);
   });
 
   return (

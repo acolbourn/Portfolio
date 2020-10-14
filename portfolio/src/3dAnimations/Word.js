@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import { positions } from './3dConstants';
 import Letter from './Letter';
 
 export default function Word({
@@ -10,15 +11,14 @@ export default function Word({
   rotation,
   color,
   mouse,
-  common,
-  blackholeCenter,
+  common, 
   maxSpeeds,
   graphics,
   icon,
   alignText,
   scale,
   isLine,
-}) {
+}) {  
   const letters = [...text];
   const [x, y, z] = position;
   let spacingArray = []; // Spacing array of each individual letter
@@ -45,13 +45,13 @@ export default function Word({
   if (alignText === 'center') {
     offset = x - center;
   }
-  let positions = positionsX.map((posX) => [posX + offset, y + 5, z]);
+  let letterPositions = positionsX.map((posX) => [posX + offset, y + 5, z]);
 
   const letterComponents = letters.map((letter, idx) => (
     <Suspense key={idx} fallback={null}>
       <Letter
         text={letter}
-        position={positions[idx]}
+        position={letterPositions[idx]}
         rotation={rotation}
         fontSize={fontSize}
         fadeGroup={fadeGroup}
@@ -68,7 +68,7 @@ export default function Word({
   ));
 
   return (
-    <mesh position={[blackholeCenter[0], blackholeCenter[1], 0]} scale={scale}>
+    <mesh position={[positions.logo[0], positions.logo[1], 0]} scale={scale}>
       {letterComponents}
     </mesh>
   );

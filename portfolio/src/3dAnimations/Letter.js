@@ -54,7 +54,7 @@ export default function Letter({
   const initDistToHole = Math.hypot(xDir, yDir, zDir); // Initial distance to blackhole center
   let tempObject = new THREE.Object3D(); // Not displayed, object for rotation calculations that are then applied to each letter.
   tempObject.position.set(x, y, z);
-  let orbit; // Orbit to maintain
+  let orbit; // Orbit distance to maintain around blackhole center
   const holeOffset = 0.01; // Offset so letters never reach singularity
   let distFiltered = 1; // Filtered distance so letters don't enter blackhole
 
@@ -67,8 +67,7 @@ export default function Letter({
     letterSpacing: 0,
     textAlign: 'justify',
   };
-  // Create material
-  const mat = new THREE.MeshPhongMaterial();
+  const mat = new THREE.MeshPhongMaterial();  // Three material
 
   // Get new random orbit speeds from precomputed array
   let maxSpeed = maxSpeeds[Math.floor(Math.random() * (maxSpeeds.length - 1))];
@@ -93,25 +92,15 @@ export default function Letter({
       tempObject.quaternion.set(0, 0, 0, 1);
       xQuat.set(0, 0, 0, 1);
       yQuat.set(0, 0, 0, 1);
-      zQuat.set(0, 0, 0, 1);
-      // Get new random orbit speeds from precomputed array
-      // maxSpeed = maxSpeeds[Math.floor(Math.random() * (maxSpeeds.length - 1))];
+      zQuat.set(0, 0, 0, 1);      
     }
   }
 
-  useFrame(() => {
-    // import mouse data
-    const {
-      // mouseX,
-      // mouseY,
-      // mouseXScaled,
-      // mouseYScaled,
-      mouseXLeftLin,
-      // mouseXRightLin,
-      // mouseXLeftLog,
-      // mouseXRightLog,
-      inDeadZone,
-      // inBlackHoleZone,
+  useFrame(() => { 
+    // import mouse data   
+    const {      
+      mouseXLeftLin,      
+      inDeadZone,      
       isLeftOrRight,
       disableMouse,
       blackHoleState,
@@ -128,17 +117,16 @@ export default function Letter({
       opacity,
     } = common.current;
 
-    // Set opacity
+    // Set opacity. If icon, limit opacity to reduce excessive bloom
     if (icon && opacity[fadeGroup] >= 0.85) {
       meshRef.current.material.opacity = 0.85;
     } else {
-      // if icon limit opacity to reduce bright bloom
       meshRef.current.material.opacity = opacity[fadeGroup];
     }
 
-    // Only animate letter movements if user selects high graphics and mouse isn't disabled for intro animations
+    // Only animate if high graphics selected
     if (graphics === 'high') {
-      // mouse disabled during intro fade in
+      // mouse disabled during intro animations
       if (!disableMouse) {
         // If mouse on left/right of screen, animate letter being sucked into or out of blackhole. Else if mouse in center deadzone, reset text
         if (!inDeadZone) {
@@ -155,7 +143,6 @@ export default function Letter({
               xQuat.setFromAxisAngle(xAxis, xSpeed);
               yQuat.setFromAxisAngle(yAxis, ySpeed);
               zQuat.setFromAxisAngle(zAxis, zSpeed);
-
               tempObject.quaternion.multiplyQuaternions(
                 xQuat,
                 tempObject.quaternion

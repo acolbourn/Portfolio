@@ -93,6 +93,6 @@ export default function ThreeScale({
               fontSize={fontSizes.name}
             />            
           </group> */}
-    </group>
+    </group>    
   );
 }

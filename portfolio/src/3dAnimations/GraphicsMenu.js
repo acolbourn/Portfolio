@@ -15,25 +15,25 @@ export default function GraphicsMenu({
   graphics,
   currentFPS,
 }) {
+  const classes = useStyles();
   const [isExpanded, setIsExpanded] = useState(false)
 
-  // Disable warnings for first 5 seconds
+  // Disable warnings for first 8 seconds
   let disableWarnings = useRef(true);
   useEffect(() => {
     let timer1 = setTimeout(() => {
       disableWarnings.current = false;
-    }, 5000);
+    }, 8000);
     // Clear timeout on unmount
     return () => {
       clearTimeout(timer1);
     };
   }, []);
 
-  const classes = useStyles();
   // Create alerts for low fps so graphics menu blinks and user can select a more appropriate setting
   let graphicsAlert = classes.normal;
-  const warningLevel = 30;
-  const alertLevel = 20;
+  const warningLevel = 30;  // fps
+  const alertLevel = 20;    // fps
   if (!disableWarnings.current) {
     if (currentFPS < warningLevel && currentFPS > alertLevel) {
       graphicsAlert = classes.warning;
@@ -46,8 +46,8 @@ export default function GraphicsMenu({
     handleGraphicsChange(event.target.value) // Handle graphics change in parent
     setIsExpanded(false) // Auto close menu after user selection
   }
-  const handleExpand = (event, expanded) => {
-    setIsExpanded(!isExpanded)
+  const handleExpand = () => {
+    setIsExpanded(!isExpanded)  // Open/Close menu on click
   }
 
   return (

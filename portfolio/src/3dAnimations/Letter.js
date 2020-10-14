@@ -244,8 +244,8 @@ export default function Letter({
             ref={meshRef}
             {...opts}
             font={
-              icon
-                ? '/fonts/Font Awesome 5 Free-Solid-900.otf'
+              icon                
+                ? '/fonts/FontAwesomeCustom.woff'
                 : '/fonts/syncopate-v11-latin-regular.woff'
             }
             anchorX='center'

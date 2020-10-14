@@ -1,14 +1,13 @@
 import React from 'react';
 import { useThree } from 'react-three-fiber';
 import { scaleLinear, scalePow } from 'd3-scale';
+import { positions } from './3dConstants';
 import LogoBoxes from './LogoBoxes.js';
 import HeaderText from './HeaderText.js';
 import Sun from './Sun';
 import WobbleSphere from './WobbleSphere';
 import StarsAnimated from './StarsAnimated';
-// import TextGeometry from './TextGeometry';
 import SunBloom from './SunBloom';
-import { positions } from './3dConstants';
 
 export default function ThreeScale({
   scaleRef,
@@ -17,7 +16,6 @@ export default function ThreeScale({
   graphics,
   isLoading,
 }) {
-  console.log('ThreeScale rendered');
   // Rerender on window resize events and recalculate scales
   const { width, height } = useThree().size;
   const windowHalfX = width / 2;
@@ -78,21 +76,10 @@ export default function ThreeScale({
         graphics={graphics}
       />
       <HeaderText mouse={mouse} graphics={graphics} isLoading={isLoading} />
-      {graphics !== 'low' ? (
-        <Sun position={positions.logo} mouse={mouse} />
-      ) : null}
+      {graphics !== 'low' ? <Sun position={positions.logo} mouse={mouse} /> : null}
       {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null}
-
       <WobbleSphere position={positions.logo} mouse={mouse} />
       <StarsAnimated mouse={mouse} position={positions.logo} graphics={graphics}/>
-
-      {/* <group scale={[5, 5, 5]} position={[30, -170, 0]}>
-            <TextGeometry
-              text={'Alex Colbourn'}
-              position={[-13, 20, 0]}
-              fontSize={fontSizes.name}
-            />            
-          </group> */}
     </group>    
   );
 }

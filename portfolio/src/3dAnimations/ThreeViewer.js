@@ -2,14 +2,11 @@ import React, { Suspense, useRef, useCallback } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { Stats } from 'drei';
 import Lights from './Lights';
-// import LoadingSpinner from './LoadingSpinner';
 import HomeFallback from '../HomeFallback';
-
 import ThreeScale from './ThreeScale';
 
 export default function ThreeViewer({ graphics, isLoading }) {
-  console.log('ThreeViewer rendered');
-  // Process mouse/touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
+  // Process mouse & touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
   const mouse = useRef({
     mouseX: 0, // Raw X
     mouseY: 0, // Raw Y
@@ -28,7 +25,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
   });
 
   // The intro animation uses a state machine passed inside the mouse.introState ref above.  It executes the following sequence:
-  // 1. Loading - SpinnerFade Component visible.
+  // 1. Loading - SpinnerFade Component visible which displays the loading spinner.
   // 2. Text Loaded / Boxes Loaded - These states wait in parallel.  useEffects inside of both LogoBoxes and HeaderText components wait until they are both mounted and then update state.
   // 3. Text and Boxes Loaded - At this point the resources are loaded so the animations begin.  HeaderText updates the isLoading ref which is consumed by SpinnerFade and fades/unmounts the loading spinner.  At the same time, it triggers the names/titles to fade in.
   // 4. Name Loaded - HeaderText checks the opacity fade in of the name and once it's fully faded in updates the state.  This triggers LogoBoxes to begin the box assemble animation.  It also triggers StarsAnimated to fade the stars in.
@@ -37,7 +34,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
 
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
 
-  // Scaling must be processed within canvas by passing to ThreeScale component, then passed back using this ref for mouse processing, otherwise canvas is rerendered
+  // Scaling must be processed within canvas by passing to ThreeScale component, then passed back using this ref for mouse processing, otherwise canvas is rerendered.
   const scaleRef = useRef({
     windowHalfX: 0, // Screen width / 2
     windowHalfY: 0, // Screen height / 2
@@ -102,7 +99,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
       mouse.current.disableMouse = false;
     }
 
-    // Update mouse ref, use try/catch in case ThreeScale component hasn't created scaling functions yet.  This has no impact as mouse is disabled during intro animations anyway.
+    // Update mouse ref, use try/catch in case ThreeScale component hasn't created scaling functions yet.
     try {
       // Update mouse ref
       mouse.current = {
@@ -117,7 +114,6 @@ export default function ThreeViewer({ graphics, isLoading }) {
         inDeadZone: inDeadZone,
         inBlackHoleZone: inBlackHoleZone,
         isLeftOrRight: isLeftOrRight,
-        // disableMouse: false,
         disableMouse: mouse.current.disableMouse,
         introState: mouse.current.introState,
         blackHoleState: mouse.current.blackHoleState,

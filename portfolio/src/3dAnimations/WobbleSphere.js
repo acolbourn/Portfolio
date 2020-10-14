@@ -5,9 +5,8 @@ import { useSpring, animated } from 'react-spring/three';
 import { Icosahedron, MeshDistortMaterial } from 'drei';
 
 export default function WobbleSphere({ position, mouse }) {
-  console.log('WobbleSphere rendered');
-  const main = useRef();
-  const matRef = useRef();
+  const main = useRef();   // mesh ref
+  const matRef = useRef(); // material ref
 
   // Only load cube map once and memoize for graphics updates
   const envMap = useMemo(() => {
@@ -20,8 +19,7 @@ export default function WobbleSphere({ position, mouse }) {
       '3dResources/cubeMap/pz.png',
       '3dResources/cubeMap/nz.png',
     ]);  
-  }, [])
-  
+  }, [])  
 
   // Init react-spring variables, used for smooth movement
   const massImplode = 1; // mass when imploding
@@ -44,7 +42,6 @@ export default function WobbleSphere({ position, mouse }) {
     },
   }));
 
-  // main sphere rotates following the mouse position
   useFrame(({ clock }) => {
     const { inBlackHoleZone, blackHoleState, disableMouse } = mouse.current;
 
@@ -77,6 +74,7 @@ export default function WobbleSphere({ position, mouse }) {
           0.1
         );        
       } else {
+        // Hide when mouse isn't in blackhole zone and scale to min
         // Set react-spring variables
         main.current.visible = false;
         scale = minScale;
@@ -113,19 +111,19 @@ export default function WobbleSphere({ position, mouse }) {
             scale={[8, 8, 8]}
           >
             <MeshDistortMaterial
-          ref={matRef}
-          envMap={envMap}                           
-          color={'white'}          
-          roughness={0}
-          metalness={0.999}
-          bumpScale={0.005}
-          clearcoat={1}
-          clearcoatRoughness={0}
-          radius={1}
-          distort={0.4}     
-          reflectivity={20}         
-        />
-            </Icosahedron>        
+              ref={matRef}
+              envMap={envMap}                           
+              color={'white'}          
+              roughness={0}
+              metalness={0.999}
+              bumpScale={0.005}
+              clearcoat={1}
+              clearcoatRoughness={0}
+              radius={1}
+              distort={0.4}     
+              reflectivity={20}         
+            />
+          </Icosahedron>        
       </animated.mesh>
     </Suspense>
   );

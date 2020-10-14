@@ -71,6 +71,7 @@ export default function LogoBoxes({
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
   const ref = useRef(); // Mesh ref
   const matRef = useRef(); // Material ref  
+  const colorRef = useRef(); // Color ref  
   const isLoadingRef = useRef(true); // loading ref for opacity fade
   const initBoxPositionRef = useRef(3000); // inital box position ref
 
@@ -93,7 +94,7 @@ export default function LogoBoxes({
       clamp: clamp,
     },
   }));
-
+ 
   // Initialize empty color array
   const colorArray = useMemo(
     () =>
@@ -284,7 +285,7 @@ export default function LogoBoxes({
       let i = 0; // Box instance loop count
 
       // Update box positions and rotations.
-      logoPoints3d.forEach((position, idx) => {
+      logoPoints3d.forEach((position, idx) => {        
         const id = i++; // Box id
         // Box position within logo group
         const x = position[0];
@@ -322,7 +323,7 @@ export default function LogoBoxes({
           Math.sin(z / 4 + time);
         tempObject.rotation.z = tempObject.rotation.y * 2;
         // Apply new values to matrix
-        tempColor.set(boxColorsHex[colorIds[idx]]).toArray(colorArray, id * 3);
+        tempColor.set(boxColorsHex[colorIds[idx]]).toArray(colorRef.current.array, id * 3);        
         tempObject.updateMatrix();
         ref.current.setMatrixAt(id, tempObject.matrix);
       });
@@ -374,6 +375,7 @@ export default function LogoBoxes({
             args={[boxSize, boxSize, boxSize]}
           >
             <instancedBufferAttribute
+              ref={colorRef}
               attachObject={['attributes', 'color']}
               args={[colorArray, 3]}
             />

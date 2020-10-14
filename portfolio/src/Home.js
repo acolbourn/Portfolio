@@ -3,18 +3,16 @@ import HomeFallback from './HomeFallback';
 import WEBGL from './3dAnimations/webGLCheck';
 import GetFPS from './3dAnimations/GetFPS';
 import ThreeViewer from './3dAnimations/ThreeViewer';
-import useStyles from './styles/HomeStyles';
-// import LoadingSpinner from './3dAnimations/LoadingSpinner';
 import SpinnerFade from './3dAnimations/SpinnerFade';
+import useStyles from './styles/HomeStyles';
 
 export default function Home() {
-  console.log('Home rendered');
   const classes = useStyles();
   const [graphics, setGraphics] = useState('high');
   const handleGraphicsChange = (value) => {
     setGraphics(value);
   };
-  // Loading Spinner ref - useRef instead of useState to allow a deep check that all resources are loaded without canvas rerender
+  // Loading Spinner ref - useRef instead of useState so canvas doesn't rerender.
   const isLoading = useRef(true);
   let content; // Page content depending on graphics capability
 

@@ -10,19 +10,20 @@ const useStyles = makeStyles((theme) => ({
     },
     '& .MuiListItem-root': {
       paddingLeft: 0,
-    },
+    },    
   },
   listItem: {
     '&:hover': {
       color: '#fff',
       '& svg': {
         transition: 'color 0.2s',
-        color: '#08fdd8',
+        color: theme.colors.primary,
       },
       '& .MuiAvatar-root': {
-        transition: 'border 0.2s',
-        border: '3px solid #08fdd8',
-      },
+        transition: 'border-color 0.2s',
+        border: '3px solid',
+       borderColor: theme.colors.primary,
+      },      
     },
   },
   github: {
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       '& span': {
         transition: 'color 0.2s',
-        color: '#08fdd8',
+        color: theme.colors.primary,
       },
     },
   },

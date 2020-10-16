@@ -1,6 +1,5 @@
 import React, { Suspense, useRef, useCallback } from 'react';
 import { Canvas } from 'react-three-fiber';
-import { Stats } from 'drei';
 import Lights from './Lights';
 import HomeFallback from '../HomeFallback';
 import ThreeScale from './ThreeScale';
@@ -145,7 +144,6 @@ export default function ThreeViewer({ graphics, isLoading }) {
             graphics={graphics}
             isLoading={isLoading}
           />
-          <Stats showPanel={1} />
         </Canvas>        
       </Suspense>
     </>

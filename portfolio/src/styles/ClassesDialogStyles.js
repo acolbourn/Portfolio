@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
   },
   classLink: {
     margin: 0,
+    '& .MuiTypography-colorPrimary': {
+      color: theme.colors.primary
+    }
   },
   headerDivider: {
     marginTop: '9px',

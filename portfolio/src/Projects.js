@@ -31,10 +31,11 @@ export default function Projects() {
         <Tabs
           value={value}
           onChange={handleChange}
-          indicatorColor='primary'
+          indicatorColor='primary'          
           textColor='primary'
           variant='fullWidth'
-          aria-label='full width tabs example'
+          aria-label='full width tabs'  
+          classes={{indicator: classes.customIndicator, root: classes.customFont }}        
         >
           <Tab label='Robotics' {...a11yProps(0)} />
           <Tab label={isMobile ? 'Web' : 'Web Development'} {...a11yProps(1)} />

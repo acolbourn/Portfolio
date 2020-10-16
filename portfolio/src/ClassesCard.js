@@ -4,7 +4,6 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import './styles/ribbon.css';
 import useStyles from './styles/ClassesCardStyles';
 import ClassesDialog from './ClassesDialog';
 
@@ -44,9 +43,9 @@ export default function ClassesCard({ codingClass }) {
         </CardContent>
       </CardActionArea>
       {featured && (
-        <div className='ribbon ribbon-top-right'>
+        <div className={classes.ribbon}>
           <span>Featured</span>
-        </div>
+        </div>        
       )}
       <ClassesDialog
         codingClass={codingClass}

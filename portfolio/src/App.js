@@ -27,6 +27,7 @@ let theme = createMuiTheme({
     // primary: '#08fdd8', // green from jj site
     // primary: "#FD1056", // red from jj site
     secondary: '#444',
+    fadedBlue: '#4086AA',
   },
   fonts: {
     primary: 'Montserrat, sans-serif',

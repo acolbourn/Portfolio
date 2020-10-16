@@ -8,7 +8,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import ProjectDialog from './ProjectDialog';
 import useStyles from './styles/ProjectCardStyles';
-import './styles/ribbon.css';
 
 export default function ProjectCard({ project }) {
   const { imgSrc, imgAlt, title, description, featured } = project;
@@ -53,7 +52,7 @@ export default function ProjectCard({ project }) {
           </Typography>
         </CardContent>
         {featured && (
-          <div className='ribbon ribbon-top-right'>
+          <div className={classes.ribbon}>
             <span>Featured</span>
           </div>
         )}

@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     border: '1px solid',
     borderColor: theme.colors.fadedBlue,
+    backgroundColor: theme.colors.background,
     width: '100%',
     minWidth: '150px',
     maxWidth: '600px',
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
-    color: theme.colors.primary,
+    color: theme.colors.fadedBlue,
     [theme.breakpoints.down('xs')]: {
       marginBottom: '0',
     },

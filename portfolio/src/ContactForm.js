@@ -100,7 +100,7 @@ export default function ContactForm({ submitForm, status, message }) {
     <div className={classes.root}>
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <Typography className={classes.title} variant='h2' gutterBottom>
+          <Typography className={classes.title} variant='h3' gutterBottom>
             Contact Me
           </Typography>
           <div>

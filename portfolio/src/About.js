@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Timeline from './Timeline';
-import BackgroundTag from './BackgroundTag';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   title: {
-    color: '#08fdd8',
+    color: theme.colors.primary,
     marginLeft: '15px',
     fontSize: '73px',
     [theme.breakpoints.down('sm')]: {
@@ -79,26 +78,22 @@ const useStyles = makeStyles((theme) => ({
 export default function About() {
   const classes = useStyles();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <div className={classes.root}>
       <div className={classes.aboutContainer}>
-        <BackgroundTag tagType='header' isMobile={isMobile} />
         <div className={classes.contentContainer}>
           <div className={classes.content}>
             <div>
-              <BackgroundTag tagType='h1Top' isMobile={isMobile} />
               <h1 className={classes.title}>About Me</h1>
-              <BackgroundTag tagType='h1Bottom' isMobile={isMobile} />
             </div>
             <div className={classes.textArea}>
               <Typography paragraph variant='body1'>
                 Engineer and tinkerer to my core. While I love designing parts
                 or breaking out the soldering iron, writing the software that
                 brings a project to life has always been my favorite phase of a
-                project. For this reason, I'm currently transitioning towards
+                project. This is why I'm transitioning into
                 primarily software focused roles going forward.
               </Typography>
               <Typography paragraph variant='body1'>
@@ -115,7 +110,6 @@ export default function About() {
             <Timeline />
           </div>
         </div>
-        <BackgroundTag tagType='footer' isMobile={isMobile} />
       </div>
       {isDesktop && (
         <div className={classes.sideContainer}>

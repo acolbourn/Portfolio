@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/core/styles';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import IconButton from '@material-ui/core/IconButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -21,7 +22,7 @@ class CopyText extends Component {
             alexcolbourn@gmail.com
             <IconButton aria-label='Copy Email'>
               <FileCopyIcon
-                style={{ color: this.state.copied ? '#08fdd8' : 'grey' }}
+                style={{ color: this.state.copied ? this.props.theme.colors.primary : 'grey' }}
               />
             </IconButton>
           </Typography>
@@ -31,4 +32,4 @@ class CopyText extends Component {
   }
 }
 
-export default CopyText;
+export default withTheme(CopyText);

@@ -12,6 +12,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    border: '1px solid',
+    borderColor: theme.colors.fadedBlue,
     width: '100%',
     minWidth: '150px',
     maxWidth: '600px',
@@ -28,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
       '@media (max-height: 800px)': {
         height: '100%',
         width: '100%',
+        border: 'none',
       },
     },
   },
@@ -43,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
+    color: theme.colors.primary,
     [theme.breakpoints.down('xs')]: {
       marginBottom: '0',
     },

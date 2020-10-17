@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   navLink: {
+    position: 'relative',
     [theme.breakpoints.down('sm')]: {
       fontSize: '23px',
     },
@@ -58,11 +59,12 @@ const useStyles = makeStyles((theme) => ({
   navLinkText: {
     fontFamily: 'Montserrat, Roboto, Arial, sans-serif', 
     fontSize: '12px',
-    width: '100%',
+    width: '62px',
     position: 'absolute',
+    textAlign: 'center',
     [theme.breakpoints.down('xs')]: {
       fontSize: '10px',
-      top: '18px',
+      top: '17px',
     },    
   },
   socialGroup: {

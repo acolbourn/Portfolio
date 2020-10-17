@@ -13,7 +13,10 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTab-wrapper': {
       fontFamily: 'Montserrat, Roboto, Arial, sans-serif',
       fontWeight: 500,
-      fontSize: '0.95rem'
+      fontSize: '0.95rem',
+      [theme.breakpoints.down('xs')]: {
+        fontSize: '0.76rem'
+      },
     }  
   },
   swipeContainer: {
@@ -28,10 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   customIndicator: {
     backgroundColor: theme.colors.primary
-  },
-  customFont: {
-    fontSize: '1rem'
-  }
+  },  
 }));
 
 export default useStyles;

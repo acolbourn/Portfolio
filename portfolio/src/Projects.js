@@ -35,7 +35,7 @@ export default function Projects() {
           textColor='primary'
           variant='fullWidth'
           aria-label='full width tabs'  
-          classes={{indicator: classes.customIndicator, root: classes.customFont }}        
+          classes={{indicator: classes.customIndicator}}        
         >
           <Tab label='Robotics' {...a11yProps(0)} />
           <Tab label={isMobile ? 'Web' : 'Web Development'} {...a11yProps(1)} />

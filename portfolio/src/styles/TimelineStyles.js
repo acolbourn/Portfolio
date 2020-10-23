@@ -10,7 +10,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     position: 'relative',
-    marginBottom: '7rem',
+    marginBottom: '28px',
+    fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif',
+    fontWeight: '400'
   },
   timelineBox: {
     display: 'flex',
@@ -54,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
     height: '5px',
   },
   jobText: {
+    fontSize: '0.92rem',
     textAlign: 'center',
     margin: '0 auto 10px',
     padding: '2px',
@@ -98,16 +101,17 @@ const useStyles = makeStyles((theme) => ({
   line: {
     height: '1px',
     width: '100%',
-    backgroundColor: '#444',
+    backgroundColor: '#828282',
   },
   tick: {
     height: '15px',
     width: '2px',
-    backgroundColor: '#444',
+    backgroundColor: '#828282',
     position: 'absolute',
   },
   year: {
-    color: '#444',
+    fontSize: '0.86rem',
+    color: '#828282',    
     position: 'absolute',
     top: '10px',
     left: '5px',

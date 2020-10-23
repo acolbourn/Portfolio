@@ -12,7 +12,9 @@ const useStyles = makeStyles((theme) => ({
     width: '100%', 
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'stretch',  
+    alignItems: 'stretch',
+    fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif',
+    fontWeight: '400' 
     
   },  
   paperCustom: {
@@ -62,13 +64,19 @@ const useStyles = makeStyles((theme) => ({
   },  
   title: {
     color: theme.colors.primary,
+    fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif',
+    fontWeight: '300'
   },
   content: {
     flex: 1,    
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    margin: '16px'
+    margin: '16px',
+    '& .MuiTypography-root': {
+      fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif',
+      fontWeight: '400'
+    }    
   },
 }));
 

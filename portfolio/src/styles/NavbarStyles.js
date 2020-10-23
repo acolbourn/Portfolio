@@ -57,14 +57,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   navLinkText: {
-    fontFamily: 'Montserrat, Roboto, Arial, sans-serif', 
-    fontSize: '12px',
+    fontFamily: 'ProximaNova, AvenirNextCyr, sans-serif', 
+    fontWeight: '400',
+    fontSize: '13px',
     width: '62px',
     position: 'absolute',
     textAlign: 'center',
     [theme.breakpoints.down('xs')]: {
-      fontSize: '10px',
-      top: '17px',
+      fontSize: '12px',
+      top: '15.5px',
     },    
   },
   socialGroup: {

@@ -126,36 +126,42 @@ export default function ContactForm({ submitForm, status, message }) {
               );
               return (
                 <Form className={classes.form}>
-                  <FormGroup>
-                    <Field
-                      name='Name'
-                      as={TextField}
-                      label='Name'
-                      error={formattedErrors.Name.isError}
-                      helperText={formattedErrors.Name.message}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Field
-                      name='Email'
-                      as={TextField}
-                      label='Email'
-                      type='email'
-                      error={formattedErrors.Email.isError}
-                      helperText={formattedErrors.Email.message}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Field
-                      name='Message'
-                      as={TextField}
-                      label='Message'
-                      multiline
-                      rows={isMobile ? 5 : 8}
-                      error={formattedErrors.Message.isError}
-                      helperText={formattedErrors.Message.message}
-                    />
-                  </FormGroup>
+                  <div className={classes.formGroup}>
+                    <FormGroup>
+                      <Field
+                        name='Name'
+                        as={TextField}
+                        label='Name'
+                        error={formattedErrors.Name.isError}
+                        helperText={formattedErrors.Name.message}
+                      />
+                    </FormGroup>
+                  </div>                  
+                  <div className={classes.formGroup}>
+                    <FormGroup>
+                      <Field
+                        name='Email'
+                        as={TextField}
+                        label='Email'
+                        type='email'
+                        error={formattedErrors.Email.isError}
+                        helperText={formattedErrors.Email.message}
+                      />
+                    </FormGroup>
+                  </div>                  
+                  <div className={classes.formGroupMessage}>
+                    <FormGroup>
+                      <Field
+                        name='Message'
+                        as={TextField}
+                        label='Message'
+                        multiline
+                        rows={isMobile ? 5 : 8}
+                        error={formattedErrors.Message.isError}
+                        helperText={formattedErrors.Message.message}
+                      />
+                    </FormGroup>
+                  </div>                  
                   <div className={classes.buttonPosition}>
                     <div className={classes.buttonWrapper}>
                       <Button

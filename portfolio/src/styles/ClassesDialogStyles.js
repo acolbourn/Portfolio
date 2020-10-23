@@ -6,11 +6,12 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: 0,
     },
     '& .MuiPaper-root': {
-      maxWidth: '800px',
+      maxWidth: '800px',      
     },
   },
   title: {
-    paddingBottom: 8,
+    paddingBottom: 3,
+    fontSize: '1.29rem',
   },
   grade: {
     marginBottom: '4px',

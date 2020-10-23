@@ -1,15 +1,42 @@
 import { makeStyles, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import GilroyLight from '../fonts/Gilroy-Light/font.woff2'
+import ProximaNovaLightWoff2 from '../fonts/ProximaNova-Light.woff2'
+import AvenirNextCyrLightWoff2 from '../fonts/AvenirNextCyr-Light.woff2'
+import AvenirNextCyrThinWoff2 from '../fonts/AvenirNextCyr-Thin.woff2'
 
-const gilroy = {
-  fontFamily: 'Gilroy',
+// Setup self-hosted fonts
+const proximaNovaLight = {
+  fontFamily: 'ProximaNova',
   fontStyle: 'normal',
   fontDisplay: 'swap',
   fontWeight: 400,
   src: `
-    local('Gilroy'),
-    local('Gilroy-Light'),
-    url(${GilroyLight}) format('woff2')
+    local('ProximaNova'),
+    local('ProximaNova-Light'),
+    url(${ProximaNovaLightWoff2}) format('woff2')
+  `,
+};
+
+const avenirNextCyrLight = {
+  fontFamily: 'AvenirNextCyr',
+  fontStyle: 'normal',
+  fontDisplay: 'swap',
+  fontWeight: 400,
+  src: `
+    local('AvenirNextCyr'),
+    local('AvenirNextCyr-Light'),
+    url(${AvenirNextCyrLightWoff2}) format('woff2')
+  `,
+};
+
+const avenirNextCyrThin = {
+  fontFamily: 'AvenirNextCyr',
+  fontStyle: 'normal',
+  fontDisplay: 'swap',
+  fontWeight: 300,
+  src: `
+    local('AvenirNextCyr'),
+    local('AvenirNextCyr-Thin'),
+    url(${AvenirNextCyrThinWoff2}) format('woff2')
   `,
 };
 
@@ -40,14 +67,12 @@ let theme = createMuiTheme({
   },  
   // Material-UI global overrides
   typography: {
-    fontFamily: 'Gilroy, sans-serif',
-    // google fonts: Karla Rubik Work Sans
-    // fontFamily: 'Montserrat, sans-serif',
+    fontFamily: ['ProximaNova, AvenirNextCyr, sans-serif'],
   },
   overrides: {
     MuiCssBaseline: {
       '@global': {
-        '@font-face': [gilroy],
+        '@font-face': [proximaNovaLight, avenirNextCyrLight, avenirNextCyrThin],
       },
     }, 
     MuiButton: {            

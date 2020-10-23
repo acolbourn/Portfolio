@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: '100%',    
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
     '& .MuiList-root': {
@@ -45,7 +45,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   webIcon: {
-    border: '2px solid rgba(255, 255, 255, 0.7)',
+    backgroundColor: theme.palette.background.paper,
+    color: '#272727',    
+    border: '2px solid rgba(255, 255, 255, 0.7)',    
   },
   icons: {
     position: 'relative',

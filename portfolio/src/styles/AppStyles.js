@@ -63,7 +63,7 @@ let theme = createMuiTheme({
     fadedBlue: colors.fadedBlue,
   },
   fonts: {
-    primary: 'Montserrat, sans-serif',
+    primary: 'ProximaNova, AvenirNextCyr, sans-serif',    
   },  
   // Material-UI global overrides
   typography: {

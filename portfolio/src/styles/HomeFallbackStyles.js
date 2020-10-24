@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   logo: {
-    width: '80%',
+    width: '50%',
     maxWidth: '500px',
     paddingTop: '3.5rem',
   },

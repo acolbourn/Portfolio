@@ -465,7 +465,7 @@ const jobs = [
     overlapTimeline: false,
   },
   {
-    job: 'Coding Bootcamps',
+    job: 'Bootcamps & Quarantine',
     jobTitle: 'Udemy Student',
     startYear: '2019.5',
     endYear: 'current',

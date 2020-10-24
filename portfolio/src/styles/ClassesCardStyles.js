@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
       color: '#ffffff',    
       fontFamily: 'ProximaNova, AvenirNextCyr, sans-serif',
       fontWeight: '400',
-      fontSize: '18px',
+      fontSize: '17px',
       textShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
       textTransform: 'uppercase',
       textAlign: 'center',

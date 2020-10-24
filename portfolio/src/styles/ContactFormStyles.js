@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '90px',
   },
   formGroupMessage: {
-    minHeight: '146px',
+    minHeight: '148px',
   }
 }));
 

@@ -17,7 +17,6 @@ export default function GraphicsMenu({
 }) {
   const classes = useStyles();
   const [isExpanded, setIsExpanded] = useState(false)
-
   // Disable warnings for first 8 seconds
   let disableWarnings = useRef(true);
   useEffect(() => {

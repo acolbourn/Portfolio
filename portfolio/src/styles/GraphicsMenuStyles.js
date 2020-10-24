@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme) => ({
       top: '8px',
       right: '8px',
       width: '110px',
-      backgroundColor: theme.colors.background,
-      opacity: 0.75,
+      backgroundColor: 'rgba(29, 29, 29, 0.75)',      
+      opacity: 1,
       border: '1px solid',
       borderColor: theme.colors.secondary,
       '& .MuiSvgIcon-root': {
@@ -21,15 +21,15 @@ const useStyles = makeStyles((theme) => ({
       },
       '& .MuiTypography-root': {
         fontFamily: theme.fonts.primary,
-        color: theme.colors.primary,
+        color: theme.colors.primary,        
       },
       '& .MuiFormControlLabel-label': {
-        fontSize: '13px',
+        fontSize: '15px',
         [theme.breakpoints.down('sm')]: {
-          fontSize: '12px',
+          fontSize: '14px',
         },
         [theme.breakpoints.down('xs')]: {
-          fontSize: '10px',
+          fontSize: '12px',
         },
       },
       '& .MuiAccordionSummary-expandIcon': {
@@ -48,12 +48,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   heading: {
-    fontSize: '14px',
+    fontSize: '16px',    
     [theme.breakpoints.down('sm')]: {
-      fontSize: '13px',
+      fontSize: '15px',
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: '11px',
+      fontSize: '13px',
     },
   },
   '& .MuiAccordionSummary-content': {

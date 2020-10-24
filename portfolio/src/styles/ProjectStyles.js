@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme) => ({
       color: theme.colors.primary
     },  
     '& .MuiTab-wrapper': {
-      fontFamily: 'Montserrat, Roboto, Arial, sans-serif',
-      fontWeight: 500,
+      fontFamily: 'ProximaNova, AvenirNextCyr, sans-serif',
+      fontWeight: '400',
       fontSize: '0.95rem',
       [theme.breakpoints.down('xs')]: {
         fontSize: '0.76rem'

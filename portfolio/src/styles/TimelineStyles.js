@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     position: 'relative',
-    marginBottom: '28px',
+    marginBottom: '42px',
     fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif',
     fontWeight: '400'
   },

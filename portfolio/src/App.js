@@ -8,7 +8,8 @@ import Classes from './Classes';
 import Contact from './Contact';
 import Projects from './Projects';
 // import About from './About';
-import AboutNew from './AboutNew';
+// import AboutNew from './AboutNew';
+import AboutGrid from './AboutGrid';
 import {useStyles, theme} from './styles/AppStyles';
 import './styles/App.css';
 
@@ -36,7 +37,7 @@ function App() {
                 <Projects />
               </Route>
               <Route path='/about'>
-                <AboutNew />
+                <AboutGrid />
               </Route>
               <Route path='/'>
                 <Home />

@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     flex: '50%',
     paddingTop: theme.spacing(1),
   },
-  leftContainer: {    
+  leftContainer: {  
     flex: '50%',    
     padding: theme.spacing(2),    
     paddingRight: theme.spacing(1),
@@ -72,18 +72,37 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    margin: '16px',
+    margin: '16px 16px 0 16px',
     '& .MuiTypography-root': {
       fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif',
       fontWeight: '400'
     }    
   },
+  skillGroupBox: {
+    height: '100%',
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignContent: 'space-around'
+  },
+  skillBox: {
+    whiteSpace: 'nowrap',
+    flex: 1,
+    margin: '8px',
+  }
 }));
 
 export default function AboutNew() {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const webSkills = ['JavaScript', 'Python', 'React', 'HTML 5', 'CSS 3', 'WebGL', 'Three.js', 'D3.js', 'Node', 'Express', 'MongoDB', 'MERN Stack', 'Git'];
+  const roboticsSkills = ['Robot Operating System (ROS)', 'Gazebo', 'LabVIEW', 'Python', 'Microcontrollers', "Programmable Logic Controllers (PLC's)", 'Raspberry Pi', 'Arduino', 'AutoCAD', 'SolidWorks', 'Mechanical Design', '3d Printing', 'Electrical Schematics'];
+
+  const webSkillsGroup = webSkills.map(skill => (
+    <div key={skill} className={classes.skillBox}>
+      <h4>{skill}</h4> 
+    </div>
+  ))
 
   const rightContainer = (
     <div className={classes.rightContainer}>
@@ -94,9 +113,9 @@ export default function AboutNew() {
               </Typography>
               <Divider variant="middle" />
               <div className={classes.content}>
-                <Typography paragraph variant='body1'>
-                  Javascript
-                </Typography>
+                <div className={classes.skillGroupBox}>
+                  {webSkillsGroup}
+                </div>
               </div>
             </Paper>
           </div>
@@ -139,7 +158,7 @@ export default function AboutNew() {
                       moment, but I'm very interested in all Backend, Fullstack, and
                       Robotics software opportunities as well.
                     </Typography>
-                    <Typography paragraph variant='body1'>
+                    <Typography paragraph variant='body1' gutterBottom={false}>
                       Outside of work you'll find me making music, hiking, biking, or
                       flying planes again if you pay me enough.
                     </Typography>

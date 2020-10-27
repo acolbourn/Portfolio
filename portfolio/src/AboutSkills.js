@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 
-export default function AboutSkills({skills, classes, title, className, isMobile}) {
+export default function AboutSkills({skills, classes, title, classType, isMobile}) {
     const skillsGroup = skills.map(skill => (
         <div key={skill} className={classes.skillBox}>
             <Typography variant='body1'>
@@ -12,7 +12,7 @@ export default function AboutSkills({skills, classes, title, className, isMobile
     ))
 
     let content = (
-        <div className={`${classes.gridItem} ${classes[className]}`}>
+        <div className={`${classes.gridItem} ${classes[classType]}`}>
             <Typography className={classes.title} variant='h4' gutterBottom>
                 {title}
             </Typography>

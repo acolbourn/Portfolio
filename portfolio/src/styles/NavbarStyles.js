@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
       transition: 'opacity 0.2s',
     },
     '&:hover': {
+      textDecoration: 'none',
       color: theme.colors.primary,
       '& svg': {
         opacity: '0',

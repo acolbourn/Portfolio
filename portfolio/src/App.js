@@ -6,7 +6,8 @@ import BackToTop from './BackToTop';
 import Home from './Home';
 import Classes from './Classes';
 import Contact from './Contact';
-import Projects from './Projects';
+import ProjectsGrid from './ProjectsGrid';
+// import Projects from './Projects';
 import About from './About';
 import {useStyles, theme} from './styles/AppStyles';
 import './styles/App.css';
@@ -32,7 +33,7 @@ function App() {
                 <Classes />
               </Route>
               <Route path='/projects'>
-                <Projects />
+                <ProjectsGrid />
               </Route>
               <Route path='/about'>
                 <About />

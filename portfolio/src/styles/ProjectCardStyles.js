@@ -5,28 +5,29 @@ const useStyles = makeStyles((theme) => ({
     border: featured ? '1px solid' : 'none',
     borderColor: theme.colors.primary,
     width: '100%',
-    height: '500px',
-    '@media (max-width: 1280px)': {
-      height: '450px',
-    },
-    '@media (max-width: 1150px)': {
-      height: '475px',
-    },
-    '@media (max-width: 960px)': {
-      height: '400px',
-    },
-    '@media (max-width: 750px)': {
-      height: '450px',
-    },
-    '@media (max-width: 600px)': {
-      height: '360px',
-    },
-    '@media (max-width: 420px)': {
-      height: '400px',
-    },
-    '@media (max-width: 360px)': {
-      height: '420px',
-    },
+    height: '100%',
+    // height: '500px',
+    // '@media (max-width: 1280px)': {
+    //   height: '450px',
+    // },
+    // '@media (max-width: 1150px)': {
+    //   height: '475px',
+    // },
+    // '@media (max-width: 960px)': {
+    //   height: '400px',
+    // },
+    // '@media (max-width: 750px)': {
+    //   height: '450px',
+    // },
+    // '@media (max-width: 600px)': {
+    //   height: '360px',
+    // },
+    // '@media (max-width: 420px)': {
+    //   height: '400px',
+    // },
+    // '@media (max-width: 360px)': {
+    //   height: '420px',
+    // },
     display: 'flex',
   }),
   actionArea: {
@@ -67,9 +68,9 @@ const useStyles = makeStyles((theme) => ({
       display: 'block',
       width: 225,
       padding: '15px 0',
-      backgroundColor: theme.colors.fadedBlue,    
-      boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)',      
-      color: '#ffffff',    
+      backgroundColor: theme.colors.fadedBlue,
+      boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)',
+      color: '#ffffff',
       fontFamily: 'ProximaNova, AvenirNextCyr, sans-serif',
       fontWeight: '400',
       fontSize: '17px',
@@ -79,8 +80,8 @@ const useStyles = makeStyles((theme) => ({
       left: '-25px',
       top: 30,
       transform: 'rotate(45deg)',
-    }
-  },    
+    },
+  },
 }));
 
 export default useStyles;

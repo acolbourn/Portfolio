@@ -7,7 +7,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
-// import CodeOutlinedIcon from '@material-ui/icons/CodeOutlined';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 import SchoolIcon from '@material-ui/icons/School';
 import Icon from '@material-ui/core/Icon';
@@ -48,11 +47,7 @@ export default function ButtonAppBar() {
           <WorkOutlineOutlinedIcon className={classes.navLink} />
           <div className={classes.navLinkText}>PROJECTS</div>
         </IconButton>
-      </NavLink>
-      {/* <IconButton className={classes.icon} aria-label='Code'>
-        <CodeOutlinedIcon className={classes.navLink} />
-        <div className={classes.navLinkText}>CODE</div>
-      </IconButton> */}
+      </NavLink>      
       <NavLink to='/classes' activeClassName={classes.activePage} exact>
         <IconButton className={classes.icon} aria-label='Classes'>
           <SchoolIcon className={classes.navLink} />
@@ -75,9 +70,9 @@ export default function ButtonAppBar() {
   );
 
   const socialGroupList = [
-    { iconClass: 'fab fa-linkedin-in', label: 'LinkedIn' },
-    { iconClass: 'fab fa-github', label: 'Github' },
-    { iconClass: 'fab fa-youtube', label: 'YouTube' },
+    { iconClass: 'fab fa-linkedin-in', label: 'LinkedIn', link: 'https://www.linkedin.com/in/alex-colbourn' },
+    { iconClass: 'fab fa-github', label: 'Github', link: 'https://github.com/acolbourn' },
+    { iconClass: 'fab fa-youtube', label: 'YouTube', link: 'https://www.youtube.com/channel/UCN4scLg9N0ujvaBxCpVB4Ow/videos' }
   ];
 
   const socialGroup = (
@@ -87,6 +82,8 @@ export default function ButtonAppBar() {
           className={classes.icon}
           aria-label={link.label}
           key={link.label}
+          href={link.link}
+          target='_blank'
         >
           <Icon className={`${link.iconClass} ${classes.socialLink}`} />
         </IconButton>

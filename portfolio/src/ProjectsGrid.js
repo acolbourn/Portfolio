@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 // import { useTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { AnimateSharedLayout, motion } from 'framer-motion';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-// import FormLabel from '@material-ui/core/FormLabel';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ProjectCard from './ProjectCard';
 import { roboticsProjects, webProjects } from './constants';
 
@@ -18,19 +15,21 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: '400',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   gridContainer: {
     flex: 1,
     width: '100%',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))',
-    gridAutoRows: 'minmax(10px, auto)',
-    gap: '1em',
-    padding: '1em',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 375px))',
+    gridAutoRows: 'min-content',
+    justifyContent: 'center',
+    gap: '2em',
+    padding: '2em',
     margin: 0,
   },
   card: {
-    backgroundColor: theme.colors.secondary,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -39,9 +38,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
-    '& .MuiFormGroup-root': {
-      flexDirection: 'row',
+    paddingTop: '2em',
+    '& .MuiToggleButton-root': {
+      width: '200px',
     },
   },
 }));
@@ -49,56 +48,40 @@ const useStyles = makeStyles((theme) => ({
 export default function ProjectsGrid() {
   const classes = useStyles();
   // const theme = useTheme();
-  const [value, setValue] = useState('all');
-  const [projects, setProjects] = useState(
-    webProjects.concat(roboticsProjects)
-  );
+  const [filterValue, setFilterValue] = useState('all');
+  const combinedProjects = roboticsProjects.concat(webProjects);
+  const [projects, setProjects] = useState(combinedProjects);
 
-  const handleFilterChange = (event) => {
-    const selection = event.target.value;
-    setValue(selection);
+  const handleFilterChange = (event, selection) => {
+    setFilterValue(selection);
     if (selection === 'all') {
-      setProjects(webProjects.concat(roboticsProjects));
+      setProjects(combinedProjects);
     } else if (selection === 'web') {
       setProjects(webProjects);
     } else if (selection === 'robotics') {
       setProjects(roboticsProjects);
     }
   };
-  //   const [projects, setProjects] = useState(['1', '2', '3', '4', '5', '6']);
-
-  //   const handleFilterChange = (event) => {
-  //     const selection = event.target.value;
-  //     setValue(selection);
-  //     if (selection === 'all') {
-  //       setProjects(['1', '2', '3', '4', '5', '6']);
-  //     } else if (selection === 'web') {
-  //       setProjects(['1', '2', '3']);
-  //     } else if (selection === 'robotics') {
-  //       setProjects(['4', '5', '6']);
-  //     }
-  //   };
 
   return (
     <div className={classes.root}>
       <div className={classes.radioGroup}>
-        <FormControl component='fieldset'>
-          {/* <FormLabel component='legend'>Filter Projects:</FormLabel> */}
-          <RadioGroup
-            aria-label='filter'
-            name='filter'
-            value={value}
-            onChange={handleFilterChange}
-          >
-            <FormControlLabel value='all' control={<Radio />} label='All' />
-            <FormControlLabel value='web' control={<Radio />} label='Web' />
-            <FormControlLabel
-              value='robotics'
-              control={<Radio />}
-              label='Robotics'
-            />
-          </RadioGroup>
-        </FormControl>
+        <ToggleButtonGroup
+          value={filterValue}
+          exclusive
+          onChange={handleFilterChange}
+          aria-label='filter'
+        >
+          <ToggleButton value='all' aria-label='all'>
+            All
+          </ToggleButton>
+          <ToggleButton value='web' aria-label='web'>
+            Web
+          </ToggleButton>
+          <ToggleButton value='robotics' aria-label='robotics'>
+            Robotics
+          </ToggleButton>
+        </ToggleButtonGroup>
       </div>
       <AnimateSharedLayout>
         <motion.ul layout className={classes.gridContainer}>
@@ -107,13 +90,6 @@ export default function ProjectsGrid() {
               <ProjectCard id={project.id} project={project} />
             </motion.li>
           ))}
-          {/* {projects.map((project) => {
-            return (
-              <motion.li layout className={classes.card} key={project}>
-                <h1>{project}</h1>
-              </motion.li>
-            );
-          })} */}
         </motion.ul>
       </AnimateSharedLayout>
     </div>

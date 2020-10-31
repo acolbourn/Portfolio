@@ -5,10 +5,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiButtonGroup-groupedContainedPrimary:not(:last-child)': {
+      borderColor: '#fff !important',
+    },
+  },
   pageInfo: {
-    backgroundColor: '#3f51b5 !important',
+    backgroundColor: `${theme.colors.fadedBlue} !important`,
     color: '#fff !important',
+    borderColor: '#fff !important',
   },
 }));
 

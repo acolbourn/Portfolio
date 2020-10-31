@@ -1,7 +1,11 @@
-import { makeStyles, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import ProximaNovaLightWoff2 from '../fonts/ProximaNova-Light.woff2'
-import AvenirNextCyrLightWoff2 from '../fonts/AvenirNextCyr-Light.woff2'
-import AvenirNextCyrThinWoff2 from '../fonts/AvenirNextCyr-Thin.woff2'
+import {
+  makeStyles,
+  createMuiTheme,
+  responsiveFontSizes,
+} from '@material-ui/core/styles';
+import ProximaNovaLightWoff2 from '../fonts/ProximaNova-Light.woff2';
+import AvenirNextCyrLightWoff2 from '../fonts/AvenirNextCyr-Light.woff2';
+import AvenirNextCyrThinWoff2 from '../fonts/AvenirNextCyr-Thin.woff2';
 
 // Setup self-hosted fonts
 const proximaNovaLight = {
@@ -48,23 +52,24 @@ const colors = {
   primary: '#29BFF7', // MAIN
   // primary: '#08fdd8', // green from jj site
   // primary: "#FD1056", // red from jj site
+  // '#F50057' // material ui radio button red
   secondary: '#444',
   fadedBlue: '#4086AA',
-}
+};
 
 let theme = createMuiTheme({
   palette: {
     type: 'dark',
   },
   colors: {
-    background: colors.background,    
-    primary: colors.primary,     
+    background: colors.background,
+    primary: colors.primary,
     secondary: colors.secondary,
     fadedBlue: colors.fadedBlue,
   },
   fonts: {
-    primary: 'ProximaNova, AvenirNextCyr, sans-serif',    
-  },  
+    primary: 'ProximaNova, AvenirNextCyr, sans-serif',
+  },
   // Material-UI global overrides
   typography: {
     fontFamily: ['ProximaNova, AvenirNextCyr, sans-serif'],
@@ -74,32 +79,32 @@ let theme = createMuiTheme({
       '@global': {
         '@font-face': [proximaNovaLight, avenirNextCyrLight, avenirNextCyrThin],
       },
-    }, 
-    MuiButton: {            
-      containedPrimary: {        
+    },
+    MuiButton: {
+      containedPrimary: {
         backgroundColor: colors.fadedBlue,
         '&:hover:not($disabled)': {
-          backgroundColor: colors.primary
-        }
-      },      
-      textPrimary: {        
+          backgroundColor: colors.primary,
+        },
+      },
+      textPrimary: {
         color: colors.fadedBlue,
       },
     },
     MuiFormLabel: {
       root: {
         '&$focused': {
-          color: colors.fadedBlue
-        }
-      }
+          color: colors.fadedBlue,
+        },
+      },
     },
     MuiInput: {
-      underline: {        
+      underline: {
         '&$focused:after': {
-          borderBottomColor: colors.fadedBlue
-        }                          
-      }
-    },    
+          borderBottomColor: colors.fadedBlue,
+        },
+      },
+    },
   },
 });
 
@@ -124,4 +129,4 @@ const useStyles = makeStyles((theme) => ({
 
 theme = responsiveFontSizes(theme);
 
-export {useStyles, theme};
+export { useStyles, theme };

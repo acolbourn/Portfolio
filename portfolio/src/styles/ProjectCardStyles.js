@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.primary,
     width: '100%',
     height: '100%',
+    // height: '200px',
     // height: '500px',
     // '@media (max-width: 1280px)': {
     //   height: '450px',
@@ -29,6 +30,17 @@ const useStyles = makeStyles((theme) => ({
     //   height: '420px',
     // },
     display: 'flex',
+    '& .MuiCardMedia-media': {
+      height: '150px',
+      // height: '45%',
+      // height: '225px',
+      // [theme.breakpoints.down('md')]: {
+      //   height: '225px',
+      // },
+      // [theme.breakpoints.down('sm')]: {
+      //   height: '180px',
+      // },
+    },
   }),
   actionArea: {
     display: 'flex',
@@ -36,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiCardContent-root': {
       flex: 1,
     },
+    paddingBottom: '0.05rem',
   },
   // Ribbon Styles
   ribbon: {

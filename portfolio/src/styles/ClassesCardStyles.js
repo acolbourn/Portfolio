@@ -49,9 +49,10 @@ const useStyles = makeStyles((theme) => ({
       display: 'block',
       width: 225,
       padding: '15px 0',
-      backgroundColor: theme.colors.fadedBlue,    
-      boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)',      
-      color: '#ffffff',    
+      backgroundImage:
+        'linear-gradient(to left, rgba(33,42,47,0.95), rgba(64,134,170,0.9))',
+      boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)',
+      color: '#ffffff',
       fontFamily: 'ProximaNova, AvenirNextCyr, sans-serif',
       fontWeight: '400',
       fontSize: '17px',
@@ -61,8 +62,8 @@ const useStyles = makeStyles((theme) => ({
       left: '-25px',
       top: 30,
       transform: 'rotate(45deg)',
-    }
-  },    
+    },
+  },
 }));
 
 export default useStyles;

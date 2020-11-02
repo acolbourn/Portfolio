@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,7 +10,6 @@ import useStyles from './styles/ProjectCardStyles';
 export default function ProjectCard({ project }) {
   const { imgSrc, imgAlt, title, description, featured } = project;
   const classes = useStyles(featured);
-  // const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {

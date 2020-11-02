@@ -6,40 +6,9 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.primary,
     width: '100%',
     height: '100%',
-    // height: '200px',
-    // height: '500px',
-    // '@media (max-width: 1280px)': {
-    //   height: '450px',
-    // },
-    // '@media (max-width: 1150px)': {
-    //   height: '475px',
-    // },
-    // '@media (max-width: 960px)': {
-    //   height: '400px',
-    // },
-    // '@media (max-width: 750px)': {
-    //   height: '450px',
-    // },
-    // '@media (max-width: 600px)': {
-    //   height: '360px',
-    // },
-    // '@media (max-width: 420px)': {
-    //   height: '400px',
-    // },
-    // '@media (max-width: 360px)': {
-    //   height: '420px',
-    // },
     display: 'flex',
     '& .MuiCardMedia-media': {
       height: '150px',
-      // height: '45%',
-      // height: '225px',
-      // [theme.breakpoints.down('md')]: {
-      //   height: '225px',
-      // },
-      // [theme.breakpoints.down('sm')]: {
-      //   height: '180px',
-      // },
     },
   }),
   actionArea: {
@@ -81,7 +50,8 @@ const useStyles = makeStyles((theme) => ({
       display: 'block',
       width: 225,
       padding: '15px 0',
-      backgroundColor: theme.colors.fadedBlue,
+      backgroundImage:
+        'linear-gradient(to left, rgba(33,42,47,0.95), rgba(64,134,170,0.9))',
       boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)',
       color: '#ffffff',
       fontFamily: 'ProximaNova, AvenirNextCyr, sans-serif',

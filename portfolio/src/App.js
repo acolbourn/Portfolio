@@ -1,15 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { ThemeProvider} from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import Navbar from './Navbar';
 import BackToTop from './BackToTop';
 import Home from './Home';
 import Classes from './Classes';
 import Contact from './Contact';
-import ProjectsGrid from './ProjectsGrid';
-// import Projects from './Projects';
+import Projects from './Projects';
 import About from './About';
-import {useStyles, theme} from './styles/AppStyles';
+import { useStyles, theme } from './styles/AppStyles';
 import './styles/App.css';
 
 function App() {
@@ -33,7 +32,7 @@ function App() {
                 <Classes />
               </Route>
               <Route path='/projects'>
-                <ProjectsGrid />
+                <Projects />
               </Route>
               <Route path='/about'>
                 <About />

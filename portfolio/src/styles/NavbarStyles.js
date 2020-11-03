@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  icon: {    
+  icon: {
     margin: '0 4px',
     [theme.breakpoints.down('xs')]: {
       margin: '0',
-    },    
+    },
     color: theme.colors.secondary,
     transition: 'color 0.2s',
     '& svg': {
@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
       left: '50%',
       marginLeft: '-155px',
     },
+    '@media (max-width: 650px)': {
+      left: '45%',
+    },
   },
   navLink: {
     position: 'relative',
@@ -58,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   navLinkText: {
-    fontFamily: 'ProximaNova, AvenirNextCyr, sans-serif', 
+    fontFamily: 'ProximaNova, AvenirNextCyr, sans-serif',
     fontWeight: '400',
     fontSize: '13px',
     width: '62px',
@@ -67,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       fontSize: '12px',
       top: '15.5px',
-    },    
+    },
   },
   socialGroup: {
     marginLeft: 'auto',

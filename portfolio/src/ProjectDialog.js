@@ -12,9 +12,9 @@ import ProjectWebsite from './ProjectWebsite';
 import useStyles from './styles/ProjectDialogStyles';
 
 export default function ProjectDialog({ open, closeDetail, project }) {
-  const theme = useTheme();
-  const classes = useStyles();
   const { title, youtube, github, pdf, webLink } = project;
+  const theme = useTheme();
+  const classes = useStyles(webLink ? true : false);
   const fullScreen =
     useMediaQuery(theme.breakpoints.down('xs')) || pdf !== null;
 

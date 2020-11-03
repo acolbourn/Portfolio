@@ -14,15 +14,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
-    paddingBottom: 8,
+    paddingBottom: 0,
   },
   dividerContainer: {
     flex: 'none',
   },
-  headerDivider: {
+  headerDivider: (webLink) => ({
     marginTop: '9px',
-    marginBottom: '10px',
-  },
+    marginBottom: webLink ? 0 : '10px',
+  }),
   desc: {
     marginTop: '16px',
     marginBottom: 0,

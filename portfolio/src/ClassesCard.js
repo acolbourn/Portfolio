@@ -45,7 +45,7 @@ export default function ClassesCard({ codingClass }) {
       {featured && (
         <div className={classes.ribbon}>
           <span>Featured</span>
-        </div>        
+        </div>
       )}
       <ClassesDialog
         codingClass={codingClass}

@@ -1,26 +1,45 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingBottom: '10px',
     '& div:nth-child(2)': {
       height: '48px',
       right: 'calc(50% - 120px)',
-      top: 'calc(100% - 59px)',
+      top: 'calc(100% - 62px)',
       '& button': {
         top: 0,
+      },
+      '& .MuiButtonBase-root': {
+        opacity: '1 !important',
+        filter: 'none !important',
+        backgroundColor: '#585858',
+        '&:hover': {
+          backgroundColor: '#707070',
+        },
       },
     },
     '& div:nth-child(3)': {
       height: '48px',
       left: 'calc(50% - 120px)',
-      top: 'calc(100% - 59px)',
+      top: 'calc(100% - 62px)',
       '& button': {
         top: 0,
+      },
+      '& .MuiButtonBase-root': {
+        opacity: '1 !important',
+        filter: 'none !important',
+        backgroundColor: '#585858',
+        '&:hover': {
+          backgroundColor: '#707070',
+        },
       },
     },
     '& div:nth-child(4)': {
       padding: '20px',
+    },
+    "& [class*='Carousel-active']": {
+      color: '#dc3545',
     },
   },
   carouselPaper: {

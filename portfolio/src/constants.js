@@ -39,7 +39,7 @@ const roboticsProjects = [
     imgAlt: 'Drone',
     title: 'Autonomous Drone',
     description:
-      'A project for an Army Research Lab funded drone startup aiming to use the electromagnetic radiation emitted from powerlines to both avoid and fly along them for inspections.  I created an experimental test setup and LabVIEW software that proves the feasibility of such a system using magnetic fields.',
+      'A project for an Army Research Lab funded drone startup aiming to use the electromagnetic radiation emitted from power lines to both avoid and fly along them for inspections.  I created an experimental test setup and LabVIEW software that proves the feasibility of such a system using magnetic fields.',
     featured: true,
     youtube: null,
     github: null,
@@ -74,11 +74,11 @@ const roboticsProjects = [
 const webProjects = [
   {
     id: uuidv4(),
-    imgSrc: 'images/raw/retirement.jpg',
+    imgSrc: 'images/optimized/retirement.jpg',
     imgAlt: 'Retirement Website',
     title: 'Retirement Calculator',
     description:
-      'A visual retirement calculator made with D3, Javascript, jQuery, Bootstrap 4, HTML, and CSS. This was my first big non-tutorial project to solidfy my understanding of the basics before moving onto React.  Use it to find the day when you no longer have to look at portfolio sites like this!',
+      'A visual retirement calculator made with D3, Javascript, jQuery, Bootstrap 4, HTML, and CSS. This was my first big non-tutorial project to solidify my understanding of the basics before moving onto React.  Use it to find the day when you no longer have to look at portfolio sites like this!',
     featured: true,
     youtube: null,
     github: 'https://github.com/acolbourn/Retirement-Calculator',
@@ -87,7 +87,7 @@ const webProjects = [
   },
   {
     id: uuidv4(),
-    imgSrc: 'images/raw/covid.jpg',
+    imgSrc: 'images/optimized/covid.jpg',
     imgAlt: 'Coronavirus Video Thumbnail',
     title: 'Covid-19 Hackathon',
     description:
@@ -111,7 +111,7 @@ const webProjects = [
   },
   {
     id: uuidv4(),
-    imgSrc: 'images/raw/colors.jpg',
+    imgSrc: 'images/optimized/colors.jpg',
     imgAlt: 'Color Picker Website',
     title: 'Color Picker',
     description:
@@ -202,7 +202,7 @@ const codingClasses = [
         projectGit:
           'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/colors-app',
         projectDesc:
-          "This is the capstone project of the bootcamp. It's a color palette website that lets you create and manage color pallettes.",
+          "This is the capstone project of the bootcamp. It's a color palette website that lets you create and manage color palettes.",
         projectFeatured: true,
       },
     ],
@@ -332,7 +332,7 @@ const codingClasses = [
   },
   {
     id: uuidv4(),
-    imgSrc: '/images/optimized/mit6.jpg',
+    imgSrc: '/images/optimized/codeImg1.jpg',
     imgAlt: 'MIT Computer Science',
     title: 'MITx Intro to Computer Science',
     description:

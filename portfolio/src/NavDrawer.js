@@ -21,7 +21,12 @@ export default function NavDrawer({
       <List>
         {socialGroupList.map((link) => (
           <ListItem button key={link.label}>
-            <IconButton className={classes.icon} aria-label={link.label}>
+            <IconButton
+              className={classes.icon}
+              aria-label={link.label}
+              href={link.link}
+              target='_blank'
+            >
               <Icon className={`${link.iconClass} ${classes.socialLink}`} />
             </IconButton>
           </ListItem>

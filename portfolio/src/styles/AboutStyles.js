@@ -154,10 +154,10 @@ const useStyles = makeStyles((theme) => ({
   aboutText: {
     marginTop: '-8px',
     '@media (max-height: 750px)': {
-      marginTop: '0',
+      marginTop: '6px',
     },
     [theme.breakpoints.down('xs')]: {
-      marginTop: '0',
+      marginTop: '6px',
     },
   },
   lastParagraph: {

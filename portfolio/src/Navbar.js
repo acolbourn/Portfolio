@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,14 +13,14 @@ import Icon from '@material-ui/core/Icon';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import NavDrawer from './NavDrawer';
-import useStyles from './styles/NavbarStyles';
 import Logo from './Logo';
+import useStyles from './styles/NavbarStyles';
 
 export default function ButtonAppBar() {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
-  const [drawerState, setDrawerState] = React.useState({
+  const [drawerState, setDrawerState] = useState({
     open: false,
   });
 
@@ -47,7 +47,7 @@ export default function ButtonAppBar() {
           <WorkOutlineOutlinedIcon className={classes.navLink} />
           <div className={classes.navLinkText}>PROJECTS</div>
         </IconButton>
-      </NavLink>      
+      </NavLink>
       <NavLink to='/classes' activeClassName={classes.activePage} exact>
         <IconButton className={classes.icon} aria-label='Classes'>
           <SchoolIcon className={classes.navLink} />
@@ -70,9 +70,21 @@ export default function ButtonAppBar() {
   );
 
   const socialGroupList = [
-    { iconClass: 'fab fa-linkedin-in', label: 'LinkedIn', link: 'https://www.linkedin.com/in/alex-colbourn' },
-    { iconClass: 'fab fa-github', label: 'Github', link: 'https://github.com/acolbourn' },
-    { iconClass: 'fab fa-youtube', label: 'YouTube', link: 'https://www.youtube.com/channel/UCN4scLg9N0ujvaBxCpVB4Ow/videos' }
+    {
+      iconClass: 'fab fa-linkedin-in',
+      label: 'LinkedIn',
+      link: 'https://www.linkedin.com/in/alex-colbourn',
+    },
+    {
+      iconClass: 'fab fa-github',
+      label: 'Github',
+      link: 'https://github.com/acolbourn',
+    },
+    {
+      iconClass: 'fab fa-youtube',
+      label: 'YouTube',
+      link: 'https://www.youtube.com/channel/UCN4scLg9N0ujvaBxCpVB4Ow/videos',
+    },
   ];
 
   const socialGroup = (
@@ -110,9 +122,7 @@ export default function ButtonAppBar() {
               <Logo />
             </div>
           )}
-
           {navGroup}
-
           {!isMobile && socialGroup}
         </Toolbar>
       </AppBar>

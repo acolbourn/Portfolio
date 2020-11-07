@@ -16,7 +16,7 @@ export default function ThreeScale({
   graphics,
   isLoading,
 }) {
-  // Rerender on window resize events and recalculate scales
+  // Re-render on window resize events and recalculate scales
   const { width, height } = useThree().size;
   const windowHalfX = width / 2;
   const windowHalfY = height / 2;
@@ -72,14 +72,20 @@ export default function ThreeScale({
         meshPosition={positions.logo}
         meshScale={[1, 1, 1]}
         deadZone={deadZone}
-        mouse={mouse}        
+        mouse={mouse}
         graphics={graphics}
       />
       <HeaderText mouse={mouse} graphics={graphics} isLoading={isLoading} />
-      {graphics !== 'low' ? <Sun position={positions.logo} mouse={mouse} /> : null}
+      {graphics !== 'low' ? (
+        <Sun position={positions.logo} mouse={mouse} />
+      ) : null}
       {graphics !== 'low' ? <SunBloom mouse={mouse} /> : null}
       <WobbleSphere position={positions.logo} mouse={mouse} />
-      <StarsAnimated mouse={mouse} position={positions.logo} graphics={graphics}/>
-    </group>    
+      <StarsAnimated
+        mouse={mouse}
+        position={positions.logo}
+        graphics={graphics}
+      />
+    </group>
   );
 }

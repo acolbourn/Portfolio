@@ -4,13 +4,13 @@ import { useFrame } from 'react-three-fiber';
 import Color from 'color';
 import { scaleLinear, scalePow } from 'd3-scale';
 import { useSpring, animated } from 'react-spring/three';
-import {logoPoints} from './3dConstants';
+import { logoPoints } from './3dConstants';
 import { getRandomSpherePoints } from './3dConstants';
 
 export default function LogoBoxes({
   mouse,
   meshPosition,
-  meshScale,  
+  meshScale,
   graphics,
 }) {
   const colorPalette = ['#222831', '#393e46', '#0092ca']; // Colors when mouse at bottom of screen
@@ -70,10 +70,10 @@ export default function LogoBoxes({
 
   // Note: useRefs instead of useState are essential to keep animation loop fast and avoid triggering re-renders which cause small glitches
   const ref = useRef(); // Mesh ref
-  const matRef = useRef(); // Material ref  
-  const colorRef = useRef(); // Color ref  
+  const matRef = useRef(); // Material ref
+  const colorRef = useRef(); // Color ref
   const isLoadingRef = useRef(true); // loading ref for opacity fade
-  const initBoxPositionRef = useRef(3000); // inital box position ref
+  const initBoxPositionRef = useRef(3000); // initial box position ref
 
   // Init react-spring variables, used for smooth movement
   const springScaleRef = useRef(); // scale ref
@@ -94,7 +94,7 @@ export default function LogoBoxes({
       clamp: clamp,
     },
   }));
- 
+
   // Initialize empty color array
   const colorArray = useMemo(
     () =>
@@ -176,13 +176,13 @@ export default function LogoBoxes({
       inBlackHoleZone,
       blackHoleState,
     } = mouse.current;
-   
+
     // Intro Animation State Machine
     if (mouse.current.introState !== 'Done') {
       if (mouse.current.introState === 'Name Loaded' && isLoadingRef.current) {
         // Once name is loaded, assemble boxes by setting mouse position to 0
         initBoxPositionRef.current = 0;
-        isLoadingRef.current = false;       
+        isLoadingRef.current = false;
       }
       // Check one of the boxes x position to determine if the boxes are assembled and update state
       if (
@@ -285,7 +285,7 @@ export default function LogoBoxes({
       let i = 0; // Box instance loop count
 
       // Update box positions and rotations.
-      logoPoints3d.forEach((position, idx) => {        
+      logoPoints3d.forEach((position, idx) => {
         const id = i++; // Box id
         // Box position within logo group
         const x = position[0];
@@ -323,7 +323,9 @@ export default function LogoBoxes({
           Math.sin(z / 4 + time);
         tempObject.rotation.z = tempObject.rotation.y * 2;
         // Apply new values to matrix
-        tempColor.set(boxColorsHex[colorIds[idx]]).toArray(colorRef.current.array, id * 3);        
+        tempColor
+          .set(boxColorsHex[colorIds[idx]])
+          .toArray(colorRef.current.array, id * 3);
         tempObject.updateMatrix();
         ref.current.setMatrixAt(id, tempObject.matrix);
       });

@@ -46,13 +46,7 @@ const avenirNextCyrThin = {
 
 const colors = {
   background: '#1D1D1D',
-  // primary: '#91C3DC', // light blue from retirement site
-  // primary: '#4086AA', // dark blue from retirement site
-  // primary: '#3EA6FF',  // from youtube
-  primary: '#29BFF7', // MAIN
-  // primary: '#08fdd8', // green from jj site
-  // primary: "#FD1056", // red from jj site
-  // '#F50057' // material ui radio button red
+  primary: '#29BFF7',
   secondary: '#444',
   fadedBlue: '#4086AA',
 };
@@ -113,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100vh',
-    backgroundColor: '#1D1D1D',
+    backgroundColor: colors.background,
   },
   nav: {
     height: '64px',
@@ -122,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   body: {
-    backgroundColor: '#1D1D1D',
+    backgroundColor: colors.background,
     flex: 1,
   },
 }));

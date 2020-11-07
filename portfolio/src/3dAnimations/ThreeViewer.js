@@ -5,7 +5,7 @@ import HomeFallback from '../HomeFallback';
 import ThreeScale from './ThreeScale';
 
 export default function ThreeViewer({ graphics, isLoading }) {
-  // Process mouse & touchscreen movements.  Note - useRef is essential as useState would trigger rerenders causing glitches in animation updates
+  // Process mouse & touchscreen movements.  Note - useRef is essential as useState would trigger re-renders causing glitches in animation updates
   const mouse = useRef({
     mouseX: 0, // Raw X
     mouseY: 0, // Raw Y
@@ -33,7 +33,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
 
   const deadZone = 75; // Space at center of screen where mouse movements don't effect animations
 
-  // Scaling must be processed within canvas by passing to ThreeScale component, then passed back using this ref for mouse processing, otherwise canvas is rerendered.
+  // Scaling must be processed within canvas by passing to ThreeScale component, then passed back using this ref for mouse processing, otherwise canvas is re-rendered.
   const scaleRef = useRef({
     windowHalfX: 0, // Screen width / 2
     windowHalfY: 0, // Screen height / 2
@@ -125,7 +125,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
   return (
     <>
       <Suspense fallback={<HomeFallback />}>
-        <Canvas         
+        <Canvas
           gl={{ antialias: false, alpha: true }}
           camera={{ position: [0, 0, 40] }}
           onCreated={({ gl }) => gl.setClearColor('#1D1D1D')}
@@ -134,9 +134,9 @@ export default function ThreeViewer({ graphics, isLoading }) {
           onTouchStart={(e) => e.preventDefault()}
           onTouchEnd={(e) => e.preventDefault()}
           onTouchCancel={(e) => e.preventDefault()}
-          pixelRatio={window.devicePixelRatio * 1.5}          
+          pixelRatio={window.devicePixelRatio * 1.5}
         >
-          <Lights mouse={mouse} graphics={graphics} />         
+          <Lights mouse={mouse} graphics={graphics} />
           <ThreeScale
             scaleRef={scaleRef}
             deadZone={deadZone}
@@ -144,7 +144,7 @@ export default function ThreeViewer({ graphics, isLoading }) {
             graphics={graphics}
             isLoading={isLoading}
           />
-        </Canvas>        
+        </Canvas>
       </Suspense>
     </>
   );

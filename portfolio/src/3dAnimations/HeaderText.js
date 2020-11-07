@@ -52,7 +52,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
     .range([THREE.Math.degToRad(40), THREE.Math.degToRad(0.1)])
     .clamp(true);
 
-  // Generate random speed percentages so each letter travels in a different orbit.  Precompute large array that each letter can pull from at random each time mouse is in deadzone so orbits constantly change.
+  // Generate random speed percentages so each letter travels in a different orbit.  Pre-compute large array that each letter can pull from at random each time mouse is in deadzone so orbits constantly change.
   let maxSpeeds = [];
   const speedFactor = 30;  // Lower range of orbit speeds, between 0 and 100
   const minSpeed = speedFactor / 100;

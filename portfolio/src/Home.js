@@ -12,7 +12,7 @@ export default function Home() {
   const handleGraphicsChange = (value) => {
     setGraphics(value);
   };
-  // Loading Spinner ref - useRef instead of useState so canvas doesn't rerender.
+  // Loading Spinner ref - useRef instead of useState so canvas doesn't re-render.
   const isLoading = useRef(true);
   let content; // Page content depending on graphics capability
 

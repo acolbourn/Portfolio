@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  withRouter,
+} from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
 import ReactGA from 'react-ga';
 import Navbar from './Navbar';
@@ -12,14 +17,16 @@ import About from './About';
 import { useStyles, theme } from './styles/AppStyles';
 import './styles/App.css';
 
+// Google Analytics
+ReactGA.initialize('G-N7QT01SYPQ');
+
 function App() {
   const classes = useStyles();
 
-  // Run google analytics
+  // Google Analytics - update when page changes
   useEffect(() => {
-    ReactGA.initialize('G-N7QT01SYPQ');
     ReactGA.pageview(window.location.pathname + window.location.search);
-  }, []);
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -55,4 +62,4 @@ function App() {
   );
 }
 
-export default App;
+export default withRouter(App);

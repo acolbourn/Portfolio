@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
+import ReactGA from 'react-ga';
 import Navbar from './Navbar';
 import BackToTop from './BackToTop';
 import Home from './Home';
@@ -13,6 +14,12 @@ import './styles/App.css';
 
 function App() {
   const classes = useStyles();
+
+  // Run google analytics
+  useEffect(() => {
+    ReactGA.initialize('G-N7QT01SYPQ');
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

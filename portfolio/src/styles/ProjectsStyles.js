@@ -45,12 +45,14 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     '& .MuiToggleButton-root': {
       width: '100%',
+      color: 'rgb(255 255 255 / 62%)',
     },
     '& .MuiToggleButtonGroup-root': {
       width: '100%',
     },
     '& .Mui-selected': {
       backgroundColor: 'rgb(64 134 170 / 25%)',
+      color: '#fff !important',
       '&:hover': {
         backgroundColor: 'rgb(64 134 170 / 45%)',
       },

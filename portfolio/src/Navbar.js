@@ -96,6 +96,7 @@ export default function ButtonAppBar() {
           key={link.label}
           href={link.link}
           target='_blank'
+          rel='noopener'
         >
           <Icon className={`${link.iconClass} ${classes.socialLink}`} />
         </IconButton>

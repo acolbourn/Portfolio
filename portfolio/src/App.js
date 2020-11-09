@@ -25,7 +25,7 @@ function App() {
           </div>
 
           <div className={classes.body}>
-            <Analytics id='G-N7QT01SYPQ'>
+            <Analytics id='G-08Q43GW33L'>
               <Switch>
                 <Route path='/contact'>
                   <Contact />

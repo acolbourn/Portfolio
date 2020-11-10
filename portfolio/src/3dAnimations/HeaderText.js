@@ -19,7 +19,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
 
   // Variables
   const mainTextColor = '#0047AB';
-  const instructionTextColor = '#EFEFEF'; 
+  const instructionTextColor = '#EFEFEF';
   const constRotation = 0; // fixed slow rotation when mouse on right of screen
   let rotationSpeed = constRotation; // current rotation speed scaled
   let letterScale = 1; // Scale of each letter
@@ -34,7 +34,9 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
   let frictionCurrent = frictionImplode; // current react-spring friction
   let opacity = { group1: -0.3, group2: 0 }; // Opacities of each word for fade effects.  Note, group 1 starts slightly below 0 to give loading spinner a little time to fade out
   // Skip intro animations if use selects different graphics
-  if (graphics !== 'high') {opacity = { group1: 1, group2: 1 };}
+  if (graphics !== 'high') {
+    opacity = { group1: 1, group2: 1 };
+  }
   let opacityLoaded = { group1: false, group2: false }; // true when initial fade in complete
   const isLoadingRef = useRef({ group1: true, group2: true }); // loading ref for each groups' opacity fade
   const opacityFadeSpeed = 0.01; // Opacity fade in speed on load
@@ -54,7 +56,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
 
   // Generate random speed percentages so each letter travels in a different orbit.  Pre-compute large array that each letter can pull from at random each time mouse is in deadzone so orbits constantly change.
   let maxSpeeds = [];
-  const speedFactor = 30;  // Lower range of orbit speeds, between 0 and 100
+  const speedFactor = 30; // Lower range of orbit speeds, between 0 and 100
   const minSpeed = speedFactor / 100;
   for (let i = 0; i < 200; i++) {
     // Random max rotation speeds
@@ -78,10 +80,10 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
   }, [mouse]);
 
   useFrame(() => {
-    const {      
+    const {
       mouseXLeftLin,
-      mouseXRightLin,      
-      mouseXRightLog,     
+      mouseXRightLin,
+      mouseXRightLog,
       inBlackHoleZone,
       isLeftOrRight,
       disableMouse,
@@ -148,7 +150,7 @@ export default function HeaderText({ mouse, graphics, isLoading }) {
         mouse.current.introState = 'Done';
       }
       // If graphics aren't high, mark as done and bypass all intro animations to prioritize performance
-      if (graphics !== 'high'){
+      if (graphics !== 'high') {
         mouse.current.introState = 'Done';
         // Update loading ref so SpinnerFade component fades out
         isLoading.current = false;

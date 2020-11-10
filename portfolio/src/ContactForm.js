@@ -34,6 +34,7 @@ export default function ContactForm({ submitForm, status, message }) {
     [classes.buttonSuccess]: success,
   });
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const smallHeight = useMediaQuery('(max-height:750px)');
 
   const enableSubmitButton = () => {
     if (loading) {
@@ -136,7 +137,7 @@ export default function ContactForm({ submitForm, status, message }) {
                         helperText={formattedErrors.Name.message}
                       />
                     </FormGroup>
-                  </div>                  
+                  </div>
                   <div className={classes.formGroup}>
                     <FormGroup>
                       <Field
@@ -148,7 +149,7 @@ export default function ContactForm({ submitForm, status, message }) {
                         helperText={formattedErrors.Email.message}
                       />
                     </FormGroup>
-                  </div>                  
+                  </div>
                   <div className={classes.formGroupMessage}>
                     <FormGroup>
                       <Field
@@ -156,12 +157,12 @@ export default function ContactForm({ submitForm, status, message }) {
                         as={TextField}
                         label='Message'
                         multiline
-                        rows={isMobile ? 5 : 8}
+                        rows={isMobile || smallHeight ? 5 : 8}
                         error={formattedErrors.Message.isError}
                         helperText={formattedErrors.Message.message}
                       />
                     </FormGroup>
-                  </div>                  
+                  </div>
                   <div className={classes.buttonPosition}>
                     <div className={classes.buttonWrapper}>
                       <Button

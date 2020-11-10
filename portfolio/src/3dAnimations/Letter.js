@@ -67,7 +67,7 @@ export default function Letter({
     letterSpacing: 0,
     textAlign: 'justify',
   };
-  const mat = new THREE.MeshPhongMaterial();  // Three material
+  const mat = new THREE.MeshPhongMaterial(); // Three material
 
   // Get new random orbit speeds from precomputed array
   let maxSpeed = maxSpeeds[Math.floor(Math.random() * (maxSpeeds.length - 1))];
@@ -92,15 +92,15 @@ export default function Letter({
       tempObject.quaternion.set(0, 0, 0, 1);
       xQuat.set(0, 0, 0, 1);
       yQuat.set(0, 0, 0, 1);
-      zQuat.set(0, 0, 0, 1);      
+      zQuat.set(0, 0, 0, 1);
     }
   }
 
-  useFrame(() => { 
-    // import mouse data   
-    const {      
-      mouseXLeftLin,      
-      inDeadZone,      
+  useFrame(() => {
+    // import mouse data
+    const {
+      mouseXLeftLin,
+      inDeadZone,
       isLeftOrRight,
       disableMouse,
       blackHoleState,
@@ -244,7 +244,7 @@ export default function Letter({
             ref={meshRef}
             {...opts}
             font={
-              icon                
+              icon
                 ? '/fonts/FontAwesomeCustom.woff'
                 : '/fonts/syncopate-v11-latin-regular.woff'
             }

@@ -27,7 +27,7 @@ I faced a number of challenges while creating this:
 1. Processing power - Speed optimization was by far the biggest hurdle. Viewers could be on anything from a phone to a gaming PC, so every piece of code had to be meticulously optimized.
 2. React State and Lifecycle - Communication between components was particularly challenging because normal state updates triggered re-renders which caused glitches. Solving this required many workarounds such as passing data with useRef's, state machines inside of useEffect's, and memoization with useMemo.
 3. Math - This was an interesting crossover with robotics. The positions and rotations were calculated using rotation matrices/quaternions and linear algebra. This is the exact same math used in calculating a robot's arm joint positions and swarms of robots, for example.
-4. Responsive Design - CSS was used to scale the canvas itself, but the 3d world unfortunately has no such system. Commands that take 10 seconds in CSS had to be manually recreated in 3d.
+4. Responsive Design - CSS was used to scale the canvas itself, but the 3d world unfortunately has no such system. Scaling and positioning commands that take 10 seconds in CSS had to be manually recreated in 3d.
 5. Interactivity - Translating user mouse/touchscreen input into smooth onscreen animations required dozens of simultaneous scaling operations done with d3-scale. I also used react-spring heavily to smooth out the animations. These operations are incredibly CPU hungry so they had to be used strategically as needed and then immediately disabled.
 
 ## Projects Page

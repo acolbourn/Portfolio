@@ -1,68 +1,65 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Portfolio
 
-## Available Scripts
+A portfolio site built with React and Three.js.
 
-In the project directory, you can run:
+## Technologies
 
-### `npm start`
+- React 16
+- Javascript ES6
+- HTML 5
+- CSS 3
+- material-ui 4.11
+- react-three-fiber 4.2
+- formik 2.1
+- framer-motion 2.9
+- react-router-dom 5.2
+- three 0.118
+- yup 0.28
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Home Page
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+This page was made with WebGL, Three.js, and react-three-fiber.
 
-### `npm test`
+It is intended to be a mini recreation of the big bang. When a user moves the mouse left, the website is sucked into a blackhole. When they move right, it explodes. New NASA research shows that the universe will eventually form clusters strongly resembling this portfolio.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+I faced a number of challenges while creating this:
 
-### `npm run build`
+1. Processing power - Speed optimization was by far the biggest hurdle. Viewers could be on anything from a phone to a gaming PC, so every piece of code had to be meticulously optimized.
+2. React State and Lifecycle - Communication between components was particularly challenging because normal state updates triggered re-renders which caused glitches. Solving this required many workarounds such as passing data with useRef's, state machines inside of useEffect's, and memoization with useMemo.
+3. Math - This was an interesting crossover with robotics. The positions and rotations were calculated using rotation matrices/quaternions and linear algebra. This is the exact same math used in calculating a robot's arm joint positions and swarms of robots, for example.
+4. Responsive Design - CSS was used to scale the canvas itself, but the 3d world unfortunately has no such system. Commands that take 10 seconds in CSS had to be manually recreated in 3d.
+5. Interactivity - Translating user mouse/touchscreen input into smooth onscreen animations required dozens of simultaneous scaling operations done with d3-scale. I also used react-spring heavily to smooth out the animations. These operations are incredibly CPU hungry so they had to be used strategically as needed and then immediately disabled.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Projects Page
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- Framer-Motion - Animates the page layout when the filter buttons are pressed.
+- CSS Grid & Flexbox - Used for the page and card layouts.
+- react-player and react-material-ui-carousel - Used to display video carousels.
+- react-pdf - Used to display pdfs as images.
+- Material-UI - Cards and buttons with heavily customized css.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Classes Page
 
-### `npm run eject`
+This page has links to my bootcamp projects. I felt these should be separate from my personal projects as they were tutorial projects.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## About Page
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The timeline on this page is pure CSS and javascript. It auto-updates every month, rescales automatically, and is fully responsive.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Contact Page
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- MailChimp API - Server used to receive a message.
+- Formik and Yup Validation - These were used to validate the form data in addition to basic HTML validation.
 
-## Learn More
+## Additional Skills
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project was all about learning so I wanted to discuss some additional skills I picked up along the journey:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- Website Hosting - This is done with a google domain, hosted on netlify, and continuously updated via Github.
+- Image Optimization - The total for all images on my site combined is 370 kb!
+- Speed Testing/Lighthouse Audits - Significantly sped up the site by switching to self-hosted fonts that had slow CDN's, and eliminated other blocking requests.
+- SEO - Getting close to overtaking someone else on google with my name!
+- Design - I spent a ton of time learning about font legibility, color selection, hover states, intuitive page layouts, etc...
+- SVG's - Learned how to make custom SVG's for my logo.
+- Accessibility - Everything is properly labeled for screen readers and SEO, and color contrast ratios and fonts are all easy to read.
+- Google Analytics - Setup basic page visit analytics.

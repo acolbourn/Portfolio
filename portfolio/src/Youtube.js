@@ -16,6 +16,9 @@ export default function Youtube({ youtube }) {
         navButtonsAlwaysVisible={true}
         fullHeightHover={false}
         className={classes.root}
+        activeIndicatorProps={{
+          className: classes.activeVid,
+        }}
       >
         {youtube.map((video, idx) => (
           <Paper key={idx} className={classes.carouselPaper}>

@@ -22,7 +22,7 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-mailchimp-subscribe": "^2.1.0",
-    "react-material-ui-carousel": "^1.5.1",
+    "react-material-ui-carousel": "^1.9.2",
     "react-pdf": "^4.2.0",
     "react-player": "^2.1.0",
     "react-router-dom": "^5.2.0",

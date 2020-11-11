@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif', 
+    fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif',
     fontWeight: '400',
   },
   card: {
@@ -21,19 +21,20 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '150px',
     maxWidth: '600px',
     maxHeight: '780px',
+    margin: '8px auto',
     padding: '2rem',
     '@media (max-height: 800px)': {
       padding: '0.5rem',
     },
     [theme.breakpoints.down('xs')]: {
       margin: 'auto',
-      padding: '5px',
+      padding: '8px',
       width: '90%',
       height: '80%',
       '@media (max-height: 800px)': {
         height: '100%',
         width: '100%',
-        border: 'none',        
+        border: 'none',
       },
     },
   },
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
       '@media (max-height: 800px)': {
         marginBottom: theme.spacing(3),
       },
-    },    
+    },
   },
   title: {
     color: theme.colors.fadedBlue,
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       marginBottom: '8px',
     },
-    fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif', 
+    fontFamily: 'AvenirNextCyr, ProximaNova, sans-serif',
     fontWeight: '300',
   },
   content: {
@@ -97,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formGroupMessage: {
     minHeight: '148px',
-  }
+  },
 }));
 
 export default useStyles;

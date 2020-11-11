@@ -38,9 +38,6 @@ const useStyles = makeStyles((theme) => ({
     '& div:nth-child(4)': {
       padding: '20px',
     },
-    "& [class*='Carousel-active']": {
-      color: '#dc3545',
-    },
   },
   carouselPaper: {
     width: '100% !important',
@@ -62,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
   },
   vidDescription: {
     padding: '0.75rem',
+  },
+  activeVid: {
+    color: '#dc3545',
   },
 }));
 

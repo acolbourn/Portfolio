@@ -22,7 +22,7 @@ https://www.alexcolbourn.com/
 
 This page was made with WebGL, Three.js, and react-three-fiber.
 
-It is intended to be a mini recreation of the big bang. When a user moves the mouse left, the website is sucked into a blackhole. When they move right, it explodes. New NASA research shows that the universe will eventually form clusters strongly resembling this portfolio.
+It is intended to be a mini recreation of the big bang. When a user moves the mouse left, the website is sucked into a blackhole. When they move right, it explodes.
 
 I faced a number of challenges while creating this:
 

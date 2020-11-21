@@ -59,8 +59,8 @@ export default function About() {
             </Typography>
             <Typography paragraph variant='body1'>
               I'm interested in all aspects of the internet, robotics, and the
-              overlap between them. I'm focused on Frontend and React at the
-              moment, but I'm very interested in all Backend, Fullstack, and
+              overlap between them. I'm currently focused on Frontend with
+              React, but I'm very interested in all Backend, Fullstack, and
               Robotics software opportunities as well.
             </Typography>
             <Typography
@@ -69,7 +69,7 @@ export default function About() {
               className={classes.lastParagraph}
             >
               Outside of work you'll find me making music, hiking, biking, or
-              flying planes again if you pay me enough.
+              flying small planes.
             </Typography>
           </div>
         </div>

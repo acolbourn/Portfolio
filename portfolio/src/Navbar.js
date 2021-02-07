@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -33,6 +34,13 @@ export default function ButtonAppBar() {
     }
     setDrawerState({ open: openToggle });
   };
+
+  // Google Analytics
+  let location = useLocation();
+  useEffect(() => {
+    ReactGA.initialize('UA-182243752-1');
+    ReactGA.pageview(location.pathname);
+  }, [location]);
 
   const navGroup = (
     <div className={classes.navGroup}>

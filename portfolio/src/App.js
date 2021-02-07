@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
-import Analytics from 'react-router-ga';
 import Navbar from './Navbar';
 import BackToTop from './BackToTop';
 import Home from './Home';
@@ -25,25 +24,23 @@ function App() {
           </div>
 
           <div className={classes.body}>
-            <Analytics id='UA-182243752-1'>
-              <Switch>
-                <Route path='/contact'>
-                  <Contact />
-                </Route>
-                <Route path='/classes'>
-                  <Classes />
-                </Route>
-                <Route path='/projects'>
-                  <Projects />
-                </Route>
-                <Route path='/about'>
-                  <About />
-                </Route>
-                <Route path='/'>
-                  <Home />
-                </Route>
-              </Switch>
-            </Analytics>
+            <Switch>
+              <Route path='/contact'>
+                <Contact />
+              </Route>
+              <Route path='/classes'>
+                <Classes />
+              </Route>
+              <Route path='/projects'>
+                <Projects />
+              </Route>
+              <Route path='/about'>
+                <About />
+              </Route>
+              <Route path='/'>
+                <Home />
+              </Route>
+            </Switch>
           </div>
         </div>
       </Router>

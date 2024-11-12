@@ -59,7 +59,7 @@ This project was all about learning so I wanted to discuss some additional skill
 
 - Website Hosting - This is done with a google domain, hosted on netlify, and continuously updated via Github.
 - Image Optimization - The total for all images on my site combined is 370 kb!
-- Speed Testing/Lighthouse Audits - Significantly sped up the site by switching to self-hosted fonts that had slow CDN's, and eliminated other blocking requests.
+- Speed Testing/Lighthouse Audits - Significantly sped up the site by switching to self-hosted fonts for fonts that had slow CDN's, and eliminated other blocking requests.
 - SEO - Getting close to overtaking someone else on google with my name!
 - Design - I spent a ton of time learning about font legibility, color selection, hover states, intuitive page layouts, etc...
 - SVG's - Learned how to make custom SVG's for my logo.

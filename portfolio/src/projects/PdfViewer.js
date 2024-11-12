@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import Link from '@material-ui/core/Link';
+import React, { useEffect, useRef, useState } from 'react';
+import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import PdfButtons from './PdfButtons';
 import useStyles from './styles/PdfViewerStyles';
 

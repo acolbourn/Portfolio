@@ -1,6 +1,6 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
 import ClassesCard from './ClassesCard';
 import { codingClasses } from './constants';
 

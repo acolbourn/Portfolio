@@ -1,16 +1,16 @@
-import React from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Avatar from '@material-ui/core/Avatar';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
-import WebAssetIcon from '@material-ui/icons/WebAsset';
+import ListItemText from '@material-ui/core/ListItemText';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import StarIcon from '@material-ui/icons/Star';
+import WebAssetIcon from '@material-ui/icons/WebAsset';
+import React from 'react';
 import useStyles from './styles/ClassesProjectsStyles';
 
 export default function ClassesProjects({ projects }) {

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { AnimateSharedLayout, motion } from 'framer-motion';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import ProjectCard from './ProjectCard';
+import { AnimateSharedLayout, motion } from 'framer-motion';
+import React, { useState } from 'react';
 import { roboticsProjects, webProjects } from './constants';
+import ProjectCard from './ProjectCard';
 import useStyles from './styles/ProjectsStyles';
 
 export default function Projects() {

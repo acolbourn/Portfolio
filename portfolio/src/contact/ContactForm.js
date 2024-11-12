@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
 import {
+  Button,
   Card,
   CardContent,
   FormGroup,
   TextField,
   Typography,
-  Button,
 } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import clsx from 'clsx';
-import { Form, Formik, Field } from 'formik';
+import { Field, Form, Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
 import { object, string } from 'yup';
-import ContactSuccess from './ContactSuccess';
 import ContactError from './ContactError';
+import ContactSuccess from './ContactSuccess';
 import CopyText from './CopyText';
 import useStyles from './styles/ContactFormStyles';
 
 const initialValues = {
-  Name: '',
-  Email: '',
-  Message: '',
+  NAME: '',
+  EMAIL: '',
+  MESSAGE: '',
 };
 
 export default function ContactForm({ submitForm, status, message }) {
@@ -51,9 +51,10 @@ export default function ContactForm({ submitForm, status, message }) {
   const handleSubmit = (values, { setSubmitting }) => {
     setTimeout(() => {
       const valuesMailChimpFormat = {
-        MERGE0: values.Email.toString(),
-        MERGE1: values.Name.toString(),
-        MERGE2: values.Message.toString(),
+        EMAIL: values.EMAIL.toString(),
+        NAME: values.NAME.toString(),
+        MESSAGE: values.MESSAGE.toString(),
+        b_11e3807d1d0c5825bc7a2d077_249fd95a22: '', // Add honeypot field (used by MailChimp to filter out bots)
       };
       disableSubmitButton();
       setMailError(false);
@@ -112,16 +113,16 @@ export default function ContactForm({ submitForm, status, message }) {
           </div>
           <Formik
             validationSchema={object({
-              Name: string().required().min(2).max(35),
-              Email: string().required().email().min(2).max(35),
-              Message: string().required().min(2).max(2000),
+              NAME: string().required().min(2).max(35),
+              EMAIL: string().required().email().min(2).max(35),
+              MESSAGE: string().required().min(2).max(2000),
             })}
             initialValues={initialValues}
             onSubmit={handleSubmit}
           >
             {({ errors, touched }) => {
               const formattedErrors = checkAndFormatErrors(
-                ['Name', 'Email', 'Message'],
+                ['NAME', 'EMAIL', 'MESSAGE'],
                 errors,
                 touched
               );
@@ -130,36 +131,36 @@ export default function ContactForm({ submitForm, status, message }) {
                   <div className={classes.formGroup}>
                     <FormGroup>
                       <Field
-                        name='Name'
+                        name='NAME'
                         as={TextField}
                         label='Name'
-                        error={formattedErrors.Name.isError}
-                        helperText={formattedErrors.Name.message}
+                        error={formattedErrors.NAME.isError}
+                        helperText={formattedErrors.NAME.message}
                       />
                     </FormGroup>
                   </div>
                   <div className={classes.formGroup}>
                     <FormGroup>
                       <Field
-                        name='Email'
+                        name='EMAIL'
                         as={TextField}
                         label='Email'
                         type='email'
-                        error={formattedErrors.Email.isError}
-                        helperText={formattedErrors.Email.message}
+                        error={formattedErrors.EMAIL.isError}
+                        helperText={formattedErrors.EMAIL.message}
                       />
                     </FormGroup>
                   </div>
                   <div className={classes.formGroupMessage}>
                     <FormGroup>
                       <Field
-                        name='Message'
+                        name='MESSAGE'
                         as={TextField}
                         label='Message'
                         multiline
                         rows={isMobile || smallHeight ? 5 : 8}
-                        error={formattedErrors.Message.isError}
-                        helperText={formattedErrors.Message.message}
+                        error={formattedErrors.MESSAGE.isError}
+                        helperText={formattedErrors.MESSAGE.message}
                       />
                     </FormGroup>
                   </div>

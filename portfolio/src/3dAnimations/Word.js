@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { positions } from './3dConstants';
+import { positions } from './constants';
 import Letter from './Letter';
 
 export default function Word({
@@ -11,14 +11,14 @@ export default function Word({
   rotation,
   color,
   mouse,
-  common, 
+  common,
   maxSpeeds,
   graphics,
   icon,
   alignText,
   scale,
   isLine,
-}) {  
+}) {
   const letters = [...text];
   const [x, y, z] = position;
   let spacingArray = []; // Spacing array of each individual letter

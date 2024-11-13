@@ -1,45 +1,17 @@
-import React from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Typography } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
-import Timeline from './Timeline';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import React from 'react';
 import AboutSkills from './AboutSkills';
+import { roboticsSkills, webSkills } from './constants';
 import useStyles from './styles/AboutStyles';
+import Timeline from './Timeline';
 
 export default function About() {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const webSkills = [
-    'JavaScript',
-    'Python',
-    'React',
-    'HTML 5',
-    'CSS 3',
-    'Node',
-    'Express',
-    'MongoDB',
-    'WebGL',
-    'Three.js',
-    'D3.js',
-    'Git',
-  ];
-  const roboticsSkills = [
-    'ROS',
-    'Gazebo',
-    'LabVIEW',
-    "PLC's",
-    "MCU's",
-    'Arduino',
-    'Raspberry Pi',
-    'AutoCAD',
-    'SolidWorks',
-    'Mechanical Design',
-    '3d Printing',
-    'Electrical Schematics',
-  ];
 
   return (
     <div className={classes.root}>

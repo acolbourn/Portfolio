@@ -1,15 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
-import Navbar from './Navbar';
-import BackToTop from './BackToTop';
-import Home from './Home';
-import Classes from './Classes';
-import Contact from './Contact';
-import Projects from './Projects';
-import About from './About';
-import { useStyles, theme } from './styles/AppStyles';
+import React from 'react';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import About from './about/About';
+import Classes from './classes/Classes';
+import Contact from './contact/Contact';
+import BackToTop from './home/BackToTop';
+import Home from './home/Home';
+import Navbar from './navbar/Navbar';
+import Projects from './projects/Projects';
 import './styles/App.css';
+import { theme, useStyles } from './styles/AppStyles';
 
 function App() {
   const classes = useStyles();

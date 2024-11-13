@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import GetFPS from '.././3dAnimations/GetFPS';
+import SpinnerFade from '.././3dAnimations/SpinnerFade';
+import ThreeViewer from '.././3dAnimations/ThreeViewer';
+import WEBGL from '.././3dAnimations/webGLCheck';
 import HomeFallback from './HomeFallback';
-import WEBGL from './3dAnimations/webGLCheck';
-import GetFPS from './3dAnimations/GetFPS';
-import ThreeViewer from './3dAnimations/ThreeViewer';
-import SpinnerFade from './3dAnimations/SpinnerFade';
 import useStyles from './styles/HomeStyles';
 
 export default function Home() {

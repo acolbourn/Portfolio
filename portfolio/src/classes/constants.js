@@ -1,131 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const roboticsProjects = [
-  {
-    id: uuidv4(),
-    imgSrc: 'images/optimized/turtlebot.jpg',
-    imgAlt: 'Turtlebot Robot',
-    title: 'Search and Rescue',
-    description:
-      'A proof-of-concept search and rescue robot developed using Python and ROS (Robot Operating System).  It autonomously searches and maps an unknown environment using LIDAR, finds and picks up targets using basic computer vision, and delivers them to a safe location.',
-    featured: true,
-    youtube: [
-      {
-        vidLink: 'vD6ngnMxDQM',
-        vidDesc:
-          'Autonomously searching for and retrieving targets in a real world environment.',
-      },
-      {
-        vidLink: 'Vt46-e4vAJM',
-        vidDesc: 'Mapping a real world environment with LIDAR.',
-      },
-      {
-        vidLink: 'H3HIfaRytCg',
-        vidDesc:
-          'Using Gazebo/Rviz to autonomously search for and retrieve targets in a simulated environment.',
-      },
-      {
-        vidLink: 'Fu9YxBRYT_E',
-        vidDesc: 'Using Gazebo/Rviz to map a simulated environment with LIDAR.',
-      },
-    ],
-    github: null,
-    pdf: null,
-    webLink: null,
-  },
-  {
-    id: uuidv4(),
-    imgSrc: 'images/optimized/drone.jpg',
-    imgAlt: 'Drone',
-    title: 'Autonomous Drone',
-    description:
-      'A project for an Army Research Lab funded drone startup aiming to use the electromagnetic radiation emitted from power lines to both avoid and fly along them for inspections.  I created an experimental test setup and LabVIEW software that proves the feasibility of such a system using magnetic fields.',
-    featured: true,
-    youtube: null,
-    github: null,
-    pdf: {
-      local: 'MS Project Report - Alex Colbourn.pdf',
-      dropbox:
-        'https://www.dropbox.com/s/vwcrto0gxdbpa7g/MS%20Project%20Report%20-%20Alex%20Colbourn.pdf?dl=0',
-    },
-    webLink: null,
-  },
-  {
-    id: uuidv4(),
-    imgSrc: 'images/optimized/swarms.jpg',
-    imgAlt: 'Swarms of Drones',
-    title: 'Swarm Robotics',
-    description:
-      'A project using Python and graph algorithms to simulate a swarm of differential drive robots.  There is no centralized control system, they use a distributed graph mesh network to communicate and pass data to nearby robots.  They then navigate a maze in coordinated formations while avoiding collisions.',
-    featured: false,
-    youtube: [
-      {
-        vidLink: 'eUMud7Ygu5s',
-        vidDesc:
-          'Navigating a maze in formation with a swarm of decentralized robots.',
-      },
-    ],
-    github: null,
-    pdf: null,
-    webLink: null,
-  },
-];
-
-const webProjects = [
-  {
-    id: uuidv4(),
-    imgSrc: 'images/optimized/retirement.jpg',
-    imgAlt: 'Retirement Website',
-    title: 'Retirement Calculator',
-    description:
-      'A visual retirement calculator made with D3, Javascript, jQuery, Bootstrap 4, HTML, and CSS. This was my first big non-tutorial project to solidify my understanding of the basics before moving onto React.  Use it to find the day when you no longer have to look at portfolio sites like this!',
-    featured: true,
-    youtube: null,
-    github: 'https://github.com/acolbourn/Retirement-Calculator',
-    pdf: null,
-    webLink: 'https://affectionate-bhabha-988fc4.netlify.app/',
-  },
-  {
-    id: uuidv4(),
-    imgSrc: 'images/optimized/covid.jpg',
-    imgAlt: 'Coronavirus Video Thumbnail',
-    title: 'Covid-19 Hackathon',
-    description:
-      'This was my entry into a hackathon where I apply simple computer science algorithms to significantly boost Coronavirus testing capacity.  I ended up getting in contact with Dr. Desai (MSNBC contributor and Chief Medical Officer at Osmosis) who made a video featuring my idea and used my animations made with React/CSS!',
-    youtube: [
-      {
-        vidLink: 'WZ6fewjkqo4',
-        vidDesc:
-          "Dr. Desai's great video explaining the core concept using my React animations and research I sent him.  He also connected me with the CEO of Lifebridge Health who are now looking into trialing this idea at a chain of Baltimore hospitals!",
-      },
-      {
-        vidLink: 'uWXcr1ekypU',
-        vidDesc:
-          'My original hackathon submission.  The animations at 41 seconds were made using React and CSS.',
-      },
-    ],
-    featured: true,
-    github: null,
-    pdf: null,
-    webLink: null,
-  },
-  {
-    id: uuidv4(),
-    imgSrc: 'images/optimized/colors.jpg',
-    imgAlt: 'Color Picker Website',
-    title: 'Color Picker',
-    description:
-      'This was a guided project from the Udemy React Bootcamp.  Even though this was a tutorial project, I decided to put it here because I think it is an accurate representation of my current skill level with React.  I feel very comfortable making projects of around this scope.  It covers React Router, JSS, Material-UI, responsive design, validation, etc...',
-    featured: false,
-    youtube: null,
-    github:
-      'https://github.com/acolbourn/React-Bootcamp-Projects/tree/master/colors-app',
-    pdf: null,
-    webLink: 'https://vibrant-archimedes-c03d7f.netlify.app/',
-  },
-];
-
-const codingClasses = [
+export const codingClasses = [
   {
     id: uuidv4(),
     imgSrc: '/images/optimized/reactBootcamp.jpg',
@@ -306,8 +181,7 @@ const codingClasses = [
       'Graph & Dynamic Algorithms',
     ],
     school: 'NYU',
-    link:
-      'http://catalog.poly.edu/preview_course_nopop.php?catoid=9&coid=23963',
+    link: 'http://catalog.poly.edu/preview_course_nopop.php?catoid=9&coid=23963',
     projects: null,
     featured: false,
     grade: 'A',
@@ -339,8 +213,7 @@ const codingClasses = [
       "MITx: 6.00.1x is MIT's Introduction to Computer Science.  This course focuses on the fundamentals of Python and covers Object Oriented Programming, Classes, Computational Complexity, Searching and Sorting, etc...",
     keyPoints: ['Python', 'Object Oriented Programming', 'Algorithms'],
     school: 'MITx (edx)',
-    link:
-      'https://courses.edx.org/courses/course-v1:MITx+6.00.1x+2T2019a/course/',
+    link: 'https://courses.edx.org/courses/course-v1:MITx+6.00.1x+2T2019a/course/',
     projects: null,
     featured: false,
     grade: 'A',
@@ -386,8 +259,7 @@ const codingClasses = [
       'Testing and Debugging',
     ],
     school: 'Foothill College',
-    link:
-      'https://issuu.com/foothill_college/docs/winter_2012_schedule_of_classes',
+    link: 'https://issuu.com/foothill_college/docs/winter_2012_schedule_of_classes',
     projects: null,
     featured: false,
     grade: 'A',
@@ -415,63 +287,9 @@ const codingClasses = [
       'The student who completes this course will gain an advanced understanding of the principles underlying simulation of dynamical systems, with particular reference to mechatronics and robotic systems. He/she will be able to use modern tools for simulation of mechatronics and robotic systems. Moreover, he/she will be able to design and implement control algorithms and assess their performance on the simulated systems.',
     keyPoints: ['Matlab', 'Simulink', 'Computational Efficiency'],
     school: 'NYU',
-    link:
-      'http://bulletin.engineering.nyu.edu/preview_course_nopop.php?catoid=9&coid=25675',
+    link: 'http://bulletin.engineering.nyu.edu/preview_course_nopop.php?catoid=9&coid=25675',
     projects: null,
     featured: false,
     grade: 'A',
   },
 ];
-
-const jobs = [
-  {
-    job: 'Microfluidics Lab',
-    jobTitle: 'Junior Specialist',
-    startYear: '2011',
-    endYear: '2012',
-    color: '#08FDD8',
-    overlapTimeline: false,
-  },
-  {
-    job: 'Scifiniti',
-    jobTitle: 'Junior Mechanical Engineer',
-    startYear: '2012',
-    endYear: '2013.5',
-    color: '#DD0849',
-    overlapTimeline: false,
-  },
-  {
-    job: 'Sycal',
-    jobTitle: 'Controls Engineer',
-    startYear: '2013.5',
-    endYear: '2017.5',
-    color: '#08BCFD',
-    overlapTimeline: false,
-  },
-  {
-    job: 'Freelancer',
-    jobTitle: 'Product Design',
-    startYear: '2015.5',
-    endYear: '2017.5',
-    color: '#D26CD5',
-    overlapTimeline: true,
-  },
-  {
-    job: "Robotics Master's",
-    jobTitle: 'NYU Student',
-    startYear: '2017.5',
-    endYear: '2019.5',
-    color: '#96bb7c',
-    overlapTimeline: false,
-  },
-  {
-    job: 'Bootcamps & Quarantine',
-    jobTitle: 'Udemy Student',
-    startYear: '2019.5',
-    endYear: 'current',
-    color: '#FFF600',
-    overlapTimeline: false,
-  },
-];
-
-export { roboticsProjects, webProjects, codingClasses, jobs };

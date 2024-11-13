@@ -1,7 +1,7 @@
-import React, { Suspense, useRef, useCallback } from 'react';
+import React, { Suspense, useCallback, useRef } from 'react';
 import { Canvas } from 'react-three-fiber';
+import HomeFallback from '../home/HomeFallback';
 import Lights from './Lights';
-import HomeFallback from '../HomeFallback';
 import ThreeScale from './ThreeScale';
 
 export default function ThreeViewer({ graphics, isLoading }) {

@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactPlayer from 'react-player';
 import { Paper } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import React from 'react';
 import Carousel from 'react-material-ui-carousel';
+import ReactPlayer from 'react-player';
 import useStyles from './styles/YoutubeStyles';
 
 export default function Youtube({ youtube }) {

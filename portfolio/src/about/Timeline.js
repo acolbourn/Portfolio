@@ -1,9 +1,9 @@
-import React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { calculateTimeline, calculateYears } from './TimelineHelpers';
+import React from 'react';
 import { jobs } from './constants';
 import useStyles from './styles/TimelineStyles';
+import { calculateTimeline, calculateYears } from './TimelineHelpers';
 
 export default function Timeline() {
   const classes = useStyles();

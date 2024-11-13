@@ -1,15 +1,15 @@
-import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CloseIcon from '@material-ui/icons/Close';
-import Youtube from './Youtube';
+import React from 'react';
 import PdfViewer from './PdfViewer';
 import ProjectWebsite from './ProjectWebsite';
 import useStyles from './styles/ProjectDialogStyles';
+import Youtube from './Youtube';
 
 export default function ProjectDialog({ open, closeDetail, project }) {
   const { title, youtube, github, pdf, webLink } = project;

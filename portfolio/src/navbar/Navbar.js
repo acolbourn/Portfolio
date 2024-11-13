@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import ReactGA from 'react-ga';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
-import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
-import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
-import SchoolIcon from '@material-ui/icons/School';
 import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 import { useTheme } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
+import MenuIcon from '@material-ui/icons/Menu';
+import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
+import SchoolIcon from '@material-ui/icons/School';
+import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
+import React, { useEffect, useState } from 'react';
+import ReactGA from 'react-ga';
+import { NavLink, useLocation } from 'react-router-dom';
+import Logo from '../home/Logo';
 import NavDrawer from './NavDrawer';
-import Logo from './Logo';
 import useStyles from './styles/NavbarStyles';
 
 export default function ButtonAppBar() {

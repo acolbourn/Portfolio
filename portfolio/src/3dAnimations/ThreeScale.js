@@ -1,13 +1,13 @@
+import { scaleLinear, scalePow } from 'd3-scale';
 import React from 'react';
 import { useThree } from 'react-three-fiber';
-import { scaleLinear, scalePow } from 'd3-scale';
-import { positions } from './3dConstants';
-import LogoBoxes from './LogoBoxes.js';
+import { positions } from './constants.js';
 import HeaderText from './HeaderText.js';
-import Sun from './Sun';
-import WobbleSphere from './WobbleSphere';
+import LogoBoxes from './LogoBoxes.js';
 import StarsAnimated from './StarsAnimated';
+import Sun from './Sun';
 import SunBloom from './SunBloom';
+import WobbleSphere from './WobbleSphere';
 
 export default function ThreeScale({
   scaleRef,

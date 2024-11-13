@@ -1,11 +1,11 @@
-import React, { useRef, useMemo, useEffect, Suspense } from 'react';
-import * as THREE from 'three';
-import { useFrame } from 'react-three-fiber';
 import Color from 'color';
 import { scaleLinear, scalePow } from 'd3-scale';
-import { useSpring, animated } from 'react-spring/three';
-import { logoPoints } from './3dConstants';
-import { getRandomSpherePoints } from './3dConstants';
+import React, { Suspense, useEffect, useMemo, useRef } from 'react';
+import { animated, useSpring } from 'react-spring/three';
+import { useFrame } from 'react-three-fiber';
+import * as THREE from 'three';
+import { logoPoints } from './constants';
+import { getRandomSpherePoints } from './utils';
 
 export default function LogoBoxes({
   mouse,

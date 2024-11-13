@@ -1,40 +1,3 @@
-// Generate random points on a sphere
-function getRandomSpherePoints(count) {
-  let points = [];
-  for (let i = 0; i < count; i++) {
-    let u = Math.random();
-    let v = Math.random();
-    let theta = u * 2.0 * Math.PI;
-    let phi = Math.acos(2.0 * v - 1.0);
-    let r = Math.cbrt(Math.random());
-    let sinTheta = Math.sin(theta);
-    let cosTheta = Math.cos(theta);
-    let sinPhi = Math.sin(phi);
-    let cosPhi = Math.cos(phi);
-    let x = r * sinPhi * cosTheta;
-    let y = r * sinPhi * sinTheta;
-    let z = r * cosPhi;
-    points.push({ x: x, y: y, z: z });
-  }
-  return points;
-}
-
-// Calculate each boxes distance to origin of group (which is offset from canvas origin to position logo)
-function getHypotenuses(groupPosXY, groupPosZ, logoPoints3d) {
-  let hypotenuses = [];
-
-  logoPoints3d.forEach((point) => {
-    const [x, y, z] = point;
-    hypotenuses.push(Math.hypot(x - groupPosXY, y - groupPosXY, z - groupPosZ));
-  });
-  return hypotenuses;
-}
-
-// Generate random integer between min and max
-function getRndInteger(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
 const positions = {
   mouseIcon: [-5.1, 35.15, 0],
   instructionsTitle: [-2.4, 34.8, 0],
@@ -61,38 +24,9 @@ const spacing = {
   bigBang: [0.825, 0.875, 0, 1.8, 1.25, 1.325, 1.325],
   name: [2.9, 3.05, 3.2, 1.2, 3.5, 3.5, 3.2, 3, 3.5, 3.5, 3.1, 2.9],
   titles: [
-    1.6,
-    1.25,
-    0,
-    1.85,
-    1.3,
-    1.25,
-    1.25,
-    1.2,
-    1.2,
-    1.3,
-    1.25,
-    1.1,
-    0,
-    1.4,
-    0,
-    1.5,
-    1.3,
-    1.3,
-    1.35,
-    1.2,
-    0.75,
-    0.85,
-    1.2,
-    0,
-    1.65,
-    1.2,
-    1.35,
-    0.85,
-    0.9,
-    1.35,
-    1.3,
-    1.1,
+    1.6, 1.25, 0, 1.85, 1.3, 1.25, 1.25, 1.2, 1.2, 1.3, 1.25, 1.1, 0, 1.4, 0,
+    1.5, 1.3, 1.3, 1.35, 1.2, 0.75, 0.85, 1.2, 0, 1.65, 1.2, 1.35, 0.85, 0.9,
+    1.35, 1.3, 1.1,
   ],
 };
 
@@ -412,5 +346,4 @@ const logoPoints = [
   [-1, -11.5],
 ];
 
-
-export { positions, fontSizes, spacing, logoPoints, getRandomSpherePoints, getHypotenuses, getRndInteger };
+export { fontSizes, logoPoints, positions, spacing };

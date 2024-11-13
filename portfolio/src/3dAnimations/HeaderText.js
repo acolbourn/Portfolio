@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react';
-import * as THREE from 'three';
-import { useFrame } from 'react-three-fiber';
 import { scalePow } from 'd3-scale';
-import { positions, fontSizes, spacing, getRndInteger } from './3dConstants';
+import React, { useEffect, useRef } from 'react';
+import { useFrame } from 'react-three-fiber';
+import * as THREE from 'three';
+import { fontSizes, positions, spacing } from './constants';
+import { getRndInteger } from './utils';
 import Word from './Word';
 
 export default function HeaderText({ mouse, graphics, isLoading }) {

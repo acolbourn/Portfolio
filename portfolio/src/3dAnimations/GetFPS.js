@@ -3,6 +3,26 @@ import GraphicsMenu from './GraphicsMenu';
 
 const GRAPH_WIDTH = 70;
 
+/**
+ * GetFPS component calculates and tracks the frames per second (FPS) of an animation.
+ * It updates the FPS value every second and passes the current FPS to the GraphicsMenu component.
+ *
+ * @extends Component
+ *
+ * @prop {function} handleGraphicsChange - Function to handle changes in graphics settings.
+ * @prop {object} graphics - Graphics settings object.
+ *
+ * @state {number} frames - Number of frames rendered since the last FPS calculation.
+ * @state {number} startTime - The time when the component was initialized.
+ * @state {number} prevTime - The time when the last FPS calculation was made.
+ * @state {Array<number>} fps - Array of FPS values calculated over time.
+ *
+ * @method shouldComponentUpdate - Determines if the component should re-render based on changes in props or state.
+ * @method componentDidMount - Starts the animation frame request loop to calculate FPS.
+ * @method componentWillUnmount - Cancels the animation frame request loop when the component is unmounted.
+ * @method calcFPS - Calculates the FPS and updates the state with the new FPS value.
+ * @method render - Renders the GraphicsMenu component with the current FPS value.
+ */
 class GetFPS extends Component {
   // Calculate frames per second of the entire animation
   constructor(props) {
